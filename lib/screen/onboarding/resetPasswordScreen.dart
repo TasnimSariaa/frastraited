@@ -1,16 +1,15 @@
 import 'package:flutter/material.dart';
-import 'package:frastraited/screen/onboarding/forgotPasswordScreen.dart';
-import 'package:frastraited/screen/onboarding/signUpScreen.dart';
+import 'package:frastraited/screen/onboarding/loginScreen.dart';
 import 'package:frastraited/screen/widgets/bodyBackground.dart';
 
-class loginScreen extends StatefulWidget {
-  const loginScreen({super.key});
+class resetPasswordScreen extends StatefulWidget {
+  const resetPasswordScreen({super.key});
 
   @override
-  State<loginScreen> createState() => _loginScreenState();
+  State<resetPasswordScreen> createState() => _resetPasswordScreenState();
 }
 
-class _loginScreenState extends State<loginScreen> {
+class _resetPasswordScreenState extends State<resetPasswordScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -25,15 +24,26 @@ class _loginScreenState extends State<loginScreen> {
                   const SizedBox(
                     height: 80,
                   ),
-                  Text("Get Started With",
+                  Text("Set New Password",
                       style: Theme.of(context).textTheme.titleLarge),
+                  const SizedBox(
+                    height: 8,
+                  ),
+                  Text(
+                    'Minimum lenth of the password should be 8 letters',
+                    style: TextStyle(
+                      fontSize: 24,
+                      color: Colors.grey,
+                      fontWeight: FontWeight.w500,
+                    ),
+                  ),
                   const SizedBox(
                     height: 24,
                   ),
                   TextFormField(
-                    keyboardType: TextInputType.emailAddress,
+                    obscureText: true,
                     decoration: const InputDecoration(
-                      hintText: 'Email',
+                      hintText: 'New Password',
                     ),
                   ),
                   const SizedBox(
@@ -42,7 +52,7 @@ class _loginScreenState extends State<loginScreen> {
                   TextFormField(
                     obscureText: true,
                     decoration: const InputDecoration(
-                      hintText: 'Password',
+                      hintText: 'Confirm Password',
                     ),
                   ),
                   const SizedBox(
@@ -51,35 +61,25 @@ class _loginScreenState extends State<loginScreen> {
                   SizedBox(
                     width: double.infinity,
                     child: ElevatedButton(
-                      onPressed: () {},
-                      child: const Icon(Icons.arrow_circle_right_outlined),
+                      onPressed: () {
+                        // Navigator.push(
+                        //   context,
+                        //   MaterialPageRoute(
+                        //     builder: (context) => const pinVerificationScreen(),
+                        //   ),
+                        // );
+                      },
+                      child: const Text('Confirm'),
                     ),
                   ),
                   const SizedBox(
                     height: 48,
                   ),
-                  Center(
-                    child: TextButton(
-                      onPressed: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => const forgotPasswordScreen(),
-                          ),
-                        );
-                      },
-                      child: Text('Forgot Password?',
-                          style: TextStyle(
-                            color: Colors.grey,
-                            fontSize: 16,
-                          )),
-                    ),
-                  ),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       Text(
-                        "Don't have an acccount?",
+                        "have an acccount?",
                         style: TextStyle(
                           fontSize: 16,
                           fontWeight: FontWeight.w600,
@@ -88,14 +88,13 @@ class _loginScreenState extends State<loginScreen> {
                       ),
                       TextButton(
                         onPressed: () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => const signUpScreen(),
-                            ),
-                          );
+                          Navigator.pushAndRemoveUntil(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => const loginScreen()),
+                              (route) => false);
                         },
-                        child: Text('Sign Up',
+                        child: Text('Sign In',
                             style: TextStyle(
                               fontSize: 16,
                             )),

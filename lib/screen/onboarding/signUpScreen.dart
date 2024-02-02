@@ -1,19 +1,17 @@
 import 'package:flutter/material.dart';
-import 'package:frastraited/screen/onboarding/forgotPasswordScreen.dart';
-import 'package:frastraited/screen/onboarding/signUpScreen.dart';
 import 'package:frastraited/screen/widgets/bodyBackground.dart';
 
-class loginScreen extends StatefulWidget {
-  const loginScreen({super.key});
+class signUpScreen extends StatefulWidget {
+  const signUpScreen({super.key});
 
   @override
-  State<loginScreen> createState() => _loginScreenState();
+  State<signUpScreen> createState() => _signUpScreenState();
 }
 
-class _loginScreenState extends State<loginScreen> {
+class _signUpScreenState extends State<signUpScreen> {
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
+    return  Scaffold(
       body: BodyBackground(
         child: SafeArea(
           child: Padding(
@@ -25,7 +23,7 @@ class _loginScreenState extends State<loginScreen> {
                   const SizedBox(
                     height: 80,
                   ),
-                  Text("Get Started With",
+                  Text("Join With Us",
                       style: Theme.of(context).textTheme.titleLarge),
                   const SizedBox(
                     height: 24,
@@ -34,6 +32,31 @@ class _loginScreenState extends State<loginScreen> {
                     keyboardType: TextInputType.emailAddress,
                     decoration: const InputDecoration(
                       hintText: 'Email',
+                    ),
+                  ),
+                  const SizedBox(
+                    height: 16,
+                  ),
+                  TextFormField(
+                    decoration: const InputDecoration(
+                      hintText: 'First Name',
+                    ),
+                  ),
+                  const SizedBox(
+                    height: 16,
+                  ),
+                  TextFormField(
+                    decoration: const InputDecoration(
+                      hintText: 'Last Name',
+                    ),
+                  ),
+                  const SizedBox(
+                    height: 16,
+                  ),
+                  TextFormField(
+                    keyboardType: TextInputType.phone,
+                    decoration: const InputDecoration(
+                      hintText: 'Phone Number',
                     ),
                   ),
                   const SizedBox(
@@ -58,28 +81,11 @@ class _loginScreenState extends State<loginScreen> {
                   const SizedBox(
                     height: 48,
                   ),
-                  Center(
-                    child: TextButton(
-                      onPressed: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => const forgotPasswordScreen(),
-                          ),
-                        );
-                      },
-                      child: Text('Forgot Password?',
-                          style: TextStyle(
-                            color: Colors.grey,
-                            fontSize: 16,
-                          )),
-                    ),
-                  ),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       Text(
-                        "Don't have an acccount?",
+                        "have an acccount?",
                         style: TextStyle(
                           fontSize: 16,
                           fontWeight: FontWeight.w600,
@@ -88,14 +94,9 @@ class _loginScreenState extends State<loginScreen> {
                       ),
                       TextButton(
                         onPressed: () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => const signUpScreen(),
-                            ),
-                          );
-                        },
-                        child: Text('Sign Up',
+                          Navigator.pop(context);
+                          },
+                        child: Text('Sign In',
                             style: TextStyle(
                               fontSize: 16,
                             )),

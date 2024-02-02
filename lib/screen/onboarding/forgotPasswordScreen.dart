@@ -1,19 +1,18 @@
 import 'package:flutter/material.dart';
-import 'package:frastraited/screen/onboarding/forgotPasswordScreen.dart';
-import 'package:frastraited/screen/onboarding/signUpScreen.dart';
+import 'package:frastraited/screen/onboarding/pinVerificationScreen.dart';
 import 'package:frastraited/screen/widgets/bodyBackground.dart';
 
-class loginScreen extends StatefulWidget {
-  const loginScreen({super.key});
+class forgotPasswordScreen extends StatefulWidget {
+  const forgotPasswordScreen({super.key});
 
   @override
-  State<loginScreen> createState() => _loginScreenState();
+  State<forgotPasswordScreen> createState() => _forgotPasswordScreenState();
 }
 
-class _loginScreenState extends State<loginScreen> {
+class _forgotPasswordScreenState extends State<forgotPasswordScreen> {
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
+    return  Scaffold(
       body: BodyBackground(
         child: SafeArea(
           child: Padding(
@@ -25,8 +24,20 @@ class _loginScreenState extends State<loginScreen> {
                   const SizedBox(
                     height: 80,
                   ),
-                  Text("Get Started With",
-                      style: Theme.of(context).textTheme.titleLarge),
+                  Text("Your Email Address",
+                      style: Theme.of(context).textTheme.titleLarge
+                  ),
+                  const SizedBox(
+                    height: 8,
+                  ),
+
+                  Text("A 8 digit varification pin send to your email",
+                    style: TextStyle(
+                      fontSize: 24,
+                      color: Colors.grey,
+                      fontWeight: FontWeight.w500,
+                    ),
+                  ),
                   const SizedBox(
                     height: 24,
                   ),
@@ -39,47 +50,30 @@ class _loginScreenState extends State<loginScreen> {
                   const SizedBox(
                     height: 16,
                   ),
-                  TextFormField(
-                    obscureText: true,
-                    decoration: const InputDecoration(
-                      hintText: 'Password',
-                    ),
-                  ),
-                  const SizedBox(
-                    height: 16,
-                  ),
                   SizedBox(
                     width: double.infinity,
                     child: ElevatedButton(
-                      onPressed: () {},
+                      onPressed: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => const pinVerificationScreen(),
+                          ),
+                        );
+
+                      },
                       child: const Icon(Icons.arrow_circle_right_outlined),
                     ),
                   ),
                   const SizedBox(
                     height: 48,
                   ),
-                  Center(
-                    child: TextButton(
-                      onPressed: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => const forgotPasswordScreen(),
-                          ),
-                        );
-                      },
-                      child: Text('Forgot Password?',
-                          style: TextStyle(
-                            color: Colors.grey,
-                            fontSize: 16,
-                          )),
-                    ),
-                  ),
+
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       Text(
-                        "Don't have an acccount?",
+                        "have an acccount?",
                         style: TextStyle(
                           fontSize: 16,
                           fontWeight: FontWeight.w600,
@@ -88,14 +82,9 @@ class _loginScreenState extends State<loginScreen> {
                       ),
                       TextButton(
                         onPressed: () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => const signUpScreen(),
-                            ),
-                          );
+                          Navigator.pop(context);
                         },
-                        child: Text('Sign Up',
+                        child: Text('Sign In',
                             style: TextStyle(
                               fontSize: 16,
                             )),
