@@ -1,5 +1,9 @@
 //mod 8 assighnment
 import 'package:flutter/material.dart';
+import 'package:frastraited/Precentation/ui/screens/main_bottom_nav_screen.dart';
+import 'package:frastraited/Precentation/ui/utility/app_colors.dart';
+import 'package:frastraited/Precentation/ui/utility/app_theme_data.dart';
+import 'package:frastraited/app.dart';
 import 'package:frastraited/screen/onboarding/emailVerificationScreen.dart';
 import 'package:frastraited/screen/onboarding/forgotPasswordScreen.dart';
 import 'package:frastraited/screen/onboarding/loginScreen.dart';
@@ -17,30 +21,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      theme: ThemeData(
-        primaryColor: Colors.green,
-        primarySwatch: Colors.green,
-        inputDecorationTheme: const InputDecorationTheme(
-          fillColor: Colors.white,
-          filled: true,
-          border: OutlineInputBorder(
-            borderSide: BorderSide.none,
-          ),
-        ),
-        textTheme: const TextTheme(
-          titleLarge: TextStyle(
-            fontSize: 32,
-            fontWeight: FontWeight.normal,
-          ),
-        ),
-elevatedButtonTheme: ElevatedButtonThemeData(
-  style: ElevatedButton.styleFrom(
-    padding: EdgeInsets.symmetric(vertical: 10),
-
-  )
-),
-
-      ),
+      theme: AppThemeData.lightThemeData,
       debugShowCheckedModeBanner: false, //also its by default true
       title: "My project",
       initialRoute: '/',

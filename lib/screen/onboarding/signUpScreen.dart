@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:frastraited/Precentation/ui/utility/app_colors.dart';
 import 'package:frastraited/screen/widgets/bodyBackground.dart';
 
 class signUpScreen extends StatefulWidget {
@@ -20,6 +21,18 @@ class _signUpScreenState extends State<signUpScreen> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    children: [
+                      IconButton(
+                        icon: Icon(Icons.arrow_back,
+                          color: AppColors.primaryColor,),
+                        onPressed: () {
+                          Navigator.pop(context);
+                        },
+                      ),
+                    ],
+                  ),
                   const SizedBox(
                     height: 80,
                   ),
@@ -74,8 +87,10 @@ class _signUpScreenState extends State<signUpScreen> {
                   SizedBox(
                     width: double.infinity,
                     child: ElevatedButton(
+
                       onPressed: () {},
-                      child: const Icon(Icons.arrow_circle_right_outlined),
+                      child: const Text('Next',
+                        style: TextStyle(color: Colors.white),),
                     ),
                   ),
                   const SizedBox(
@@ -98,6 +113,7 @@ class _signUpScreenState extends State<signUpScreen> {
                           },
                         child: Text('Sign In',
                             style: TextStyle(
+                              color: AppColors.primaryColor,
                               fontSize: 16,
                             )),
                       ),
