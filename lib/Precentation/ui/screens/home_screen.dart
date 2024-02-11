@@ -1,58 +1,85 @@
 import 'package:flutter/material.dart';
+import 'package:frastraited/Precentation/ui/screens/history_screen.dart';
+import 'package:frastraited/Precentation/ui/screens/profile_screen.dart';
 import 'package:frastraited/Precentation/ui/utility/app_colors.dart';
 import 'package:frastraited/Precentation/ui/utility/assets_path.dart';
+import 'package:frastraited/Precentation/ui/widgets/home/circle_Icon_button.dart';
+import 'package:frastraited/screen/homeCardsScreens/activeDoctor_screen.dart';
+import 'package:frastraited/screen/homeCardsScreens/appointment_screen.dart';
+import 'package:frastraited/screen/homeCardsScreens/donation_screen.dart';
+import 'package:frastraited/screen/homeCardsScreens/operatinPac_screen.dart';
+import 'package:frastraited/screen/homeCardsScreens/pandingTests_screen.dart';
+import 'package:frastraited/screen/homeCardsScreens/reportCollection_screen.dart';
+import 'package:frastraited/screen/homeCardsScreens/vaccinePac_screen.dart';
 import 'package:frastraited/screen/widgets/bodyBackground.dart';
 
 class HomeScreen extends StatefulWidget {
-  const HomeScreen({super.key});
+  const HomeScreen({Key? key}) : super(key: key);
 
   @override
   State<HomeScreen> createState() => _HomeScreenState();
 }
 
 class _HomeScreenState extends State<HomeScreen> {
+  final List<Map<String, dynamic>> categories = [
+    {'category': 'Active doctors', 'icon': Icons.person},
+    {'category': 'Operation Packages', 'icon': Icons.personal_injury_outlined},
+    {'category': 'Vaccine Packages', 'icon': Icons.medical_services},
+    {'category': 'Appointment', 'icon': Icons.event},
+    {'category': 'Report Collection', 'icon': Icons.receipt},
+    {'category': 'Donation', 'icon': Icons.real_estate_agent_outlined},
+    {'category': 'Pending Tests', 'icon': Icons.hourglass_bottom},
+  ];
+
+  int _selectedIndex = 0;
+  final List<Widget> _screens = const [
+    ActiveDoctor(),
+    OperationScreen(),
+    VaccineScreen(),
+    Appointment(),
+    ReportCollection(),
+    Donation(),
+    PandingTests(),
+  ];
+
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        leading:   Row(
-          mainAxisAlignment: MainAxisAlignment.start,
-          children: [
-            IconButton(
-              icon: Icon(Icons.arrow_back,
-                color: AppColors.primaryColor,),
-              onPressed: () {
-                Navigator.pop(context);
-              },
-            ),
-            InkWell(
-              onTap: () {},
-              borderRadius: BorderRadius.circular(15),
-              child: CircleAvatar(
-                radius: 15,
-                backgroundColor: Colors.grey.shade300,
-                child: Icon(
-                  Icons.person,
-                  color: Colors.grey,
-                ),
-              ),
-            )
-          ],
-        ),
-      ),
+    return  Scaffold(
+      appBar:appBar,
       body: BodyBackground(
         child: SafeArea(
           child: Padding(
-            padding: const EdgeInsets.all(20),
+            padding: const EdgeInsets.all(24),
             child: SingleChildScrollView(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
-
-
-
-
-
+                  const SizedBox(height: 8),
+                  searchTextField,
+                  const SizedBox(height: 16),
+                  GridView.builder(
+                    shrinkWrap: true,
+                    physics: NeverScrollableScrollPhysics(),
+                    gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                      crossAxisCount: 3,
+                      crossAxisSpacing: 4,
+                      mainAxisSpacing: 4,
+                    ),
+                    itemCount: categories.length,
+                    itemBuilder: (BuildContext context, int index) {
+                      return _buildCategoryCard(
+                        category: categories[index]['category'],
+                        icon: categories[index]['icon'],
+                        onTap: () {
+                          setState(() {
+                            _selectedIndex = index;
+                          });
+                          navigateToScreen(index);
+                        },
+                        isSelected: _selectedIndex == index,
+                      );
+                    },
+                  ),
                 ],
               ),
             ),
@@ -60,32 +87,91 @@ class _HomeScreenState extends State<HomeScreen> {
         ),
       ),
     );
-      Scaffold(
-      appBar: AppBar(
-        leading: IconButton(
-          icon: Icon(
-            Icons.arrow_back,
-            color: AppColors.primaryColor,
-          ),
-          onPressed: () {
-            Navigator.pop(context);
-          },
+  }
+
+  Widget _buildCategoryCard({
+    required String category,
+    required IconData icon,
+    required VoidCallback onTap,
+    required bool isSelected,
+  }) {
+    return GestureDetector(
+      onTap: onTap,
+      child: Card(
+        color: Colors.white,
+        elevation: 3,
+        shape: RoundedRectangleBorder(
+          side: isSelected
+              ? BorderSide(color: AppColors.primaryColor, width: 2)
+              : BorderSide.none,
+          borderRadius: BorderRadius.circular(10),
         ),
-        actions: [
-          InkWell(
-            onTap: () {},
-            borderRadius: BorderRadius.circular(15),
-            child: CircleAvatar(
-              radius: 15,
-              backgroundColor: Colors.grey.shade300,
-              child: Icon(
-                Icons.person,
-                color: Colors.grey,
-              ),
+        child: Padding(
+          padding: const EdgeInsets.all(16),
+          child: Center(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Icon(icon, color: AppColors.primaryColor, size: 36),
+                const SizedBox(height: 8),
+                Text(
+                  category,
+                  style: TextStyle(fontSize: 18),
+                  textAlign: TextAlign.center,
+                ),
+              ],
             ),
-          )
-        ],
+          ),
+        ),
       ),
+    );
+  }
+
+  void navigateToScreen(int index) {
+    Navigator.push(
+      context,
+      MaterialPageRoute(builder: (context) => _screens[index]),
+    );
+  }
+
+  TextFormField get searchTextField {
+    return TextFormField(
+      decoration: InputDecoration(
+        hintText: 'Search',
+        filled: true,
+        fillColor: Colors.grey.shade200,
+        prefixIcon: Icon(Icons.search, color: Colors.grey),
+        border: OutlineInputBorder(
+          borderSide: BorderSide.none,
+          borderRadius: BorderRadius.circular(10),
+        ),
+        errorBorder: InputBorder.none,
+        focusedBorder: InputBorder.none,
+        enabledBorder: InputBorder.none,
+      ),
+    );
+  }
+
+  AppBar get appBar {
+    return AppBar(
+      backgroundColor: Colors.transparent,
+      actions: [
+        CircleIconButton(
+          onTap: () {},
+          iconData: Icons.person,
+        ),
+        const SizedBox(width: 8),
+        CircleIconButton(
+          onTap: () {},
+          iconData: Icons.call,
+        ),
+        const SizedBox(width: 8),
+        CircleIconButton(
+          onTap: () {},
+          iconData: Icons.notifications_active_outlined,
+        ),
+        const SizedBox(width: 8),
+      ],
     );
   }
 }
