@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:frastraited/Precentation/ui/utility/app_colors.dart';
+import 'package:frastraited/screen/task/appointmentBooking.dart';
 import 'package:frastraited/screen/widgets/bodyBackground.dart';
 
 class Appointment extends StatefulWidget {
@@ -11,7 +12,7 @@ class Appointment extends StatefulWidget {
 }
 
 class _AppointmentState extends State<Appointment> {
-  // Sample list of doctors for appointment booking
+  int? selectedDoctorIndex;
   final List<Map<String, dynamic>> doctorsForAppointment = [
     {
       'name': 'Dr. Alice Johnson',
@@ -27,31 +28,6 @@ class _AppointmentState extends State<Appointment> {
       'name': 'Dr. Emily Brown',
       'specialty': 'Pediatrician',
       'profilePicUrl': 'https://example.com/doctor3.jpg',
-    },
-    {
-      'name': 'Dr. David Wilson',
-      'specialty': 'Oncologist',
-      'profilePicUrl': 'https://example.com/doctor4.jpg',
-    },
-    {
-      'name': 'Dr. Sarah Lee',
-      'specialty': 'Ophthalmologist',
-      'profilePicUrl': 'https://example.com/doctor5.jpg',
-    },
-    {
-      'name': 'Dr. William Clark',
-      'specialty': 'Neurologist',
-      'profilePicUrl': 'https://example.com/doctor6.jpg',
-    },
-    {
-      'name': 'Dr. Olivia Martinez',
-      'specialty': 'Gynecologist',
-      'profilePicUrl': 'https://example.com/doctor7.jpg',
-    },
-    {
-      'name': 'Dr. Daniel Taylor',
-      'specialty': 'ENT Specialist',
-      'profilePicUrl': 'https://example.com/doctor8.jpg',
     },
     // Add more doctors here
   ];
@@ -110,7 +86,6 @@ class _AppointmentState extends State<Appointment> {
                         width: 150,
                         height: 150,
                       ),
-
                     ),
                     Positioned(
                       left: 20,
@@ -139,21 +114,31 @@ class _AppointmentState extends State<Appointment> {
                           ),
                         ),
                         onPressed: () {
-                          showDialog(
-                            context: context,
-                            builder: (context) => AlertDialog(
-                              title: Text('Book Appointment'),
-                              content: Text('Please choose a doctor from the list below.'),
-                              actions: [
-                                TextButton(
-                                  onPressed: () {
-                                    Navigator.pop(context);
-                                  },
-                                  child: Text('Close'),
-                                ),
-                              ],
-                            ),
-                          );
+                          if (selectedDoctorIndex != null) {
+                            // Navigate to AppointmentBooking screen
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => AppointmentBooking(),
+                              ),
+                            );
+                          } else {
+                            showDialog(
+                              context: context,
+                              builder: (context) => AlertDialog(
+                                title: Text('Error'),
+                                content: Text('Please choose a doctor from the list.'),
+                                actions: [
+                                  TextButton(
+                                    onPressed: () {
+                                      Navigator.pop(context);
+                                    },
+                                    child: Text('Close'),
+                                  ),
+                                ],
+                              ),
+                            );
+                          }
                         },
                         child: Text(
                           "  Book Appointment  ",
@@ -168,52 +153,64 @@ class _AppointmentState extends State<Appointment> {
                   ' Doctor List ',
                   style: TextStyle(fontSize: 20, fontWeight: FontWeight.w500),
                 ),
-                //SizedBox(width: double.infinity),
                 SizedBox(height: 10),
                 Expanded(
                   child: ListView.builder(
                     itemCount: doctorsForAppointment.length,
                     itemBuilder: (context, index) {
                       final doctor = doctorsForAppointment[index];
-                      return Card(
-                        borderOnForeground: true,
-                        color: Colors.white, // Common color for all cards
-                        elevation: 3,
-                        child: Container(
-                          height: 120, // Adjust the height of the container
-                          padding: const EdgeInsets.all(8),
-                          child: Row(
-                            children: [
-                              Container(
-                                width: 120,
-                                height: double.infinity,
-                                decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(8),
-                                  image: DecorationImage(
-                                    image: NetworkImage(doctor['profilePicUrl']),
-                                    fit: BoxFit.cover,
+                      return GestureDetector(
+                        onTap: () {
+                          setState(() {
+                            selectedDoctorIndex = index;
+                          });
+                        },
+                        child: Card(
+                          borderOnForeground: true,
+                          color: Colors.white,
+                          elevation: 3,
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(8),
+                            side: selectedDoctorIndex == index
+                                ? BorderSide(color: AppColors.primaryColor, width: 2)
+                                : BorderSide.none,
+                          ),
+                          child: Container(
+                            height: 120,
+                            padding: const EdgeInsets.all(8),
+                            child: Row(
+                              children: [
+                                Container(
+                                  width: 120,
+                                  height: double.infinity,
+                                  decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(8),
+                                    image: DecorationImage(
+                                      image: NetworkImage(doctor['profilePicUrl']),
+                                      fit: BoxFit.cover,
+                                    ),
                                   ),
                                 ),
-                              ),
-                              const SizedBox(width: 16),
-                              Expanded(
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  children: [
-                                    Text(
-                                      doctor['name'],
-                                      style: TextStyle(fontSize: 18, color: AppColors.primaryColor),
-                                    ),
-                                    const SizedBox(height: 4),
-                                    Text(
-                                      doctor['specialty'],
-                                      style: TextStyle(color: Colors.grey),
-                                    ),
-                                  ],
+                                const SizedBox(width: 16),
+                                Expanded(
+                                  child: Column(
+                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: [
+                                      Text(
+                                        doctor['name'],
+                                        style: TextStyle(fontSize: 18, color: AppColors.primaryColor),
+                                      ),
+                                      const SizedBox(height: 4),
+                                      Text(
+                                        doctor['specialty'],
+                                        style: TextStyle(color: Colors.grey),
+                                      ),
+                                    ],
+                                  ),
                                 ),
-                              ),
-                            ],
+                              ],
+                            ),
                           ),
                         ),
                       );
