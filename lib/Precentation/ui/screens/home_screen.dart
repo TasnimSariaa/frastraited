@@ -26,7 +26,7 @@ class _HomeScreenState extends State<HomeScreen> {
     {'category': 'Operation Packages', 'icon': Icons.personal_injury_outlined},
     {'category': 'Vaccine Packages', 'icon': Icons.medical_services},
     {'category': 'Appointment', 'icon': Icons.event},
-    {'category': 'Report Collection', 'icon': Icons.receipt},
+    {'category': 'Collect Reports', 'icon': Icons.receipt},
     {'category': 'Donation', 'icon': Icons.real_estate_agent_outlined},
     {'category': 'Pending Tests', 'icon': Icons.hourglass_bottom},
   ];
@@ -61,9 +61,9 @@ class _HomeScreenState extends State<HomeScreen> {
                     shrinkWrap: true,
                     physics: NeverScrollableScrollPhysics(),
                     gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                      crossAxisCount: 3,
-                      crossAxisSpacing: 4,
-                      mainAxisSpacing: 4,
+                      crossAxisCount: 2,
+                      crossAxisSpacing: 1,
+                      mainAxisSpacing: 1,
                     ),
                     itemCount: categories.length,
                     itemBuilder: (BuildContext context, int index) {

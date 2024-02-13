@@ -84,7 +84,7 @@ class _VaccineScreenState extends State<VaccineScreen> {
                             elevation: 3,
                             child: Container(
                               height: 120, // Adjust the height of the container
-                              //padding: const EdgeInsets.all(8),
+                              padding: const EdgeInsets.all(8),
                               child: Row(
                                 children: [
                                   Container(
