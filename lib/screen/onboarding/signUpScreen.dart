@@ -1,3 +1,7 @@
+import 'dart:developer';
+
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:frastraited/screen/widgets/bodyBackground.dart';
 
@@ -9,6 +13,13 @@ class signUpScreen extends StatefulWidget {
 }
 
 class _signUpScreenState extends State<signUpScreen> {
+  TextEditingController useremailController = TextEditingController();
+  TextEditingController userfirstNameController = TextEditingController();
+  TextEditingController userlastNameController = TextEditingController();
+  TextEditingController userphoneController= TextEditingController();
+  TextEditingController userpasswordController = TextEditingController();
+
+
   @override
   Widget build(BuildContext context) {
     return  Scaffold(
@@ -29,15 +40,20 @@ class _signUpScreenState extends State<signUpScreen> {
                     height: 24,
                   ),
                   TextFormField(
+
+                    controller: useremailController,
                     keyboardType: TextInputType.emailAddress,
                     decoration: const InputDecoration(
                       hintText: 'Email',
                     ),
+
+
                   ),
                   const SizedBox(
                     height: 16,
                   ),
                   TextFormField(
+                    controller: userfirstNameController,
                     decoration: const InputDecoration(
                       hintText: 'First Name',
                     ),
@@ -46,6 +62,7 @@ class _signUpScreenState extends State<signUpScreen> {
                     height: 16,
                   ),
                   TextFormField(
+                    controller: userlastNameController,
                     decoration: const InputDecoration(
                       hintText: 'Last Name',
                     ),
@@ -54,6 +71,7 @@ class _signUpScreenState extends State<signUpScreen> {
                     height: 16,
                   ),
                   TextFormField(
+                    controller: userphoneController,
                     keyboardType: TextInputType.phone,
                     decoration: const InputDecoration(
                       hintText: 'Phone Number',
@@ -63,6 +81,7 @@ class _signUpScreenState extends State<signUpScreen> {
                     height: 16,
                   ),
                   TextFormField(
+                    controller: userpasswordController,
                     obscureText: true,
                     decoration: const InputDecoration(
                       hintText: 'Password',
@@ -74,7 +93,25 @@ class _signUpScreenState extends State<signUpScreen> {
                   SizedBox(
                     width: double.infinity,
                     child: ElevatedButton(
-                      onPressed: () {},
+                      onPressed: () {
+                        var email= useremailController.text.trim();
+                        var firstName= userfirstNameController.text.trim();
+                        var lastName= userlastNameController.text.trim();
+                        var phone= userphoneController.text.trim();
+                        var password= userpasswordController.text.trim();
+
+                        FirebaseAuth.instance.createUserWithEmailAndPassword(email: email, password: password).then((value) =>
+                        {
+                          log("User Created"),
+                           FirebaseFirestore.instance.collection("users").doc().set({
+
+                           })
+                        }
+                        );
+
+
+
+                      },
                       child: const Icon(Icons.arrow_circle_right_outlined),
                     ),
                   ),
