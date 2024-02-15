@@ -1,11 +1,7 @@
-//mod 8 assighnment
-//import ;
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
-import 'package:frastraited/Precentation/ui/screens/main_bottom_nav_screen.dart';
-import 'package:frastraited/Precentation/ui/utility/app_colors.dart';
 import 'package:frastraited/Precentation/ui/utility/app_theme_data.dart';
-import 'package:frastraited/app.dart';
+import 'package:frastraited/firebase_options.dart';
 import 'package:frastraited/screen/onboarding/emailVerificationScreen.dart';
 import 'package:frastraited/screen/onboarding/forgotPasswordScreen.dart';
 import 'package:frastraited/screen/onboarding/loginScreen.dart';
@@ -16,37 +12,31 @@ import 'package:frastraited/screen/onboarding/signUpScreen.dart';
 import 'package:frastraited/screen/onboarding/splashScreen.dart';
 
 void main() async {
-
   WidgetsFlutterBinding.ensureInitialized();
-  await Firebase.initializeApp(
-
-  );
-
-  runApp(MyApp());
+  await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
+  runApp(const MyApp());
 }
 
 class MyApp extends StatelessWidget {
+  const MyApp({super.key});
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
       theme: AppThemeData.lightThemeData,
-      debugShowCheckedModeBanner: false, //also its by default true
+      debugShowCheckedModeBanner: false,
       title: "My project",
       initialRoute: '/',
       routes: {
-        '/': (context) => splashScreen(),
-        '/login': (context) => loginScreen(),
-        '/pinVarification': (context) => pinVerificationScreen(),
-        '/emailVarification': (context) => emailVerificationScreen(),
-        '/registration': (context) => registrationScreen(),
-        '/setPassword': (context) => resetPasswordScreen(),
-        '/signUp': (context) => signUpScreen(),
-        '/forgotPassword': (context) => forgotPasswordScreen(),
-
-
-
+        '/': (context) => const splashScreen(),
+        '/login': (context) => const loginScreen(),
+        '/pinVarification': (context) => const pinVerificationScreen(),
+        '/emailVarification': (context) => const emailVerificationScreen(),
+        '/registration': (context) => const registrationScreen(),
+        '/setPassword': (context) => const resetPasswordScreen(),
+        '/signUp': (context) => const signUpScreen(),
+        '/forgotPassword': (context) => const forgotPasswordScreen(),
       },
-
     );
   }
 }
