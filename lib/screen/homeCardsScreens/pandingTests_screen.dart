@@ -2,14 +2,14 @@ import 'package:flutter/material.dart';
 import 'package:frastraited/Precentation/ui/utility/app_colors.dart';
 import 'package:frastraited/screen/widgets/bodyBackground.dart';
 
-class PandingTests extends StatefulWidget {
-  const PandingTests({Key? key}) : super(key: key);
+class PendingTests extends StatefulWidget {
+  const PendingTests({Key? key}) : super(key: key);
 
   @override
-  State<PandingTests> createState() => _PandingTestsState();
+  State<PendingTests> createState() => _PendingTestsState();
 }
 
-class _PandingTestsState extends State<PandingTests> {
+class _PendingTestsState extends State<PendingTests> {
   // Sample list of pending tests (replace with actual data)
   List<String> pendingTests = ['Blood Test', 'Urine Test', 'X-ray', 'MRI'];
 

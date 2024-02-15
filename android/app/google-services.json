@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "318707500717",
+    "project_id": "hmproject-2ec85",
+    "storage_bucket": "hmproject-2ec85.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:318707500717:android:282f30babc6edd08be6824",
+        "android_client_info": {
+          "package_name": "com.example.frastraited"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCVRoZYtvOpe8RiYlSnh0n5Hg6bwveveKs"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

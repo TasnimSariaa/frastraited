@@ -1,17 +1,16 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/flutter_svg.dart';
-import 'package:frastraited/Precentation/ui/screens/admin_site/adminFrontScreen.dart';
+import 'package:frastraited/Precentation/ui/screens/admin_site/adminVarificationScreen.dart';
 import 'package:frastraited/screen/onboarding/loginScreen.dart';
 import 'package:frastraited/screen/widgets/bodyBackground.dart';
 
-class frontPage extends StatefulWidget {
-  const frontPage({Key? key}) : super(key: key);
+class AdminFront extends StatefulWidget {
+  const AdminFront({super.key});
 
   @override
-  State<frontPage> createState() => _frontPageState();
+  State<AdminFront> createState() => _AdminFrontState();
 }
 
-class _frontPageState extends State<frontPage> {
+class _AdminFrontState extends State<AdminFront> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -23,11 +22,6 @@ class _frontPageState extends State<frontPage> {
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  SvgPicture.asset(
-                    'assets/images/medical1.svg',
-                    width: 400,
-                    //height: double.infinity,
-                  ),
                   SizedBox(height: 20),
                   SizedBox(
                     width: double.infinity,
@@ -36,13 +30,13 @@ class _frontPageState extends State<frontPage> {
                         Navigator.push(
                           context,
                           MaterialPageRoute(
-                            builder: (context) => const loginScreen(),
+                            builder: (context) => const AdminVerificationScreen(),
                           ),
                         );
                       },
                       style: ElevatedButton.styleFrom(
                         shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.zero
+                            borderRadius: BorderRadius.zero
                         ),
                       ),
                       child: Text('Patient Site',
@@ -65,27 +59,6 @@ class _frontPageState extends State<frontPage> {
                         style: TextStyle(color: Colors.white),),
                     ),
 
-                  ),
-                  SizedBox(height: 20),
-                  SizedBox(
-                    width: double.infinity,
-                    child: ElevatedButton(
-                      onPressed: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => const AdminFront(),
-                          ),
-                        );
-                      },
-                      style: ElevatedButton.styleFrom(
-                        shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.zero
-                        ),
-                      ),
-                      child: Text('Assistant Register',
-                        style: TextStyle(color: Colors.white),),
-                    ),
                   ),
                 ],
               ),

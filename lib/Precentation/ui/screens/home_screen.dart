@@ -1,4 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:frastraited/Precentation/ui/screens/admin_site/adminHome/EditActiveDoctorsScreen.dart';
+import 'package:frastraited/Precentation/ui/screens/admin_site/adminHome/EditAppointmentScreen.dart';
+import 'package:frastraited/Precentation/ui/screens/admin_site/adminHome/EditDonationScreen.dart';
+import 'package:frastraited/Precentation/ui/screens/admin_site/adminHome/EditOperationScreen.dart';
+import 'package:frastraited/Precentation/ui/screens/admin_site/adminHome/EditPandingTestScreen.dart';
+import 'package:frastraited/Precentation/ui/screens/admin_site/adminHome/EditReportCollectionScreen.dart';
+import 'package:frastraited/Precentation/ui/screens/admin_site/adminHome/EditVaccineScreen.dart';
 import 'package:frastraited/Precentation/ui/screens/history_screen.dart';
 import 'package:frastraited/Precentation/ui/screens/profile_screen.dart';
 import 'package:frastraited/Precentation/ui/utility/app_colors.dart';
@@ -14,7 +21,9 @@ import 'package:frastraited/screen/homeCardsScreens/vaccinePac_screen.dart';
 import 'package:frastraited/screen/widgets/bodyBackground.dart';
 
 class HomeScreen extends StatefulWidget {
-  const HomeScreen({Key? key}) : super(key: key);
+  final bool admin;
+
+  const HomeScreen({Key? key, required this.admin}) : super(key: key);
 
   @override
   State<HomeScreen> createState() => _HomeScreenState();
@@ -32,20 +41,35 @@ class _HomeScreenState extends State<HomeScreen> {
   ];
 
   int _selectedIndex = 0;
-  final List<Widget> _screens = const [
-    ActiveDoctor(),
-    OperationScreen(),
-    VaccineScreen(),
-    Appointment(),
-    ReportCollection(),
-    Donation(),
-    PandingTests(),
-  ];
+
+  List<Widget> get _screens {
+    if (widget.admin) {
+      return const [
+        EditActiveDoctors(),
+        EditOperation(),
+        EditVaccine(),
+        EditAppointment(),
+        EditReportCollection(),
+        EditDonation(),
+        EditPendingTest(),
+      ];
+    } else {
+      return const [
+        ActiveDoctor(),
+        OperationScreen(),
+        VaccineScreen(),
+        Appointment(),
+        ReportCollection(),
+        Donation(),
+        PendingTests(),
+      ];
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
-    return  Scaffold(
-      appBar:appBar,
+    return Scaffold(
+      appBar: appBar,
       body: BodyBackground(
         child: SafeArea(
           child: Padding(
@@ -60,7 +84,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   GridView.builder(
                     shrinkWrap: true,
                     physics: NeverScrollableScrollPhysics(),
-                    gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                    gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
                       crossAxisCount: 2,
                       crossAxisSpacing: 1,
                       mainAxisSpacing: 1,
@@ -140,7 +164,7 @@ class _HomeScreenState extends State<HomeScreen> {
         hintText: 'Search',
         filled: true,
         fillColor: Colors.grey.shade200,
-        prefixIcon: Icon(Icons.search, color: Colors.grey),
+        prefixIcon: const Icon(Icons.search, color: Colors.grey),
         border: OutlineInputBorder(
           borderSide: BorderSide.none,
           borderRadius: BorderRadius.circular(10),
@@ -156,10 +180,6 @@ class _HomeScreenState extends State<HomeScreen> {
     return AppBar(
       backgroundColor: Colors.transparent,
       actions: [
-        CircleIconButton(
-          onTap: () {},
-          iconData: Icons.person,
-        ),
         const SizedBox(width: 8),
         CircleIconButton(
           onTap: () {},
