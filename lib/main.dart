@@ -1,4 +1,5 @@
 //mod 8 assighnment
+//import ;
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:frastraited/Precentation/ui/screens/main_bottom_nav_screen.dart';
@@ -15,6 +16,7 @@ import 'package:frastraited/screen/onboarding/signUpScreen.dart';
 import 'package:frastraited/screen/onboarding/splashScreen.dart';
 
 void main() {
+
   runApp(MyApp());
 }
 
