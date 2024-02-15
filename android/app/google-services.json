@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "585335891737",
+    "project_id": "bismillahh-3650a",
+    "storage_bucket": "bismillahh-3650a.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:585335891737:android:91c6c086b6e6c352cd0788",
+        "android_client_info": {
+          "package_name": "com.example.frastraited"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDcefBU2QmcjIIafgewuve80-yyWLPlbRQ"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
