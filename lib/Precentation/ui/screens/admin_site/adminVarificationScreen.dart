@@ -1,25 +1,26 @@
 import 'package:flutter/material.dart';
-import 'package:frastraited/Precentation/ui/screens/home_screen.dart';
 import 'package:frastraited/Precentation/ui/screens/main_bottom_nav_screen.dart';
 import 'package:frastraited/Precentation/ui/utility/app_colors.dart';
 import 'package:frastraited/Precentation/ui/widgets/app_logo.dart';
 import 'package:frastraited/screen/onboarding/forgotPasswordScreen.dart';
+import 'package:frastraited/screen/onboarding/loginScreen.dart';
 import 'package:frastraited/screen/onboarding/signUpScreen.dart';
 import 'package:frastraited/screen/widgets/bodyBackground.dart';
 
-class loginScreen extends StatefulWidget {
-  const loginScreen({Key? key}) : super(key: key);
+class AdminVerificationScreen extends StatefulWidget {
+  const AdminVerificationScreen({super.key});
 
   @override
-  State<loginScreen> createState() => _loginScreenState();
+  State<AdminVerificationScreen> createState() => _AdminVerificationScreenState();
 }
 
-class _loginScreenState extends State<loginScreen> {
-
-  bool admin=false;
+class _AdminVerificationScreenState extends State<AdminVerificationScreen> {
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
+
+    bool admin =true;//so that we can identify researcher
+
+    return  Scaffold(
       body: BodyBackground(
         child: SafeArea(
           child: Padding(
@@ -32,7 +33,7 @@ class _loginScreenState extends State<loginScreen> {
                   children: [
                     IconButton(
                       icon: Icon(Icons.arrow_back,
-                      color: AppColors.primaryColor,),
+                        color: AppColors.primaryColor,),
                       onPressed: () {
                         Navigator.pop(context);
                       },
@@ -45,7 +46,7 @@ class _loginScreenState extends State<loginScreen> {
                 ),
                 const SizedBox(height: 24),
                 Text(
-                  "Welcome Back",
+                  "Welcome",
                   style: Theme.of(context).textTheme.titleLarge,
                 ),
                 const SizedBox(height: 8),
@@ -75,7 +76,7 @@ class _loginScreenState extends State<loginScreen> {
                       Navigator.push(
                         context,
                         MaterialPageRoute(
-                          builder: (context) => MainBottomNavScreen(admin: admin,),
+                          builder: (context) => MainBottomNavScreen(admin:admin),
                         ),
                       );
 

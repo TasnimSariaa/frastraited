@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:frastraited/Precentation/ui/utility/app_colors.dart';
+import 'package:frastraited/Precentation/ui/widgets/app_logo.dart';
 import 'package:frastraited/screen/onboarding/pinVerificationScreen.dart';
 import 'package:frastraited/screen/widgets/bodyBackground.dart';
 
@@ -19,10 +21,28 @@ class _forgotPasswordScreenState extends State<forgotPasswordScreen> {
             padding: const EdgeInsets.all(24),
             child: SingleChildScrollView(
               child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
+                crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    children: [
+                      IconButton(
+                        icon: Icon(Icons.arrow_back,
+                          color: AppColors.primaryColor,),
+                        onPressed: () {
+                          Navigator.pop(context);
+                        },
+                      ),
+                    ],
+                  ),
                   const SizedBox(
                     height: 80,
+                  ),
+                  const AppLogo(
+                    height: 80,
+                  ),
+                  const SizedBox(
+                    height: 8,
                   ),
                   Text("Your Email Address",
                       style: Theme.of(context).textTheme.titleLarge
@@ -31,12 +51,9 @@ class _forgotPasswordScreenState extends State<forgotPasswordScreen> {
                     height: 8,
                   ),
 
-                  Text("A 8 digit varification pin send to your email",
-                    style: TextStyle(
-                      fontSize: 24,
-                      color: Colors.grey,
-                      fontWeight: FontWeight.w500,
-                    ),
+                  Text("A 8 digit varification pin will dasend to your email",
+                    style: Theme.of(context).textTheme.bodySmall,
+
                   ),
                   const SizedBox(
                     height: 24,
@@ -62,7 +79,8 @@ class _forgotPasswordScreenState extends State<forgotPasswordScreen> {
                         );
 
                       },
-                      child: const Icon(Icons.arrow_circle_right_outlined),
+                      child: const Text('Next',
+                        style: TextStyle(color: Colors.white),),
                     ),
                   ),
                   const SizedBox(
@@ -86,6 +104,8 @@ class _forgotPasswordScreenState extends State<forgotPasswordScreen> {
                         },
                         child: Text('Sign In',
                             style: TextStyle(
+                              color: AppColors.primaryColor,
+
                               fontSize: 16,
                             )),
                       ),

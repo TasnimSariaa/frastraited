@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:frastraited/Precentation/ui/utility/app_colors.dart';
+import 'package:frastraited/Precentation/ui/widgets/app_logo.dart';
 import 'package:frastraited/screen/onboarding/loginScreen.dart';
 import 'package:frastraited/screen/widgets/bodyBackground.dart';
 
@@ -19,10 +21,28 @@ class _resetPasswordScreenState extends State<resetPasswordScreen> {
             padding: const EdgeInsets.all(24),
             child: SingleChildScrollView(
               child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
+                crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    children: [
+                      IconButton(
+                        icon: Icon(Icons.arrow_back,
+                          color: AppColors.primaryColor,),
+                        onPressed: () {
+                          Navigator.pop(context);
+                        },
+                      ),
+                    ],
+                  ),
                   const SizedBox(
                     height: 80,
+                  ),
+                  const AppLogo(
+                    height: 80,
+                  ),
+                  const SizedBox(
+                    height: 8,
                   ),
                   Text("Set New Password",
                       style: Theme.of(context).textTheme.titleLarge),
@@ -31,11 +51,8 @@ class _resetPasswordScreenState extends State<resetPasswordScreen> {
                   ),
                   Text(
                     'Minimum lenth of the password should be 8 letters',
-                    style: TextStyle(
-                      fontSize: 24,
-                      color: Colors.grey,
-                      fontWeight: FontWeight.w500,
-                    ),
+                    style: Theme.of(context).textTheme.bodySmall,
+
                   ),
                   const SizedBox(
                     height: 24,
@@ -69,7 +86,8 @@ class _resetPasswordScreenState extends State<resetPasswordScreen> {
                         //   ),
                         // );
                       },
-                      child: const Text('Confirm'),
+                      child: const Text('Confirm',
+                        style: TextStyle(color: Colors.white),),
                     ),
                   ),
                   const SizedBox(
@@ -96,6 +114,7 @@ class _resetPasswordScreenState extends State<resetPasswordScreen> {
                         },
                         child: Text('Sign In',
                             style: TextStyle(
+                              color: AppColors.primaryColor,
                               fontSize: 16,
                             )),
                       ),

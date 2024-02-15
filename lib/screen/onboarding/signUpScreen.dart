@@ -3,6 +3,7 @@ import 'dart:developer';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:frastraited/Precentation/ui/utility/app_colors.dart';
 import 'package:frastraited/screen/widgets/bodyBackground.dart';
 
 class signUpScreen extends StatefulWidget {
@@ -16,13 +17,12 @@ class _signUpScreenState extends State<signUpScreen> {
   TextEditingController useremailController = TextEditingController();
   TextEditingController userfirstNameController = TextEditingController();
   TextEditingController userlastNameController = TextEditingController();
-  TextEditingController userphoneController= TextEditingController();
+  TextEditingController userphoneController = TextEditingController();
   TextEditingController userpasswordController = TextEditingController();
-
 
   @override
   Widget build(BuildContext context) {
-    return  Scaffold(
+    return Scaffold(
       body: BodyBackground(
         child: SafeArea(
           child: Padding(
@@ -31,23 +31,33 @@ class _signUpScreenState extends State<signUpScreen> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    children: [
+                      IconButton(
+                        icon: Icon(
+                          Icons.arrow_back,
+                          color: AppColors.primaryColor,
+                        ),
+                        onPressed: () {
+                          Navigator.pop(context);
+                        },
+                      ),
+                    ],
+                  ),
                   const SizedBox(
                     height: 80,
                   ),
-                  Text("Join With Us",
-                      style: Theme.of(context).textTheme.titleLarge),
+                  Text("Join With Us", style: Theme.of(context).textTheme.titleLarge),
                   const SizedBox(
                     height: 24,
                   ),
                   TextFormField(
-
                     controller: useremailController,
                     keyboardType: TextInputType.emailAddress,
                     decoration: const InputDecoration(
                       hintText: 'Email',
                     ),
-
-
                   ),
                   const SizedBox(
                     height: 16,
@@ -94,25 +104,20 @@ class _signUpScreenState extends State<signUpScreen> {
                     width: double.infinity,
                     child: ElevatedButton(
                       onPressed: () {
-                        var email= useremailController.text.trim();
-                        var firstName= userfirstNameController.text.trim();
-                        var lastName= userlastNameController.text.trim();
-                        var phone= userphoneController.text.trim();
-                        var password= userpasswordController.text.trim();
+                        var email = useremailController.text.trim();
+                        var firstName = userfirstNameController.text.trim();
+                        var lastName = userlastNameController.text.trim();
+                        var phone = userphoneController.text.trim();
+                        var password = userpasswordController.text.trim();
 
-                        FirebaseAuth.instance.createUserWithEmailAndPassword(email: email, password: password).then((value) =>
-                        {
-                          log("User Created"),
-                           FirebaseFirestore.instance.collection("users").doc().set({
-
-                           })
-                        }
-                        );
-
-
-
+                        FirebaseAuth.instance
+                            .createUserWithEmailAndPassword(email: email, password: password)
+                            .then((value) => {log("User Created"), FirebaseFirestore.instance.collection("users").doc().set({})});
                       },
-                      child: const Icon(Icons.arrow_circle_right_outlined),
+                      child: const Text(
+                        'Next',
+                        style: TextStyle(color: Colors.white),
+                      ),
                     ),
                   ),
                   const SizedBox(
@@ -132,9 +137,10 @@ class _signUpScreenState extends State<signUpScreen> {
                       TextButton(
                         onPressed: () {
                           Navigator.pop(context);
-                          },
+                        },
                         child: Text('Sign In',
                             style: TextStyle(
+                              color: AppColors.primaryColor,
                               fontSize: 16,
                             )),
                       ),

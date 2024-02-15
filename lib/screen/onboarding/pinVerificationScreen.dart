@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:frastraited/Precentation/ui/utility/app_colors.dart';
+import 'package:frastraited/Precentation/ui/widgets/app_logo.dart';
 import 'package:frastraited/screen/onboarding/loginScreen.dart';
 import 'package:frastraited/screen/onboarding/resetPasswordScreen.dart';
 import 'package:frastraited/screen/widgets/bodyBackground.dart';
@@ -21,10 +23,29 @@ class _pinVarificationScreenState extends State<pinVerificationScreen> {
             padding: const EdgeInsets.all(24),
             child: SingleChildScrollView(
               child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
+                crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    children: [
+                      IconButton(
+                        icon: Icon(Icons.arrow_back,
+                          color: AppColors.primaryColor,),
+                        onPressed: () {
+                          Navigator.pop(context);
+                        },
+                      ),
+                    ],
+                  ),
+
                   const SizedBox(
                     height: 80,
+                  ),
+                  const AppLogo(
+                   height: 80,
+                  ),
+                  const SizedBox(
+                    height: 8,
                   ),
                   Text("PIN Verification",
                       style: Theme.of(context).textTheme.titleLarge
@@ -34,28 +55,30 @@ class _pinVarificationScreenState extends State<pinVerificationScreen> {
                   ),
 
                   Text("A 6 digit varification pin send to your email",
-                    style: TextStyle(
-                      fontSize: 24,
-                      color: Colors.grey,
-                      fontWeight: FontWeight.w500,
-                    ),
+                      style: Theme.of(context).textTheme.bodySmall,
+
+
                   ),
                   const SizedBox(
                     height: 24,
                   ),
                   PinCodeTextField(
-                    length: 6,
+                    length: 4,
                     obscureText: false,
                     animationType: AnimationType.fade,
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    keyboardType: TextInputType.number,
                     pinTheme: PinTheme(
                       shape: PinCodeFieldShape.box,
-                      borderRadius: BorderRadius.circular(5),
+                      borderRadius: BorderRadius.circular(2),
                       fieldHeight: 50,
                       fieldWidth: 40,
-                      activeFillColor: Colors.white,
+                      activeFillColor: Colors.transparent,
                       activeColor: Colors.green,
-                      selectedFillColor: Colors.white,
-                      inactiveFillColor: Colors.white,
+                      selectedFillColor: Colors.transparent,
+                      inactiveFillColor: Colors.transparent,
+                      inactiveColor: AppColors.primaryColor,
+                      selectedColor: Colors.purple,
                     ),
                     animationDuration: const Duration(milliseconds: 300),
                     enableActiveFill: true,
@@ -84,7 +107,8 @@ class _pinVarificationScreenState extends State<pinVerificationScreen> {
                         );
 
                       },
-                      child: const Text('Verify'),
+                      child: const Text('Verify',
+                        style: TextStyle(color: Colors.white),),
                     ),
                   ),
                   const SizedBox(
@@ -110,13 +134,26 @@ class _pinVarificationScreenState extends State<pinVerificationScreen> {
                                   builder: (context) => const loginScreen()),
                                   (route) => false);
                         },
-                        child: Text('Sign In',
-                            style: TextStyle(
-                              fontSize: 16,
-                            )),
-                      ),
+                          child: Text('Sign In',
+                              style: TextStyle(
+                                color: AppColors.primaryColor,
+                                fontSize: 16,
+                              )),
+                      
+
+                      ), 
+                      
                     ],
                   ),
+                  const SizedBox(
+                    height: 20,
+                  ),
+                  const Text('The code will expire in 120s',
+                  style: TextStyle(color: Colors.grey),),
+                  const SizedBox(
+                    height: 8,
+                  ),
+                  TextButton(onPressed: (){}, child: Text('Resend Code')),
                 ],
               ),
             ),
