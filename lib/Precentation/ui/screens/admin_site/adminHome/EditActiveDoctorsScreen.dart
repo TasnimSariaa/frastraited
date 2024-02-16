@@ -74,7 +74,7 @@ class _EditActiveDoctorsState extends State<EditActiveDoctors> {
                             CircleAvatar(
                               radius: 30,
                               backgroundImage:
-                                  NetworkImage(doctor['profilePicUrl']),
+                              NetworkImage(doctor['profilePicUrl']),
                             ),
                             if (doctor['isActive'])
                               Positioned(
@@ -98,12 +98,7 @@ class _EditActiveDoctorsState extends State<EditActiveDoctors> {
                         trailing: Row(
                           mainAxisSize: MainAxisSize.min,
                           children: [
-                            // Toggle button to update active status
-                            Theme(
-                              data: ThemeData(
-                                toggleableActiveColor: AppColors.primaryColor,
-                              ),
-                              child: Switch(
+                               Switch(
                                 value: doctor['isActive'],
                                 onChanged: (newValue) {
                                   setState(() {
@@ -111,38 +106,12 @@ class _EditActiveDoctorsState extends State<EditActiveDoctors> {
                                   });
                                 },
                               ),
-                            ),
+
                             // Dialog for update/delete options
                             IconButton(
                               icon: Icon(Icons.more_vert),
                               onPressed: () {
-                                showDialog(
-                                  context: context,
-                                  builder: (context) => AlertDialog(
-                                    title: Text('Modify Doctor'),
-                                    content: Text(
-                                        'Do you want to modify this doctor?'),
-                                    actions: [
-                                      TextButton(
-                                        onPressed: () {
-                                          // Handle update doctor
-                                          Navigator.pop(context);
-                                        },
-                                        child: Text('Update'),
-                                      ),
-                                      TextButton(
-                                        onPressed: () {
-                                          // Handle delete doctor
-                                          setState(() {
-                                            activeDoctors.removeAt(index);
-                                          });
-                                          Navigator.pop(context);
-                                        },
-                                        child: Text('Delete'),
-                                      ),
-                                    ],
-                                  ),
-                                );
+                                _showEditDialog(context, index);
                               },
                             ),
                           ],
@@ -158,8 +127,7 @@ class _EditActiveDoctorsState extends State<EditActiveDoctors> {
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
-          // Handle adding a new doctor
-          // You can open a new screen or a dialog to input doctor details
+          _showAddDoctorBottomSheet(context);
         },
         backgroundColor: AppColors.primaryColor, // Set the background color
         child: Icon(
@@ -167,6 +135,163 @@ class _EditActiveDoctorsState extends State<EditActiveDoctors> {
           color: Colors.white,
         ),
       ),
+    );
+  }
+
+  void _showEditDialog(BuildContext context, int index) {
+    Map<String, dynamic> doctor = activeDoctors[index];
+
+    TextEditingController nameController = TextEditingController(text: doctor['name']);
+    TextEditingController specialityController = TextEditingController(text: doctor['speciality']);
+    TextEditingController profilePicUrlController = TextEditingController(text: doctor['profilePicUrl']);
+
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text('Modify Doctor'),
+          content: Text('Do you want to modify the Doctor list?'),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.pop(context);
+                _showEditBottomSheet(context, doctor, index);
+              },
+              child: Text('Update'),
+            ),
+            TextButton(
+              onPressed: () {
+                setState(() {
+                  activeDoctors.removeAt(index);
+                });
+                Navigator.pop(context);
+              },
+              child: Text('Delete'),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  void _showEditBottomSheet(BuildContext context, Map<String, dynamic> doctor, int index) {
+    TextEditingController nameController = TextEditingController(text: doctor['name']);
+    TextEditingController specialityController = TextEditingController(text: doctor['speciality']);
+    TextEditingController profilePicUrlController = TextEditingController(text: doctor['profilePicUrl']);
+
+    showModalBottomSheet(
+      context: context,
+      isScrollControlled: true,
+      builder: (context) {
+        return SingleChildScrollView(
+          child: Padding(
+            padding: EdgeInsets.only(
+              bottom: MediaQuery.of(context).viewInsets.bottom,
+            ),
+            child: Container(
+              padding: EdgeInsets.all(16),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  TextField(
+                    controller: nameController,
+                    decoration: InputDecoration(labelText: 'Name'),
+                  ),
+                  SizedBox(height: 16),
+                  TextField(
+                    controller: specialityController,
+                    decoration: InputDecoration(labelText: 'Speciality'),
+                  ),
+                  SizedBox(height: 16),
+                  TextField(
+                    controller: profilePicUrlController,
+                    decoration: InputDecoration(labelText: 'Profile Picture URL'),
+                  ),
+                  SizedBox(height: 16),
+                  ElevatedButton(
+                    onPressed: () {
+                      setState(() {
+                        // Update doctor information
+                        activeDoctors[index]['name'] = nameController.text;
+                        activeDoctors[index]['speciality'] = specialityController.text;
+                        activeDoctors[index]['profilePicUrl'] = profilePicUrlController.text;
+                      });
+                      Navigator.pop(context);
+                    },
+                    child: Text(
+                      'Update',
+                      style: TextStyle(color: Colors.white),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ),
+        );
+      },
+    );
+  }
+
+  void _showAddDoctorBottomSheet(BuildContext context) {
+    TextEditingController nameController = TextEditingController();
+    TextEditingController specialityController = TextEditingController();
+    TextEditingController profilePicUrlController = TextEditingController();
+
+    showModalBottomSheet(
+      context: context,
+      isScrollControlled: true,
+      builder: (context) {
+        return SingleChildScrollView(
+          child: Padding(
+            padding: EdgeInsets.only(
+              bottom: MediaQuery.of(context).viewInsets.bottom,
+            ),
+            child: Container(
+              padding: EdgeInsets.all(16),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  TextField(
+                    controller: nameController,
+                    decoration: InputDecoration(labelText: 'Name'),
+                  ),
+                  SizedBox(height: 16),
+                  TextField(
+                    controller: specialityController,
+                    decoration: InputDecoration(labelText: 'Speciality'),
+                  ),
+                  SizedBox(height: 16),
+                  TextField(
+                    controller: profilePicUrlController,
+                    decoration: InputDecoration(labelText: 'Profile Picture URL'),
+                  ),
+                  SizedBox(height: 16),
+                  ElevatedButton(
+                    onPressed: () {
+                      setState(() {
+                        // Add new doctor to the list
+                        activeDoctors.add({
+                          'name': nameController.text,
+                          'speciality': specialityController.text,
+                          'profilePicUrl': profilePicUrlController.text,
+                          'isActive': false, // Default to inactive
+                        });
+                      });
+                      Navigator.pop(context);
+                    },
+                    child: Text(
+                      'Add Doctor',
+                      style: TextStyle(color: Colors.white),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ),
+        );
+      },
     );
   }
 }
