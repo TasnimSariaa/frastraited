@@ -29,6 +29,58 @@ class _signUpScreenState extends State<signUpScreen> {
    final userType=['User','Doctor','Admin'];
    String? selectedType="User";
 
+   final FirebaseAuth _auth = FirebaseAuth.instance;
+
+
+
+
+  Future<void> _signUp(String email, String firstName, String lastName,
+      String phone, String password) async {
+    try {
+      UserCredential userCredential = await _auth
+          .createUserWithEmailAndPassword(email: email, password: password);
+
+      await userCredential.user?.updateDisplayName(firstName);
+
+      await FirebaseFirestore.instance
+          .collection('users')
+          .doc(userCredential.user?.uid)
+          .set({
+        'firstName': firstName,
+        'lastName': lastName,
+        'userType': selectedType,
+        'phone': phone,
+        'email': email,
+        'userid': userCredential.user?.uid
+
+      });
+      Navigator.push(
+        context,
+        MaterialPageRoute(builder: (context) {
+          return loginScreen();
+        }),
+      );
+    } on FirebaseAuthException catch (e) {
+      print('FirebaseAuthException: $e');
+      showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            title: Text("Registration Failed"),
+            content: Text(e.message ?? "An error occurred."),
+            actions: [
+              TextButton(
+                onPressed: () {
+                  Navigator.pop(context);
+                },
+                child: Text("OK"),
+              ),
+            ],
+          );
+        },
+      );
+    }
+  }
 
 
   TextEditingController useremailController = TextEditingController();
@@ -159,63 +211,16 @@ class _signUpScreenState extends State<signUpScreen> {
                   SizedBox(
                     width: double.infinity,
                     child: ElevatedButton(
-                      onPressed: () async {
-                        var email = useremailController.text.trim();
-                        var firstName = userfirstNameController.text.trim();
-                        var lastName = userlastNameController.text.trim();
-                        var phone = userphoneController.text.trim();
-                        var password = userpasswordController.text.trim();
-
-                          try {
-                            await FirebaseAuth.instance
-                                .createUserWithEmailAndPassword(
-                                    email: email, password: password)
-                                .then((value) => {
-                                      currentUser?.reload(),
-                                      log("User Created"),
-                                      FirebaseFirestore.instance
-                                          .collection("users")
-                                          .doc(currentUser!.uid)
-                                          .set({
-                                        'firstName': firstName,
-                                        'lastName': lastName,
-                                        'userType': selectedType,
-                                        'phone': phone,
-                                        'email': email,
-                                        'userid': currentUser!.uid
-                                      }),
-                                      log("Data Stored"),
-                                    }).then((value) => {
-                                      Navigator.push(
-                                        context,
-                                        MaterialPageRoute(
-                                            builder: (context) =>
-                                                const loginScreen()),
-                                      ),
-                                      FirebaseAuth.instance.signOut(),
-                                    });
-                          } on FirebaseAuthException catch (e) {
-                            showDialog(
-                              context: context,
-                              builder: (BuildContext context) {
-                                return AlertDialog(
-                                  title: Text('Authentication Error'),
-                                  content: Text(e.message ?? 'An error occurred'),
-                                  actions: <Widget>[
-                                    TextButton(
-                                      onPressed: () {
-                                        Navigator.of(context).pop(); // Close the dialog
-                                      },
-                                      child: Text('OK'),
-                                    ),
-                                  ],
-                                );
-                              },
-                            );
-                          }
+                      onPressed: () {
+                        _signUp(
+                            useremailController.text.trim(),
+                            userfirstNameController.text.trim(),
+                            userlastNameController.text.trim(),
+                            userphoneController.text.trim(),
+                            userpasswordController.text.trim());
+                        },
 
 
-                      },
                       child: const Text(
                         'Next',
                         style: TextStyle(color: Colors.white),

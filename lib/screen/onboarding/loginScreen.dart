@@ -98,7 +98,23 @@ class _loginScreenState extends State<loginScreen> {
                           print("Check Email and password");
                         }
                       }on FirebaseAuthException catch(e){
-
+                        showDialog(
+                          context: context,
+                          builder: (BuildContext context) {
+                            return AlertDialog(
+                              title: Text('Authentication Error'),
+                              content: Text(e.message ?? 'An error occurred'),
+                              actions: <Widget>[
+                                TextButton(
+                                  onPressed: () {
+                                    Navigator.of(context).pop(); // Close the dialog
+                                  },
+                                  child: Text('OK'),
+                                ),
+                              ],
+                            );
+                          },
+                        );
                       }
 
                     },
