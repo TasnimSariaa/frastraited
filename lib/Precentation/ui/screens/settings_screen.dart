@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:frastraited/Precentation/ui/utility/app_colors.dart';
+import 'package:frastraited/screen/onboarding/resetPasswordScreen.dart';
 import 'package:frastraited/screen/widgets/bodyBackground.dart';
 
 class SettingScreen extends StatefulWidget {
@@ -48,7 +49,12 @@ class _SettingScreenState extends State<SettingScreen> {
                         color: _hoverColor ?? Colors.white,
                         child: InkWell(
                           onTap: () {
-                            // Handle Change Password
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => const resetPasswordScreen(),
+                              ),
+                            );
                           },
                           onHover: (value) {
                             setState(() {

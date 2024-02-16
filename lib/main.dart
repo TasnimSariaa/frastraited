@@ -2,7 +2,6 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:frastraited/Precentation/ui/utility/app_theme_data.dart';
 import 'package:frastraited/firebase_options.dart';
-import 'package:frastraited/screen/onboarding/emailVerificationScreen.dart';
 import 'package:frastraited/screen/onboarding/forgotPasswordScreen.dart';
 import 'package:frastraited/screen/onboarding/loginScreen.dart';
 import 'package:frastraited/screen/onboarding/pinVerificationScreen.dart';
@@ -32,7 +31,6 @@ class MyApp extends StatelessWidget {
         '/': (context) => const splashScreen(),
         '/login': (context) => const loginScreen(),
         '/pinVarification': (context) => const pinVerificationScreen(),
-        '/emailVarification': (context) => const emailVerificationScreen(),
         '/registration': (context) => const registrationScreen(),
         '/setPassword': (context) => const resetPasswordScreen(),
         '/signUp': (context) => const signUpScreen(),

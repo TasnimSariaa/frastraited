@@ -14,22 +14,27 @@ class _VaccineScreenState extends State<VaccineScreen> {
   final List<Map<String, dynamic>> availableVaccines = [
     {
       'name': 'COVID-19 Vaccine',
-      'description': 'Protects against COVID-19 virus',
-      'imageUrl': 'https://images.unsplash.com/photo-1605289982774-9a6fef564df8?q=80&w=1964&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
+      'place': 'Annex building, 1st floor(Room 102)',
+      'price': 'Free',
+      'imageUrl':
+      'https://images.unsplash.com/photo-1605289982774-9a6fef564df8?q=80&w=1964&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
     },
     {
       'name': 'Influenza Vaccine',
-      'description': 'Protects against influenza virus',
+      'place': 'Main hospital, 2nd floor(Room 201)',
+      'price': 'BDT 500',
       'imageUrl': 'https://example.com/influenza_vaccine.jpg',
     },
     {
       'name': 'Hepatitis B Vaccine',
-      'description': 'Protects against hepatitis B virus',
+      'place': 'North Wing, 3rd floor(Room 301)',
+      'price': 'BDT 1000',
       'imageUrl': 'https://example.com/hepatitis_b_vaccine.jpg',
     },
     {
       'name': 'HPV Vaccine',
-      'description': 'Protects against human papillomavirus',
+      'place': 'South Wing, 4th floor(Room 401)',
+      'price': 'BDT 750',
       'imageUrl': 'https://example.com/hpv_vaccine.jpg',
     },
     // Add more vaccine information here
@@ -50,8 +55,10 @@ class _VaccineScreenState extends State<VaccineScreen> {
                     mainAxisAlignment: MainAxisAlignment.start,
                     children: [
                       IconButton(
-                        icon: Icon(Icons.arrow_back,
-                          color: AppColors.primaryColor,),
+                        icon: Icon(
+                          Icons.arrow_back,
+                          color: AppColors.primaryColor,
+                        ),
                         onPressed: () {
                           Navigator.pop(context);
                         },
@@ -110,11 +117,33 @@ class _VaccineScreenState extends State<VaccineScreen> {
                                         ),
                                         const SizedBox(height: 4),
                                         Text(
-                                          vaccine['description'],
-                                          style: TextStyle(color: Colors.grey),
+                                          'Available at: ${vaccine['place']}',
+                                          style: TextStyle(color: Colors.black45),
+                                        ),
+                                        const SizedBox(height: 4),
+                                        Text(
+                                          'Price: ${vaccine['price']}',
+                                          style: TextStyle(color: Colors.blueGrey),
                                         ),
                                       ],
                                     ),
+                                  ),
+                                  Column(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: [
+                                      IconButton(
+                                        icon: Icon(Icons.delete),
+                                        onPressed: () {
+                                          _showDeleteAlertDialog(context, index);
+                                        },
+                                      ),
+                                      IconButton(
+                                        icon: Icon(Icons.edit),
+                                        onPressed: () {
+                                          _showEditBottomSheet(context, vaccine, index);
+                                        },
+                                      ),
+                                    ],
                                   ),
                                 ],
                               ),
@@ -130,6 +159,174 @@ class _VaccineScreenState extends State<VaccineScreen> {
           ),
         ),
       ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {
+          _showAddBottomSheet(context);
+        },
+        child: Icon(Icons.add),
+        backgroundColor: AppColors.primaryColor,
+      ),
+    );
+  }
+
+  void _showDeleteAlertDialog(BuildContext context, int index) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text("Delete Vaccine?"),
+          content: Text("Do you want to delete the vaccine from the list?"),
+          actions: [
+            TextButton(
+              onPressed: () {
+                setState(() {
+                  availableVaccines.removeAt(index);
+                });
+                Navigator.of(context).pop();
+              },
+              child: Text(
+                "Delete",
+                style: TextStyle(color: Colors.white),
+              ),
+              style: ButtonStyle(
+                backgroundColor: MaterialStateProperty.all<Color>(AppColors.primaryColor),
+              ),
+            ),
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+              child: Text("Cancel"),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  void _showEditBottomSheet(BuildContext context, Map<String, dynamic> vaccine, int index) {
+    TextEditingController nameController = TextEditingController(text: vaccine['name']);
+    TextEditingController imageUrlController = TextEditingController(text: vaccine['imageUrl']);
+    TextEditingController placeController = TextEditingController(text: vaccine['place']);
+    TextEditingController priceController = TextEditingController(text: vaccine['price']);
+
+    showModalBottomSheet(
+      context: context,
+      isScrollControlled: true,
+      builder: (context) {
+        return SingleChildScrollView(
+          child: Padding(
+            padding: EdgeInsets.only(
+              bottom: MediaQuery.of(context).viewInsets.bottom,
+            ),
+            child: Container(
+              padding: EdgeInsets.all(16),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  TextField(
+                    controller: nameController,
+                    decoration: InputDecoration(labelText: 'Name'),
+                  ),
+                  SizedBox(height: 16),
+                  TextField(
+                    controller: imageUrlController,
+                    decoration: InputDecoration(labelText: 'Image URL'),
+                  ),
+                  SizedBox(height: 16),
+                  TextField(
+                    controller: placeController,
+                    decoration: InputDecoration(labelText: 'Place'),
+                  ),
+                  SizedBox(height: 16),
+                  TextField(
+                    controller: priceController,
+                    decoration: InputDecoration(labelText: 'Price'),
+                  ),
+                  SizedBox(height: 16),
+                  ElevatedButton(
+                    onPressed: () {
+                      setState(() {
+                        availableVaccines[index]['name'] = nameController.text;
+                        availableVaccines[index]['imageUrl'] = imageUrlController.text;
+                        availableVaccines[index]['place'] = placeController.text;
+                        availableVaccines[index]['price'] = priceController.text;
+                      });
+                      Navigator.pop(context);
+                    },
+                    child: Text('Update', style: TextStyle(color: Colors.white)),
+                  ),
+                ],
+              ),
+            ),
+          ),
+        );
+      },
+    );
+  }
+
+  void _showAddBottomSheet(BuildContext context) {
+    TextEditingController nameController = TextEditingController();
+    TextEditingController imageUrlController = TextEditingController();
+    TextEditingController placeController = TextEditingController();
+    TextEditingController priceController = TextEditingController();
+
+    showModalBottomSheet(
+      context: context,
+      isScrollControlled: true,
+      builder: (context) {
+        return SingleChildScrollView(
+          child: Padding(
+            padding: EdgeInsets.only(
+              bottom: MediaQuery.of(context).viewInsets.bottom,
+            ),
+            child: Container(
+              padding: EdgeInsets.all(16),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  TextField(
+                    controller: nameController,
+                    decoration: InputDecoration(labelText: 'Name'),
+                  ),
+                  SizedBox(height: 16),
+                  TextField(
+                    controller: imageUrlController,
+                    decoration: InputDecoration(labelText: 'Image URL'),
+                  ),
+                  SizedBox(height: 16),
+                  TextField(
+                    controller: placeController,
+                    decoration: InputDecoration(labelText: 'Place'),
+                  ),
+                  SizedBox(height: 16),
+                  TextField(
+                    controller: priceController,
+                    decoration: InputDecoration(labelText: 'Price'),
+                  ),
+                  SizedBox(height: 16),
+                  ElevatedButton(
+                    onPressed: () {
+                      setState(() {
+                        availableVaccines.add({
+                          'name': nameController.text,
+                          'imageUrl': imageUrlController.text,
+                          'place': placeController.text,
+                          'price': priceController.text,
+                        });
+                      });
+                      Navigator.pop(context);
+                    },
+                    child: Text('Add', style: TextStyle(color: Colors.white)),
+                  ),
+                ],
+              ),
+            ),
+          ),
+        );
+      },
     );
   }
 }
