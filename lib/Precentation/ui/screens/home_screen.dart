@@ -15,7 +15,7 @@ import 'package:frastraited/screen/homeCardsScreens/activeDoctor_screen.dart';
 import 'package:frastraited/screen/homeCardsScreens/appointment_screen.dart';
 import 'package:frastraited/screen/homeCardsScreens/donation_screen.dart';
 import 'package:frastraited/screen/homeCardsScreens/operatinPac_screen.dart';
-import 'package:frastraited/screen/homeCardsScreens/pandingTests_screen.dart';
+import 'package:frastraited/screen/homeCardsScreens/pendingTests_screen.dart';
 import 'package:frastraited/screen/homeCardsScreens/reportCollection_screen.dart';
 import 'package:frastraited/screen/homeCardsScreens/vaccinePac_screen.dart';
 import 'package:frastraited/screen/widgets/bodyBackground.dart';
