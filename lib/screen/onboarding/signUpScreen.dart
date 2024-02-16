@@ -1,10 +1,16 @@
 import 'dart:developer';
 
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+
 import 'package:frastraited/Precentation/ui/utility/app_colors.dart';
+import 'package:frastraited/screen/onboarding/loginScreen.dart';
 import 'package:frastraited/screen/widgets/bodyBackground.dart';
+
+
+
 
 class signUpScreen extends StatefulWidget {
   const signUpScreen({super.key});
@@ -14,11 +20,25 @@ class signUpScreen extends StatefulWidget {
 }
 
 class _signUpScreenState extends State<signUpScreen> {
+
+  _signUpScreenState(){
+    selectedType = userType[0];
+  }
+
+
+   final userType=['User','Doctor','Admin'];
+   String? selectedType="User";
+
+
+
   TextEditingController useremailController = TextEditingController();
   TextEditingController userfirstNameController = TextEditingController();
   TextEditingController userlastNameController = TextEditingController();
   TextEditingController userphoneController = TextEditingController();
   TextEditingController userpasswordController = TextEditingController();
+
+
+  User? currentUser= FirebaseAuth.instance.currentUser;
 
   @override
   Widget build(BuildContext context) {
@@ -78,6 +98,42 @@ class _signUpScreenState extends State<signUpScreen> {
                     ),
                   ),
                   const SizedBox(
+                    height: 20,
+                  ),
+                  DropdownButtonFormField(
+                    value: selectedType,
+                      items: userType.map(
+                          (e){
+                            return DropdownMenuItem(
+                                child: Text(e),
+                                value: e,
+
+                            );
+                          }
+                      ).toList(),
+                      onChanged: (val){
+                      setState(() {
+                        selectedType=val as String;
+
+                      });
+                      },
+                       decoration: InputDecoration(
+                         labelText: "User Type ",
+                         labelStyle: TextStyle(
+                           color: Colors.black
+                         )
+                       ),
+                    style: TextStyle(
+                      color: Colors.grey,
+                      fontWeight: FontWeight.w500,
+                      fontSize: 16
+
+                    ),
+
+                      ),
+
+
+                  const SizedBox(
                     height: 16,
                   ),
                   TextFormField(
@@ -103,16 +159,62 @@ class _signUpScreenState extends State<signUpScreen> {
                   SizedBox(
                     width: double.infinity,
                     child: ElevatedButton(
-                      onPressed: () {
+                      onPressed: () async {
                         var email = useremailController.text.trim();
                         var firstName = userfirstNameController.text.trim();
                         var lastName = userlastNameController.text.trim();
                         var phone = userphoneController.text.trim();
                         var password = userpasswordController.text.trim();
 
-                        FirebaseAuth.instance
-                            .createUserWithEmailAndPassword(email: email, password: password)
-                            .then((value) => {log("User Created"), FirebaseFirestore.instance.collection("users").doc().set({})});
+                          try {
+                            await FirebaseAuth.instance
+                                .createUserWithEmailAndPassword(
+                                    email: email, password: password)
+                                .then((value) => {
+                                      currentUser?.reload(),
+                                      log("User Created"),
+                                      FirebaseFirestore.instance
+                                          .collection("users")
+                                          .doc(currentUser!.uid)
+                                          .set({
+                                        'firstName': firstName,
+                                        'lastName': lastName,
+                                        'userType': selectedType,
+                                        'phone': phone,
+                                        'email': email,
+                                        'userid': currentUser!.uid
+                                      }),
+                                      log("Data Stored"),
+                                    }).then((value) => {
+                                      Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                            builder: (context) =>
+                                                const loginScreen()),
+                                      ),
+                                      FirebaseAuth.instance.signOut(),
+                                    });
+                          } on FirebaseAuthException catch (e) {
+                            showDialog(
+                              context: context,
+                              builder: (BuildContext context) {
+                                return AlertDialog(
+                                  title: Text('Authentication Error'),
+                                  content: Text(e.message ?? 'An error occurred'),
+                                  actions: <Widget>[
+                                    TextButton(
+                                      onPressed: () {
+                                        Navigator.of(context).pop(); // Close the dialog
+                                      },
+                                      child: Text('OK'),
+                                    ),
+                                  ],
+                                );
+                              },
+                            );
+                          }
+
+
                       },
                       child: const Text(
                         'Next',
@@ -127,7 +229,7 @@ class _signUpScreenState extends State<signUpScreen> {
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       Text(
-                        "have an acccount?",
+                        "Already have an acccount?",
                         style: TextStyle(
                           fontSize: 16,
                           fontWeight: FontWeight.w600,
