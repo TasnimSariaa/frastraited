@@ -7,14 +7,11 @@ import 'package:frastraited/Precentation/ui/utility/app_theme_data.dart';
 import 'package:frastraited/firebase_options.dart';
 import 'package:frastraited/screen/onboarding/emailVerificationScreen.dart';
 import 'package:frastraited/screen/onboarding/forgotPasswordScreen.dart';
-import 'package:frastraited/screen/onboarding/frontPage.dart';
 import 'package:frastraited/screen/onboarding/loginScreen.dart';
-import 'package:frastraited/screen/onboarding/pinVerificationScreen.dart';
 import 'package:frastraited/screen/onboarding/registrationScreen.dart';
-import 'package:frastraited/screen/onboarding/resetPasswordScreen.dart';
 import 'package:frastraited/screen/onboarding/signUpScreen.dart';
 import 'package:frastraited/screen/onboarding/splashScreen.dart';
-import 'package:get/get.dart';
+
 
 import 'Precentation/ui/screens/main_bottom_nav_screen.dart';
 
@@ -50,10 +47,8 @@ class _MyAppState extends State<MyApp> {
       routes: {
         '/': (context) => const splashScreen(),
         '/login': (context) => const loginScreen(),
-        '/pinVarification': (context) => const pinVerificationScreen(),
         '/emailVarification': (context) => const emailVerificationScreen(),
         '/registration': (context) => const registrationScreen(),
-        '/setPassword': (context) => const resetPasswordScreen(),
         '/signUp': (context) => const signUpScreen(),
         '/forgotPassword': (context) => const forgotPasswordScreen(),
         '/userHome' : (context) => const MainBottomNavScreen(admin: false,),

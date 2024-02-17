@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:frastraited/Precentation/ui/utility/app_colors.dart';
 import 'package:frastraited/Precentation/ui/widgets/app_logo.dart';
 import 'package:frastraited/screen/onboarding/loginScreen.dart';
-import 'package:frastraited/screen/onboarding/pinVerificationScreen.dart';
+
 import 'package:frastraited/screen/widgets/bodyBackground.dart';
 import 'package:get/get.dart';
 
