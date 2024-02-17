@@ -90,7 +90,7 @@ class _loginScreenState extends State<loginScreen> {
                           final user = await DatabaseService.instance.getUserInfo(firebaseUser.uid);
                           isLoading = false;
                           setState(() {});
-                          Navigator.push(
+                          Navigator.pushReplacement(
                             context,
                             MaterialPageRoute(
                               builder: (context) => MainBottomNavScreen(admin: user.userType.toLowerCase() == "admin"),
