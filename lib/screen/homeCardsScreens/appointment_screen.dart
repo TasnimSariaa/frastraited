@@ -3,6 +3,7 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:frastraited/Precentation/ui/utility/app_colors.dart';
 import 'package:frastraited/screen/task/appointmentBooking.dart';
 import 'package:frastraited/screen/widgets/bodyBackground.dart';
+//import 'appointment_booking.dart';
 
 class Appointment extends StatefulWidget {
   const Appointment({Key? key}) : super(key: key);
@@ -119,7 +120,9 @@ class _AppointmentState extends State<Appointment> {
                             Navigator.push(
                               context,
                               MaterialPageRoute(
-                                builder: (context) => AppointmentBooking(),
+                                builder: (context) => AppointmentBooking(
+                                  selectedDoctor: doctorsForAppointment[selectedDoctorIndex!],
+                                ),
                               ),
                             );
                           } else {
