@@ -1,13 +1,18 @@
 import 'package:flutter/material.dart';
 import 'package:frastraited/Precentation/ui/utility/app_colors.dart';
 import 'package:frastraited/screen/widgets/bodyBackground.dart';
+//import 'package:intl/intl.dart'; // Import DateFormat for date formatting
 
 class PaymentsScreen extends StatelessWidget {
   final String category;
   final String type;
   final String payable;
 
-  PaymentsScreen({required this.category, required this.type, required this.payable});
+  PaymentsScreen({
+    required this.category,
+    required this.type,
+    required this.payable,
+  });
 
   void _showPaymentForm(BuildContext context) {
     showModalBottomSheet(
@@ -39,7 +44,7 @@ class PaymentsScreen extends StatelessWidget {
               SizedBox(height: 20),
               ElevatedButton(
                 onPressed: () {
-                  _makePayment();
+                  _makePayment(context);
                 },
                 child: Text('   Confirm Payment   ',
                   style: TextStyle(color: Colors.white),
@@ -52,8 +57,10 @@ class PaymentsScreen extends StatelessWidget {
     );
   }
 
-  void _makePayment() {
-    // Implement Stripe payment logic here
+  void _makePayment(BuildContext context) {
+    // Fetch payment information
+    //String currentDate = DateFormat.yMMMd().format(DateTime.now());
+    Navigator.pop(context, {'category': category, 'type': type, 'payable': payable, });
   }
 
   @override

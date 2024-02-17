@@ -22,7 +22,7 @@ class _MainBottomNavScreenState extends State<MainBottomNavScreen> {
     super.initState();
     _screens = [
       HomeScreen(admin: widget.admin), // Pass admin parameter to HomeScreen
-      HistoryScreen(),
+      HistoryScreen(paymentInfo: {},),
       PaymentsScreen(category: '', type: '', payable: '',),
       ProfileScreen(),
     ];

@@ -1,30 +1,24 @@
 import 'package:flutter/material.dart';
 import 'package:frastraited/Precentation/ui/utility/app_colors.dart';
-import 'package:frastraited/screen/onboarding/loginScreen.dart';
 import 'package:frastraited/screen/widgets/bodyBackground.dart';
 
 class EditAppointment extends StatefulWidget {
-  const EditAppointment({super.key});
+  final String category;
+  final String type;
+  final String payable;
+
+  const EditAppointment({
+    required this.category,
+    required this.type,
+    required this.payable,
+    Key? key,
+  }) : super(key: key);
 
   @override
   State<EditAppointment> createState() => _EditAppointmentState();
 }
 
 class _EditAppointmentState extends State<EditAppointment> {
-  final List<Map<String, dynamic>> availableVaccines = [
-    {
-      'name': 'Hepatitis B Vaccine',
-      'description': 'Protects against hepatitis B virus',
-      'imageUrl': 'https://example.com/hepatitis_b_vaccine.jpg',
-    },
-    {
-      'name': 'HPV Vaccine',
-      'description': 'Protects against human papillomavirus',
-      'imageUrl': 'https://example.com/hpv_vaccine.jpg',
-    },
-    // Add more vaccine information here
-  ];
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -40,79 +34,70 @@ class _EditAppointmentState extends State<EditAppointment> {
                     mainAxisAlignment: MainAxisAlignment.start,
                     children: [
                       IconButton(
-                        icon: Icon(Icons.arrow_back,
-                          color: AppColors.primaryColor,),
+                        icon: Icon(
+                          Icons.arrow_back,
+                          color: AppColors.primaryColor,
+                        ),
                         onPressed: () {
                           Navigator.pop(context);
                         },
                       ),
                     ],
                   ),
-                  const SizedBox(
-                    height: 40,
-                  ),
+                  const SizedBox(height: 40),
                   Text(
-                    'Available Vaccines',
-                    style: TextStyle(
-                      fontSize: 24,
-                      fontWeight: FontWeight.bold,
-                      color: AppColors.primaryColor,
+                    'Payment Details',
+                    style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+                  ),
+                  SizedBox(height: 40),
+                  Container(
+                    width: double.infinity,
+                    padding: EdgeInsets.all(20),
+                    decoration: BoxDecoration(
+                      color: Colors.white,
+                      borderRadius: BorderRadius.circular(10),
+                      boxShadow: [
+                        BoxShadow(
+                          color: Colors.grey.withOpacity(0.5),
+                          spreadRadius: 2,
+                          blurRadius: 5,
+                          offset: Offset(0, 3),
+                        ),
+                      ],
+                    ),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        Text(
+                          'Category:  ${widget.category}',
+                          style: TextStyle(fontSize: 18, color: AppColors.primaryColor),
+                        ),
+                        Text(
+                          'Type:   ${widget.type}',
+                          style: TextStyle(fontSize: 18, color: Colors.black),
+                        ),
+                        Text(
+                          'Payable:   ${widget.payable}',
+                          style: TextStyle(fontSize: 18, color: Colors.grey),
+                        ),
+                      ],
                     ),
                   ),
-                  const SizedBox(height: 30),
-                  ListView.builder(
-                    shrinkWrap: true,
-                    physics: NeverScrollableScrollPhysics(),
-                    itemCount: availableVaccines.length,
-                    itemBuilder: (BuildContext context, int index) {
-                      final vaccine = availableVaccines[index];
-                      return Column(
-                        children: [
-                          Card(
-                            borderOnForeground: true,
-                            color: Colors.white, // Common color for all cards
-                            elevation: 3,
-                            child: Container(
-                              height: 90, // Adjust the height of the container
-                              padding: const EdgeInsets.all(8),
-                              child: Row(
-                                children: [
-                                  Container(
-                                    width: 120,
-                                    height: double.infinity,
-                                    decoration: BoxDecoration(
-                                      borderRadius: BorderRadius.circular(8),
-                                      image: DecorationImage(
-                                        image: NetworkImage(vaccine['imageUrl']),
-                                        fit: BoxFit.cover,
-                                      ),
-                                    ),
-                                  ),
-                                  const SizedBox(width: 16),
-                                  Expanded(
-                                    child: Column(
-                                      crossAxisAlignment: CrossAxisAlignment.start,
-                                      mainAxisAlignment: MainAxisAlignment.center,
-                                      children: [
-                                        Text(
-                                          vaccine['name'],
-                                          style: TextStyle(fontSize: 18, color: AppColors.primaryColor),
-                                        ),
-                                        const SizedBox(height: 4),
-                                        Text(
-                                          vaccine['description'],
-                                          style: TextStyle(color: Colors.grey),
-                                        ),
-                                      ],
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ),
-                          ),
-                        ],
-                      );
+                  SizedBox(height: 20),
+                  Text(
+                    " Pay BDT ${widget.payable} by Bkash and fetch the Transaction ID! ",
+                    style: TextStyle(color: Colors.blueGrey, fontWeight: FontWeight.w700, fontSize: 16),
+                  ),
+                  SizedBox(height: 20),
+                  ElevatedButton(
+                    onPressed: () {
+                      // Handle payment confirmation without navigation
+                      _confirmPayment(context);
                     },
+                    child: Text(
+                      '  Next  ',
+                      style: TextStyle(color: Colors.white),
+                    ),
                   ),
                 ],
               ),
@@ -121,5 +106,10 @@ class _EditAppointmentState extends State<EditAppointment> {
         ),
       ),
     );
+  }
+
+  void _confirmPayment(BuildContext context) {
+    // Update appointment information in PaymentsScreen
+    Navigator.pop(context, {'category': widget.category, 'type': widget.type, 'payable': widget.payable});
   }
 }

@@ -48,7 +48,7 @@ class _HomeScreenState extends State<HomeScreen> {
         EditActiveDoctors(),
         EditOperation(),
         EditVaccine(),
-        EditAppointment(),
+        EditAppointment(category: '', type: '', payable: '',),
         EditReportCollection(),
         EditDonation(),
         EditPendingTest(),

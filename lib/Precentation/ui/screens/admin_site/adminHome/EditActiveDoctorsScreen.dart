@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:frastraited/Precentation/ui/utility/app_colors.dart';
+import 'package:frastraited/Precentation/ui/utility/search_field.dart';
 import 'package:frastraited/screen/widgets/bodyBackground.dart';
 
 class EditActiveDoctors extends StatefulWidget {
@@ -27,6 +28,9 @@ class _EditActiveDoctorsState extends State<EditActiveDoctors> {
     // Add more doctor information here
   ];
 
+  // Controller for search text field
+  TextEditingController searchController = TextEditingController();
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -51,6 +55,13 @@ class _EditActiveDoctorsState extends State<EditActiveDoctors> {
                         },
                       ),
                     ],
+                  ),
+                  const SizedBox(height: 20),
+                  SearchField(
+                    controller: searchController,
+                    onTextChanged: (value) {
+                      setState(() {}); // Trigger rebuild on text change
+                    },
                   ),
                   const SizedBox(height: 20),
                   Text(
@@ -98,16 +109,14 @@ class _EditActiveDoctorsState extends State<EditActiveDoctors> {
                         trailing: Row(
                           mainAxisSize: MainAxisSize.min,
                           children: [
-                               Switch(
-                                value: doctor['isActive'],
-                                onChanged: (newValue) {
-                                  setState(() {
-                                    doctor['isActive'] = newValue;
-                                  });
-                                },
-                              ),
-
-                            // Dialog for update/delete options
+                            Switch(
+                              value: doctor['isActive'],
+                              onChanged: (newValue) {
+                                setState(() {
+                                  doctor['isActive'] = newValue;
+                                });
+                              },
+                            ),
                             IconButton(
                               icon: Icon(Icons.more_vert),
                               onPressed: () {
@@ -141,9 +150,12 @@ class _EditActiveDoctorsState extends State<EditActiveDoctors> {
   void _showEditDialog(BuildContext context, int index) {
     Map<String, dynamic> doctor = activeDoctors[index];
 
-    TextEditingController nameController = TextEditingController(text: doctor['name']);
-    TextEditingController specialityController = TextEditingController(text: doctor['speciality']);
-    TextEditingController profilePicUrlController = TextEditingController(text: doctor['profilePicUrl']);
+    TextEditingController nameController =
+    TextEditingController(text: doctor['name']);
+    TextEditingController specialityController =
+    TextEditingController(text: doctor['speciality']);
+    TextEditingController profilePicUrlController =
+    TextEditingController(text: doctor['profilePicUrl']);
 
     showDialog(
       context: context,
@@ -174,10 +186,14 @@ class _EditActiveDoctorsState extends State<EditActiveDoctors> {
     );
   }
 
-  void _showEditBottomSheet(BuildContext context, Map<String, dynamic> doctor, int index) {
-    TextEditingController nameController = TextEditingController(text: doctor['name']);
-    TextEditingController specialityController = TextEditingController(text: doctor['speciality']);
-    TextEditingController profilePicUrlController = TextEditingController(text: doctor['profilePicUrl']);
+  void _showEditBottomSheet(
+      BuildContext context, Map<String, dynamic> doctor, int index) {
+    TextEditingController nameController =
+    TextEditingController(text: doctor['name']);
+    TextEditingController specialityController =
+    TextEditingController(text: doctor['speciality']);
+    TextEditingController profilePicUrlController =
+    TextEditingController(text: doctor['profilePicUrl']);
 
     showModalBottomSheet(
       context: context,
@@ -206,7 +222,8 @@ class _EditActiveDoctorsState extends State<EditActiveDoctors> {
                   SizedBox(height: 16),
                   TextField(
                     controller: profilePicUrlController,
-                    decoration: InputDecoration(labelText: 'Profile Picture URL'),
+                    decoration:
+                    InputDecoration(labelText: 'Profile Picture URL'),
                   ),
                   SizedBox(height: 16),
                   ElevatedButton(
@@ -214,8 +231,10 @@ class _EditActiveDoctorsState extends State<EditActiveDoctors> {
                       setState(() {
                         // Update doctor information
                         activeDoctors[index]['name'] = nameController.text;
-                        activeDoctors[index]['speciality'] = specialityController.text;
-                        activeDoctors[index]['profilePicUrl'] = profilePicUrlController.text;
+                        activeDoctors[index]['speciality'] =
+                            specialityController.text;
+                        activeDoctors[index]['profilePicUrl'] =
+                            profilePicUrlController.text;
                       });
                       Navigator.pop(context);
                     },
@@ -265,7 +284,8 @@ class _EditActiveDoctorsState extends State<EditActiveDoctors> {
                   SizedBox(height: 16),
                   TextField(
                     controller: profilePicUrlController,
-                    decoration: InputDecoration(labelText: 'Profile Picture URL'),
+                    decoration:
+                    InputDecoration(labelText: 'Profile Picture URL'),
                   ),
                   SizedBox(height: 16),
                   ElevatedButton(
@@ -293,5 +313,11 @@ class _EditActiveDoctorsState extends State<EditActiveDoctors> {
         );
       },
     );
+  }
+
+  @override
+  void dispose() {
+    searchController.dispose();
+    super.dispose();
   }
 }
