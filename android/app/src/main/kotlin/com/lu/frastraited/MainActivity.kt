@@ -1,4 +1,4 @@
-package com.example.frastraited
+package com.lu.frastraited
 
 import io.flutter.embedding.android.FlutterActivity
 

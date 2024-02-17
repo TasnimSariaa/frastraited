@@ -1,8 +1,6 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 import 'package:frastraited/Precentation/ui/utility/app_colors.dart';
-import 'package:frastraited/screen/onboarding/frontPage.dart';
-import 'package:frastraited/screen/onboarding/loginScreen.dart';
 import 'package:frastraited/screen/widgets/bodyBackground.dart';
 
 class splashScreen extends StatefulWidget {
@@ -13,18 +11,18 @@ class splashScreen extends StatefulWidget {
 }
 
 class _splashScreenState extends State<splashScreen> {
-  void initState(){
+  @override
+  void initState() {
     super.initState();
-    goToLogin();
-  }
-
-  void goToLogin(){
-    Future.delayed(Duration(seconds:2)).then((value){
-      Navigator.pushAndRemoveUntil(context,
-          MaterialPageRoute(builder: (context)=> const frontPage()),
-      (route)=>false);
+    Future.delayed(const Duration(seconds: 1)).then((value) {
+      if (FirebaseAuth.instance.currentUser != null) {
+        Navigator.pushReplacementNamed(context, "/userHome");
+      } else {
+        Navigator.pushReplacementNamed(context, "/login");
+      }
     });
   }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -34,18 +32,16 @@ class _splashScreenState extends State<splashScreen> {
             children: [
               //Icon(Icons.),
               const Spacer(),
-              Image.asset('assets/images/logo.png',width: 120,
-                height: 120,),
-              const Spacer(),
-              const CircularProgressIndicator(
-                color: AppColors.primaryColor,
+              Image.asset(
+                'assets/images/logo.png',
+                width: 120,
+                height: 120,
               ),
-              const SizedBox(height: 8,),
+              const Spacer(),
+              const CircularProgressIndicator(color: AppColors.primaryColor),
+              const SizedBox(height: 8),
               const Text('Version 1.0'),
-              const SizedBox(height: 8,),
-
-
-
+              const SizedBox(height: 8),
             ],
           ),
         ),
