@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:frastraited/Precentation/ui/screens/home_screen.dart';
 import 'package:frastraited/Precentation/ui/utility/app_colors.dart';
-import 'package:frastraited/screen/onboarding/loginScreen.dart';
 import 'package:frastraited/screen/widgets/bodyBackground.dart';
 
 class EditVaccine extends StatefulWidget {
@@ -29,18 +27,6 @@ class _EditVaccineState extends State<EditVaccine> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      floatingActionButton: FloatingActionButton(
-
-        onPressed: (){
-          Navigator.push(
-            context,
-            MaterialPageRoute(
-              builder: (context) => HomeScreen(admin: false)
-            ),
-          );
-        },
-        child: Icon(Icons.add),
-      ),
       body: BodyBackground(
         child: SafeArea(
           child: SingleChildScrollView(
@@ -123,8 +109,6 @@ class _EditVaccineState extends State<EditVaccine> {
                               ),
                             ),
                           ),
-
-
                         ],
                       );
                     },
