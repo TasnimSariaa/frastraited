@@ -48,8 +48,10 @@ class _OperationScreenState extends State<OperationScreen> {
                     mainAxisAlignment: MainAxisAlignment.start,
                     children: [
                       IconButton(
-                        icon: Icon(Icons.arrow_back,
-                          color: AppColors.primaryColor,),
+                        icon: Icon(
+                          Icons.arrow_back,
+                          color: AppColors.primaryColor,
+                        ),
                         onPressed: () {
                           Navigator.pop(context);
                         },
@@ -60,7 +62,7 @@ class _OperationScreenState extends State<OperationScreen> {
                     height: 10,
                   ),
                   Text(
-                    'Available Operation Packages',
+                    'Available Operations',
                     style: TextStyle(
                       fontSize: 24,
                       fontWeight: FontWeight.bold,
@@ -76,20 +78,33 @@ class _OperationScreenState extends State<OperationScreen> {
                       final package = availableOperationPackages[index];
                       return Column(
                         children: [
-                          Card(
-                            color: Colors.white,
-                            elevation: 3,// Common color for all cards
-                            borderOnForeground: true,
+                          GestureDetector(
+                            onTap: () {
+                              // Handle onTap event
+                            },
                             child: Container(
-                              height: 120, // Adjust the height of the container
-                              //padding: const EdgeInsets.all(8),
+                              height: 120,
+                              decoration: BoxDecoration(
+                                color: Colors.white,
+                                borderRadius: BorderRadius.circular(8),
+                                boxShadow: [
+                                  BoxShadow(
+                                    color: Colors.grey.withOpacity(0.5),
+                                    spreadRadius: 1,
+                                    blurRadius: 3,
+                                    offset: Offset(0, 2), // changes position of shadow
+                                  ),
+                                ],
+                              ),
                               child: Row(
                                 children: [
                                   Container(
                                     width: 120,
-                                    height: double.infinity,
                                     decoration: BoxDecoration(
-                                      borderRadius: BorderRadius.circular(8),
+                                      borderRadius: BorderRadius.only(
+                                        topLeft: Radius.circular(8),
+                                        bottomLeft: Radius.circular(8),
+                                      ),
                                       image: DecorationImage(
                                         image: NetworkImage(package['imageUrl']),
                                         fit: BoxFit.cover,
@@ -98,31 +113,35 @@ class _OperationScreenState extends State<OperationScreen> {
                                   ),
                                   const SizedBox(width: 16),
                                   Expanded(
-                                    child: Column(
-                                      crossAxisAlignment: CrossAxisAlignment.start,
-                                      mainAxisAlignment: MainAxisAlignment.center,
-                                      children: [
-                                        Text(
-                                          package['name'],
-                                          style: TextStyle(fontSize: 18, color: AppColors.primaryColor),
-                                        ),
-                                        const SizedBox(height: 4),
-                                        Text(
-                                          package['description'],
-                                          style: TextStyle(color: Colors.grey),
-                                        ),
-                                        const SizedBox(height: 4),
-                                        Text(
-                                          'Amount: ${package['amount']}',
-                                          style: TextStyle(fontWeight: FontWeight.bold,color: Colors.blueGrey),
-                                        ),
-                                      ],
+                                    child: Padding(
+                                      padding: const EdgeInsets.symmetric(vertical: 8),
+                                      child: Column(
+                                        crossAxisAlignment: CrossAxisAlignment.start,
+                                        mainAxisAlignment: MainAxisAlignment.center,
+                                        children: [
+                                          Text(
+                                            package['name'],
+                                            style: TextStyle(fontSize: 18, color: AppColors.primaryColor),
+                                          ),
+                                          const SizedBox(height: 5,),
+                                          Text(
+                                            package['description'],
+                                            style: TextStyle(color: Colors.grey),
+                                          ),
+                                          const SizedBox(height: 12,),
+                                          Text(
+                                            'Amount: ${package['amount']}',
+                                            style: TextStyle(fontWeight: FontWeight.bold,color: Colors.blueGrey),
+                                          ),
+                                        ],
+                                      ),
                                     ),
                                   ),
                                 ],
                               ),
                             ),
                           ),
+                          SizedBox(height: 20),
                         ],
                       );
                     },
@@ -135,7 +154,4 @@ class _OperationScreenState extends State<OperationScreen> {
       ),
     );
   }
-
-
-
 }

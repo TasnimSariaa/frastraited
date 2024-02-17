@@ -81,9 +81,7 @@ class _PendingTestsState extends State<PendingTests> {
                               ),
                             ),
                             ElevatedButton(
-                              onPressed: () {
-                                // Implement booking test functionality
-                              },
+                              onPressed: _bookTest,
                               child: Text('  Book Test  ',
                                 style: TextStyle(color: Colors.white,
                                     fontWeight: FontWeight.w500),
@@ -103,4 +101,30 @@ class _PendingTestsState extends State<PendingTests> {
       ),
     );
   }
+  void _bookTest() {
+    // Show payment confirmation dialog
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: Text('Payment Confirmation'),
+        content: Text('You have to pay BDT 200 for the test booking.'),
+        actions: [
+          TextButton(
+            onPressed: () {
+              // Perform payment logic
+              Navigator.pop(context);
+            },
+            child: Text('Pay'),
+          ),
+          TextButton(
+            onPressed: () {
+              Navigator.pop(context);
+            },
+            child: Text('Cancel'),
+          ),
+        ],
+      ),
+    );
+  }
+
 }

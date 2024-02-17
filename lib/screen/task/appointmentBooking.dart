@@ -51,7 +51,7 @@ class _AppointmentBookingState extends State<AppointmentBooking> {
                   const SizedBox(height: 20),
                   ElevatedButton(
                     onPressed: _bookAppointment,
-                    child: Text(' Book Appointment ',
+                    child: Text('  Book Appointment  ',
                       style: TextStyle(color: Colors.white),),
                   ),
                 ],

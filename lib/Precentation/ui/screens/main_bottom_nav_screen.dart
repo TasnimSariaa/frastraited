@@ -43,6 +43,7 @@ class _MainBottomNavScreenState extends State<MainBottomNavScreen> {
         items: const [
           BottomNavigationBarItem(icon: Icon(Icons.home_filled), label: 'Home'),
           BottomNavigationBarItem(icon: Icon(Icons.history), label: 'History'),
+          BottomNavigationBarItem(icon: Icon(Icons.attach_money), label: 'Payments'),
           BottomNavigationBarItem(icon: Icon(Icons.account_circle_rounded), label: 'Profile'),
         ],
       ),

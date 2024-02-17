@@ -68,7 +68,7 @@ class _ActiveDoctorState extends State<ActiveDoctor> {
                     height: 20,
                   ),
                   Text(
-                    'Active Doctors',
+                    'Doctors On Duty',
                     style: TextStyle(
                       fontSize: 24,
                       fontWeight: FontWeight.bold,

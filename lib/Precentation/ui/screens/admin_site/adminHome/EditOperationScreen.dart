@@ -48,17 +48,14 @@ class _EditOperationState extends State<EditOperation> {
                     mainAxisAlignment: MainAxisAlignment.start,
                     children: [
                       IconButton(
-                        icon: Icon(Icons.arrow_back,
-                          color: AppColors.primaryColor,),
+                        icon: Icon(Icons.arrow_back, color: AppColors.primaryColor,),
                         onPressed: () {
                           Navigator.pop(context);
                         },
                       ),
                     ],
                   ),
-                  const SizedBox(
-                    height: 10,
-                  ),
+                  const SizedBox(height: 10),
                   Text(
                     'Available Operation Packages',
                     style: TextStyle(
@@ -76,68 +73,78 @@ class _EditOperationState extends State<EditOperation> {
                       final package = availableOperationPackages[index];
                       return Column(
                         children: [
-                          Card(
-                            color: Colors.white,
-                            elevation: 3,// Common color for all cards
-                            borderOnForeground: true,
-                            child: Container(
-                              height: 120, // Adjust the height of the container
-                              //padding: const EdgeInsets.all(8),
-                              child: Row(
-                                children: [
-                                  Container(
-                                    width: 120,
-                                    height: double.infinity,
-                                    decoration: BoxDecoration(
-                                      borderRadius: BorderRadius.circular(8),
-                                      image: DecorationImage(
-                                        image: NetworkImage(package['imageUrl']),
-                                        fit: BoxFit.cover,
-                                      ),
+                          Container(
+                            height: 120, // Adjusted height
+                            margin: EdgeInsets.symmetric(vertical: 10), // Adjusted margin
+                            decoration: BoxDecoration(
+                              color: Colors.white,
+                              borderRadius: BorderRadius.circular(12),
+                              boxShadow: [
+                                BoxShadow(
+                                  color: Colors.grey.withOpacity(0.5),
+                                  spreadRadius: 1,
+                                  blurRadius: 4,
+                                  offset: Offset(0, 3),
+                                ),
+                              ],
+                            ),
+                            child: Row(
+                              children: [
+                                Container(
+                                  width: 120,
+                                  height: double.infinity,
+                                  decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.only(
+                                      topLeft: Radius.circular(12),
+                                      bottomLeft: Radius.circular(12),
+                                    ),
+                                    image: DecorationImage(
+                                      image: NetworkImage(package['imageUrl']),
+                                      fit: BoxFit.cover,
                                     ),
                                   ),
-                                  const SizedBox(width: 16),
-                                  Expanded(
-                                    child: Column(
-                                      crossAxisAlignment: CrossAxisAlignment.start,
-                                      mainAxisAlignment: MainAxisAlignment.center,
-                                      children: [
-                                        Text(
-                                          package['name'],
-                                          style: TextStyle(fontSize: 18, color: AppColors.primaryColor),
-                                        ),
-                                        const SizedBox(height: 4),
-                                        Text(
-                                          package['description'],
-                                          style: TextStyle(color: Colors.grey),
-                                        ),
-                                        const SizedBox(height: 4),
-                                        Text(
-                                          'Amount: ${package['amount']}',
-                                          style: TextStyle(fontWeight: FontWeight.bold,color: Colors.blueGrey),
-                                        ),
-                                      ],
-                                    ),
-                                  ),
-                                  Column(
+                                ),
+                                const SizedBox(width: 20),
+                                Expanded(
+                                  child: Column(
                                     mainAxisAlignment: MainAxisAlignment.center,
+                                    crossAxisAlignment: CrossAxisAlignment.start,
                                     children: [
-                                      IconButton(
-                                        icon: Icon(Icons.delete),
-                                        onPressed: () {
-                                          _showDeleteAlertDialog(context, index);
-                                        },
+                                      Text(
+                                        package['name'],
+                                        style: TextStyle(fontSize: 18, color: AppColors.primaryColor),
                                       ),
-                                      IconButton(
-                                        icon: Icon(Icons.edit),
-                                        onPressed: () {
-                                          _showEditBottomSheet(context, package, index);
-                                        },
+                                      const SizedBox(height: 4),
+                                      Text(
+                                        package['description'],
+                                        style: TextStyle(color: Colors.grey),
+                                      ),
+                                      const SizedBox(height: 4),
+                                      Text(
+                                        'Amount: ${package['amount']}',
+                                        style: TextStyle(fontWeight: FontWeight.bold,color: Colors.blueGrey),
                                       ),
                                     ],
                                   ),
-                                ],
-                              ),
+                                ),
+                                Column(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    IconButton(
+                                      icon: Icon(Icons.delete),
+                                      onPressed: () {
+                                        _showDeleteAlertDialog(context, index);
+                                      },
+                                    ),
+                                    IconButton(
+                                      icon: Icon(Icons.edit),
+                                      onPressed: () {
+                                        _showEditBottomSheet(context, package, index);
+                                      },
+                                    ),
+                                  ],
+                                ),
+                              ],
                             ),
                           ),
                         ],
@@ -246,8 +253,7 @@ class _EditOperationState extends State<EditOperation> {
                       });
                       Navigator.pop(context);
                     },
-                    child: Text('Update',
-                      style: TextStyle(color: Colors.white),),
+                    child: Text('Update', style: TextStyle(color: Colors.white)),
                   ),
                 ],
               ),
@@ -311,8 +317,7 @@ class _EditOperationState extends State<EditOperation> {
                       });
                       Navigator.pop(context);
                     },
-                    child: Text('Add',
-                      style: TextStyle(color: Colors.white),),
+                    child: Text('Add', style: TextStyle(color: Colors.white)),
                   ),
                 ],
               ),

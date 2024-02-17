@@ -73,7 +73,7 @@ class _EditAppointmentState extends State<EditAppointment> {
                             color: Colors.white, // Common color for all cards
                             elevation: 3,
                             child: Container(
-                              height: 120, // Adjust the height of the container
+                              height: 90, // Adjust the height of the container
                               padding: const EdgeInsets.all(8),
                               child: Row(
                                 children: [

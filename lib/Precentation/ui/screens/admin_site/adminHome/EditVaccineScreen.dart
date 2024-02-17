@@ -85,68 +85,91 @@ class _EditVaccineState extends State<EditVaccine> {
                       final vaccine = availableVaccines[index];
                       return Column(
                         children: [
-                          Card(
-                            borderOnForeground: true,
-                            color: Colors.white, // Common color for all cards
-                            elevation: 3,
-                            child: Container(
-                              height: 120, // Adjust the height of the container
-                              padding: const EdgeInsets.all(8),
-                              child: Row(
-                                children: [
-                                  Container(
-                                    width: 120,
-                                    height: double.infinity,
-                                    decoration: BoxDecoration(
-                                      borderRadius: BorderRadius.circular(8),
-                                      image: DecorationImage(
-                                        image: NetworkImage(vaccine['imageUrl']),
-                                        fit: BoxFit.cover,
-                                      ),
+                          Container(
+                            height: 120,
+                            margin: EdgeInsets.symmetric(vertical: 10),
+                            decoration: BoxDecoration(
+                              color: Colors.white,
+                              borderRadius: BorderRadius.circular(12),
+                              boxShadow: [
+                                BoxShadow(
+                                  color: Colors.grey.withOpacity(0.5),
+                                  spreadRadius: 1,
+                                  blurRadius: 4,
+                                  offset: Offset(0, 3),
+                                ),
+                              ],
+                            ),
+                            child: Row(
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              children: [
+                                Container(
+                                  padding: const EdgeInsets.symmetric(horizontal: 10),
+                                  width: 120,
+                                  height: double.infinity,
+                                  decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.only(
+                                      topLeft: Radius.circular(12),
+                                      bottomLeft: Radius.circular(12),
+                                    ),
+                                    image: DecorationImage(
+                                      image: NetworkImage(vaccine['imageUrl']),
+                                      fit: BoxFit.cover,
                                     ),
                                   ),
-                                  const SizedBox(width: 16),
-                                  Expanded(
-                                    child: Column(
-                                      crossAxisAlignment: CrossAxisAlignment.start,
-                                      mainAxisAlignment: MainAxisAlignment.center,
-                                      children: [
-                                        Text(
-                                          vaccine['name'],
-                                          style: TextStyle(fontSize: 18, color: AppColors.primaryColor),
-                                        ),
-                                        const SizedBox(height: 4),
-                                        Text(
-                                          'Available at: ${vaccine['place']}',
-                                          style: TextStyle(color: Colors.black45),
-                                        ),
-                                        const SizedBox(height: 4),
-                                        Text(
-                                          'Price: ${vaccine['price']}',
-                                          style: TextStyle(color: Colors.blueGrey),
-                                        ),
-                                      ],
-                                    ),
-                                  ),
-                                  Column(
+                                ),
+                                SizedBox(width: 20),
+                                Expanded(
+                                  child: Column(
                                     mainAxisAlignment: MainAxisAlignment.center,
+                                    crossAxisAlignment: CrossAxisAlignment.start,
                                     children: [
-                                      IconButton(
-                                        icon: Icon(Icons.delete),
-                                        onPressed: () {
-                                          _showDeleteAlertDialog(context, index);
-                                        },
+                                      Text(
+                                        vaccine['name'],
+                                        style: TextStyle(
+                                          fontSize: 18,
+                                          fontWeight: FontWeight.bold,
+                                          color: AppColors.primaryColor,
+                                        ),
                                       ),
-                                      IconButton(
-                                        icon: Icon(Icons.edit),
-                                        onPressed: () {
-                                          _showEditBottomSheet(context, vaccine, index);
-                                        },
+                                      SizedBox(height: 5),
+                                      Text(
+                                        'Available at: ${vaccine['place']}',
+                                        style: TextStyle(
+                                          color: Colors.black54,
+                                          fontSize: 14,
+                                        ),
+                                      ),
+                                      SizedBox(height: 5),
+                                      Text(
+                                        'Price: ${vaccine['price']}',
+                                        style: TextStyle(
+                                          color: Colors.blueGrey,
+                                          fontSize: 14,
+                                          fontWeight: FontWeight.bold,
+                                        ),
                                       ),
                                     ],
                                   ),
-                                ],
-                              ),
+                                ),
+                                Column(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    IconButton(
+                                      icon: Icon(Icons.delete),
+                                      onPressed: () {
+                                        _showDeleteAlertDialog(context, index);
+                                      },
+                                    ),
+                                    IconButton(
+                                      icon: Icon(Icons.edit),
+                                      onPressed: () {
+                                        _showEditBottomSheet(context, vaccine, index);
+                                      },
+                                    ),
+                                  ],
+                                ),
+                              ],
                             ),
                           ),
                         ],
