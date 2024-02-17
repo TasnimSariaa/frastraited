@@ -1,3 +1,4 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:frastraited/Precentation/ui/screens/home_screen.dart';
 import 'package:frastraited/Precentation/ui/screens/main_bottom_nav_screen.dart';
@@ -15,6 +16,9 @@ class loginScreen extends StatefulWidget {
 }
 
 class _loginScreenState extends State<loginScreen> {
+
+  TextEditingController loginemailController = TextEditingController();
+  TextEditingController loginpasswordController = TextEditingController();
 
   bool admin=false;
   @override
@@ -55,6 +59,7 @@ class _loginScreenState extends State<loginScreen> {
                 ),
                 const SizedBox(height: 24),
                 TextFormField(
+                  controller: loginemailController,
                   keyboardType: TextInputType.emailAddress,
                   decoration: const InputDecoration(
                     hintText: 'Email',
@@ -62,6 +67,7 @@ class _loginScreenState extends State<loginScreen> {
                 ),
                 const SizedBox(height: 16),
                 TextFormField(
+                  controller: loginpasswordController,
                   obscureText: true,
                   decoration: const InputDecoration(
                     hintText: 'Password',
@@ -71,13 +77,45 @@ class _loginScreenState extends State<loginScreen> {
                 SizedBox(
                   width: double.infinity,
                   child: ElevatedButton(
-                    onPressed: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => MainBottomNavScreen(admin: admin,),
-                        ),
-                      );
+                    onPressed: () async{
+                      var loginEmail = loginemailController.text.trim();
+                      var loginPass= loginpasswordController.text.trim();
+                      try{
+                        final User? firebaseUser =
+                        (await FirebaseAuth.instance.
+                        signInWithEmailAndPassword(email: loginEmail, password: loginPass)
+                        ).user;
+
+                        if(firebaseUser != null ){
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => MainBottomNavScreen(admin: admin,),
+                            ),
+                          );
+                        }
+                        else{
+                          print("Check Email and password");
+                        }
+                      }on FirebaseAuthException catch(e){
+                        showDialog(
+                          context: context,
+                          builder: (BuildContext context) {
+                            return AlertDialog(
+                              title: Text('Authentication Error'),
+                              content: Text(e.message ?? 'An error occurred'),
+                              actions: <Widget>[
+                                TextButton(
+                                  onPressed: () {
+                                    Navigator.of(context).pop(); // Close the dialog
+                                  },
+                                  child: Text('OK'),
+                                ),
+                              ],
+                            );
+                          },
+                        );
+                      }
 
                     },
                     child: const Text(
