@@ -5,6 +5,7 @@ import 'package:frastraited/Precentation/ui/utility/app_colors.dart';
 import 'package:frastraited/Precentation/ui/widgets/app_logo.dart';
 import 'package:frastraited/screen/onboarding/forgotPasswordScreen.dart';
 import 'package:frastraited/screen/onboarding/signUpScreen.dart';
+import 'package:frastraited/screen/service/database_service.dart';
 import 'package:frastraited/screen/widgets/bodyBackground.dart';
 
 class loginScreen extends StatefulWidget {
@@ -17,8 +18,6 @@ class loginScreen extends StatefulWidget {
 class _loginScreenState extends State<loginScreen> {
   TextEditingController loginemailController = TextEditingController();
   TextEditingController loginpasswordController = TextEditingController();
-
-  bool admin = false;
 
   bool isLoading = false;
 
@@ -87,16 +86,14 @@ class _loginScreenState extends State<loginScreen> {
                       var loginPass = loginpasswordController.text.trim();
                       try {
                         final User? firebaseUser = (await FirebaseAuth.instance.signInWithEmailAndPassword(email: loginEmail, password: loginPass)).user;
-
                         if (firebaseUser != null) {
+                          final user = await DatabaseService.instance.getUserInfo(firebaseUser.uid);
                           isLoading = false;
                           setState(() {});
                           Navigator.push(
                             context,
                             MaterialPageRoute(
-                              builder: (context) => MainBottomNavScreen(
-                                admin: admin,
-                              ),
+                              builder: (context) => MainBottomNavScreen(admin: user.userType.toLowerCase() == "admin"),
                             ),
                           );
                         } else {
