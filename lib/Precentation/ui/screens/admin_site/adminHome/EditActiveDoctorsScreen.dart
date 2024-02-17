@@ -1,127 +1,138 @@
 import 'package:flutter/material.dart';
 import 'package:frastraited/Precentation/ui/utility/app_colors.dart';
+import 'package:frastraited/screen/service/database_service.dart';
+import 'package:frastraited/screen/service/models/doctors.dart';
 import 'package:frastraited/screen/widgets/bodyBackground.dart';
+import 'package:frastraited/screen/widgets/custom_image_view.dart';
 
 class EditActiveDoctors extends StatefulWidget {
-  const EditActiveDoctors({Key? key}) : super(key: key);
+  const EditActiveDoctors({super.key});
 
   @override
   State<EditActiveDoctors> createState() => _EditActiveDoctorsState();
 }
 
 class _EditActiveDoctorsState extends State<EditActiveDoctors> {
-  // Sample list of active doctors (to be replaced with database functionality)
-  List<Map<String, dynamic>> activeDoctors = [
-    {
-      'name': 'Dr. Reza-Ul Karim',
-      'speciality': 'Plastic Surgeon',
-      'profilePicUrl': 'https://example.com/doctor3.jpg',
-      'isActive': true,
-    },
-    {
-      'name': 'Dr. Nabila Ferdous',
-      'speciality': 'Gastroenterologist',
-      'profilePicUrl': 'https://example.com/doctor4.jpg',
-      'isActive': false,
-    },
-    // Add more doctor information here
-  ];
+  List<DoctorModel> activeDoctors = [];
+
+  bool isLoading = true;
+
+  @override
+  void initState() {
+    super.initState();
+    _getDoctorList();
+  }
+
+  void _getDoctorList() async {
+    activeDoctors.clear();
+    final result = await DatabaseService.instance.getDoctorInformation();
+    activeDoctors.addAll(result);
+    isLoading = false;
+    setState(() {});
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: BodyBackground(
-        child: SafeArea(
-          child: SingleChildScrollView(
-            child: Padding(
-              padding: const EdgeInsets.all(24),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    children: [
-                      IconButton(
-                        icon: const Icon(
-                          Icons.arrow_back,
-                          color: AppColors.primaryColor,
+        child: isLoading
+            ? const Center(child: CircularProgressIndicator())
+            : SafeArea(
+                child: SingleChildScrollView(
+                  child: Padding(
+                    padding: const EdgeInsets.all(24),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          children: [
+                            IconButton(
+                              icon: const Icon(
+                                Icons.arrow_back,
+                                color: AppColors.primaryColor,
+                              ),
+                              onPressed: () {
+                                Navigator.pop(context);
+                              },
+                            ),
+                          ],
                         ),
-                        onPressed: () {
-                          Navigator.pop(context);
-                        },
-                      ),
-                    ],
-                  ),
-                  const SizedBox(height: 20),
-                  const Text(
-                    'Active Doctors',
-                    style: TextStyle(
-                      fontSize: 24,
-                      fontWeight: FontWeight.bold,
-                      color: AppColors.primaryColor,
+                        const SizedBox(height: 20),
+                        const Text(
+                          'Active Doctors',
+                          style: TextStyle(
+                            fontSize: 24,
+                            fontWeight: FontWeight.bold,
+                            color: AppColors.primaryColor,
+                          ),
+                        ),
+                        const SizedBox(height: 20),
+                        ListView.builder(
+                          shrinkWrap: true,
+                          physics: const NeverScrollableScrollPhysics(),
+                          itemCount: activeDoctors.length,
+                          itemBuilder: (BuildContext context, int index) {
+                            final doctor = activeDoctors[index];
+                            return ListTile(
+                              leading: Stack(
+                                children: [
+                                  CustomImageView(
+                                    height: 60,
+                                    width: 60,
+                                    path: doctor.profileImageUrl,
+                                    borderRadius: BorderRadius.circular(15),
+                                  ),
+                                  if (doctor.isActive)
+                                    Positioned(
+                                      right: 0,
+                                      top: 0,
+                                      child: Container(
+                                        width: 15,
+                                        height: 15,
+                                        decoration: BoxDecoration(
+                                          shape: BoxShape.circle,
+                                          color: Colors.green,
+                                          border: Border.all(color: Colors.white, width: 2),
+                                        ),
+                                      ),
+                                    ),
+                                ],
+                              ),
+                              title: Text(doctor.name),
+                              subtitle: Text(doctor.speciality),
+                              trailing: Row(
+                                mainAxisSize: MainAxisSize.min,
+                                children: [
+                                  Switch(
+                                    value: doctor.isActive,
+                                    onChanged: (newValue) async {
+                                      List<DoctorModel> updatedDoctorsList = List.from(activeDoctors);
+                                      final index = updatedDoctorsList.indexWhere((element) => element.id == doctor.id);
+
+                                      if (index != -1) {
+                                        updatedDoctorsList[index] = doctor.copyWith(isActive: newValue);
+                                        await DatabaseService.instance.updateDoctorInformation(doctor.copyWith(isActive: newValue));
+                                        setState(() => activeDoctors = updatedDoctorsList);
+                                      }
+                                    },
+                                  ),
+                                  IconButton(
+                                    icon: const Icon(Icons.more_vert),
+                                    onPressed: () {
+                                      _showEditDialog(context, doctor);
+                                    },
+                                  ),
+                                ],
+                              ),
+                            );
+                          },
+                        ),
+                      ],
                     ),
                   ),
-                  const SizedBox(height: 20),
-                  ListView.builder(
-                    shrinkWrap: true,
-                    physics: const NeverScrollableScrollPhysics(),
-                    itemCount: activeDoctors.length,
-                    itemBuilder: (BuildContext context, int index) {
-                      final doctor = activeDoctors[index];
-                      return ListTile(
-                        leading: Stack(
-                          children: [
-                            CircleAvatar(
-                              radius: 30,
-                              backgroundImage: NetworkImage(doctor['profilePicUrl']),
-                            ),
-                            if (doctor['isActive'])
-                              Positioned(
-                                right: 0,
-                                top: 0,
-                                child: Container(
-                                  width: 15,
-                                  height: 15,
-                                  decoration: BoxDecoration(
-                                    shape: BoxShape.circle,
-                                    color: Colors.green,
-                                    border: Border.all(color: Colors.white, width: 2),
-                                  ),
-                                ),
-                              ),
-                          ],
-                        ),
-                        title: Text(doctor['name']),
-                        subtitle: Text(doctor['speciality']),
-                        trailing: Row(
-                          mainAxisSize: MainAxisSize.min,
-                          children: [
-                            Switch(
-                              value: doctor['isActive'],
-                              onChanged: (newValue) {
-                                setState(() {
-                                  doctor['isActive'] = newValue;
-                                });
-                              },
-                            ),
-
-                            // Dialog for update/delete options
-                            IconButton(
-                              icon: const Icon(Icons.more_vert),
-                              onPressed: () {
-                                _showEditDialog(context, index);
-                              },
-                            ),
-                          ],
-                        ),
-                      );
-                    },
-                  ),
-                ],
+                ),
               ),
-            ),
-          ),
-        ),
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
@@ -136,13 +147,7 @@ class _EditActiveDoctorsState extends State<EditActiveDoctors> {
     );
   }
 
-  void _showEditDialog(BuildContext context, int index) {
-    Map<String, dynamic> doctor = activeDoctors[index];
-
-    TextEditingController nameController = TextEditingController(text: doctor['name']);
-    TextEditingController specialityController = TextEditingController(text: doctor['speciality']);
-    TextEditingController profilePicUrlController = TextEditingController(text: doctor['profilePicUrl']);
-
+  void _showEditDialog(BuildContext context, DoctorModel doctor) {
     showDialog(
       context: context,
       builder: (BuildContext context) {
@@ -153,15 +158,16 @@ class _EditActiveDoctorsState extends State<EditActiveDoctors> {
             TextButton(
               onPressed: () {
                 Navigator.pop(context);
-                _showEditBottomSheet(context, doctor, index);
+                _showEditBottomSheet(context, doctor);
               },
               child: const Text('Update'),
             ),
             TextButton(
-              onPressed: () {
-                setState(() {
-                  activeDoctors.removeAt(index);
-                });
+              onPressed: () async {
+                activeDoctors.remove(doctor);
+                await DatabaseService.instance.deleteDoctor(doctor);
+                _getDoctorList();
+                setState(() {});
                 Navigator.pop(context);
               },
               child: const Text('Delete'),
@@ -172,10 +178,10 @@ class _EditActiveDoctorsState extends State<EditActiveDoctors> {
     );
   }
 
-  void _showEditBottomSheet(BuildContext context, Map<String, dynamic> doctor, int index) {
-    TextEditingController nameController = TextEditingController(text: doctor['name']);
-    TextEditingController specialityController = TextEditingController(text: doctor['speciality']);
-    TextEditingController profilePicUrlController = TextEditingController(text: doctor['profilePicUrl']);
+  void _showEditBottomSheet(BuildContext context, DoctorModel doctor) {
+    TextEditingController nameController = TextEditingController(text: doctor.name);
+    TextEditingController specialityController = TextEditingController(text: doctor.speciality);
+    TextEditingController profilePicUrlController = TextEditingController(text: doctor.profileImageUrl);
 
     showModalBottomSheet(
       context: context,
@@ -208,13 +214,13 @@ class _EditActiveDoctorsState extends State<EditActiveDoctors> {
                   ),
                   const SizedBox(height: 16),
                   ElevatedButton(
-                    onPressed: () {
-                      setState(() {
-                        // Update doctor information
-                        activeDoctors[index]['name'] = nameController.text;
-                        activeDoctors[index]['speciality'] = specialityController.text;
-                        activeDoctors[index]['profilePicUrl'] = profilePicUrlController.text;
-                      });
+                    onPressed: () async {
+                      final name = nameController.text;
+                      final speciality = specialityController.text;
+                      final profilePicUrl = profilePicUrlController.text;
+                      final model = doctor.copyWith(name: name, speciality: speciality, profileImageUrl: profilePicUrl);
+                      await DatabaseService.instance.updateDoctorInformation(model);
+                      _getDoctorList();
                       Navigator.pop(context);
                     },
                     child: const Text(
@@ -267,20 +273,20 @@ class _EditActiveDoctorsState extends State<EditActiveDoctors> {
                   ),
                   const SizedBox(height: 16),
                   ElevatedButton(
-                    onPressed: () {
-                      // setState(() {
-                      //   // Add new doctor to the list
-                      //   activeDoctors.add({
-                      //     'name': nameController.text,
-                      //     'speciality': specialityController.text,
-                      //     'profilePicUrl': profilePicUrlController.text,
-                      //     'isActive': false, // Default to inactive
-                      //   });
-                      // });
-                      // Navigator.pop(context);
+                    onPressed: () async {
                       final name = nameController.text;
                       final speciality = specialityController.text;
                       final profileImageUrl = profilePicUrlController.text;
+                      DoctorModel model = DoctorModel(
+                        id: "",
+                        name: name,
+                        speciality: speciality,
+                        profileImageUrl: profileImageUrl,
+                        isActive: false,
+                      );
+                      await DatabaseService.instance.setDoctorInformation(model);
+                      _getDoctorList();
+                      Navigator.pop(context);
                     },
                     child: const Text(
                       'Add Doctor',
