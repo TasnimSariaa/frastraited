@@ -53,7 +53,7 @@ class _SettingScreenState extends State<SettingScreen> {
                             Navigator.push(
                               context,
                               MaterialPageRoute(
-                                builder: (context) => const HomeScreen(admin: true),
+                                builder: (context) => const HomeScreen(),
                               ),
                             );
                           },

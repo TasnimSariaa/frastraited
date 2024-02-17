@@ -35,7 +35,7 @@ class _MyAppState extends State<MyApp> {
         '/login': (context) => const loginScreen(),
         '/signUp': (context) => const signUpScreen(),
         '/forgotPassword': (context) => const forgotPasswordScreen(),
-        '/userHome': (context) => const MainBottomNavScreen(admin: false),
+        '/userHome': (context) => const MainBottomNavScreen(),
       },
     );
   }

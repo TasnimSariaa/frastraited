@@ -18,8 +18,6 @@ class _loginScreenState extends State<loginScreen> {
   TextEditingController loginemailController = TextEditingController();
   TextEditingController loginpasswordController = TextEditingController();
 
-  bool admin = false;
-
   bool isLoading = false;
 
   @override
@@ -87,16 +85,14 @@ class _loginScreenState extends State<loginScreen> {
                       var loginPass = loginpasswordController.text.trim();
                       try {
                         final User? firebaseUser = (await FirebaseAuth.instance.signInWithEmailAndPassword(email: loginEmail, password: loginPass)).user;
-
                         if (firebaseUser != null) {
+                          // final user = await DatabaseService.instance.getUserInfo(firebaseUser.uid);
                           isLoading = false;
                           setState(() {});
-                          Navigator.push(
+                          Navigator.pushReplacement(
                             context,
                             MaterialPageRoute(
-                              builder: (context) => MainBottomNavScreen(
-                                admin: admin,
-                              ),
+                              builder: (context) => MainBottomNavScreen(),
                             ),
                           );
                         } else {

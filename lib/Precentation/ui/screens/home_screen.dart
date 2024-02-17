@@ -1,3 +1,4 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:frastraited/Precentation/ui/screens/admin_site/adminHome/EditActiveDoctorsScreen.dart';
 import 'package:frastraited/Precentation/ui/screens/admin_site/adminHome/EditAppointmentScreen.dart';
@@ -16,13 +17,12 @@ import 'package:frastraited/screen/homeCardsScreens/operatinPac_screen.dart';
 import 'package:frastraited/screen/homeCardsScreens/pendingTests_screen.dart';
 import 'package:frastraited/screen/homeCardsScreens/reportCollection_screen.dart';
 import 'package:frastraited/screen/homeCardsScreens/vaccinePac_screen.dart';
+import 'package:frastraited/screen/service/database_service.dart';
 import 'package:frastraited/screen/widgets/bodyBackground.dart';
 // Import the SearchField widget
 
 class HomeScreen extends StatefulWidget {
-  final bool admin;
-
-  const HomeScreen({super.key, required this.admin});
+  const HomeScreen({super.key});
 
   @override
   State<HomeScreen> createState() => _HomeScreenState();
@@ -42,8 +42,25 @@ class _HomeScreenState extends State<HomeScreen> {
   int _selectedIndex = 0;
   int _hoveredIndex = -1;
 
+  bool isAdmin = false;
+
+  @override
+  void initState() {
+    super.initState();
+    if (FirebaseAuth.instance.currentUser != null) {
+      _getUser(FirebaseAuth.instance.currentUser!.uid);
+    }
+  }
+
+  void _getUser(String uid) async {
+    final user = await DatabaseService.instance.getUserInfo(uid);
+    setState(() {
+      isAdmin = user.userType.toLowerCase() == "admin";
+    });
+  }
+
   List<Widget> get _screens {
-    if (widget.admin) {
+    if (isAdmin) {
       return const [
         EditActiveDoctors(),
         EditOperation(),
@@ -148,7 +165,8 @@ class _HomeScreenState extends State<HomeScreen> {
         child: Container(
           height: 50,
           padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 10),
-          margin: const EdgeInsets.symmetric(vertical: 20, horizontal: 20), // Example margin values
+          margin: const EdgeInsets.symmetric(vertical: 20, horizontal: 20),
+          // Example margin values
           decoration: BoxDecoration(
             color: isHovered ? Colors.grey.shade100 : Colors.white,
             borderRadius: BorderRadius.circular(10),

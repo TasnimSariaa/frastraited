@@ -15,12 +15,12 @@ class signUpScreen extends StatefulWidget {
 class _signUpScreenState extends State<signUpScreen> {
   bool isLoading = true;
 
-  _signUpScreenState() {
-    selectedType = userType[0];
-  }
+  // _signUpScreenState() {
+  //   selectedType = userType[0];
+  // }
 
-  final userType = ['User', 'Doctor', 'Admin'];
-  String? selectedType = "User";
+  // final userType = ['User', 'Doctor'];
+  // String? selectedType = "User";
 
   final FirebaseAuth _auth = FirebaseAuth.instance;
 
@@ -33,7 +33,7 @@ class _signUpScreenState extends State<signUpScreen> {
       await FirebaseFirestore.instance.collection('users').doc(userCredential.user?.uid).set({
         'firstName': firstName,
         'lastName': lastName,
-        'userType': selectedType,
+        'userType': "User",
         'phone': phone,
         'email': email,
         'userid': userCredential.user?.uid,
@@ -136,22 +136,22 @@ class _signUpScreenState extends State<signUpScreen> {
                   const SizedBox(
                     height: 20,
                   ),
-                  DropdownButtonFormField(
-                    value: selectedType,
-                    items: userType.map((e) {
-                      return DropdownMenuItem(
-                        value: e,
-                        child: Text(e),
-                      );
-                    }).toList(),
-                    onChanged: (val) {
-                      setState(() {
-                        selectedType = val as String;
-                      });
-                    },
-                    decoration: InputDecoration(labelText: "User Type ", labelStyle: TextStyle(color: Colors.black)),
-                    style: TextStyle(color: Colors.grey, fontWeight: FontWeight.w500, fontSize: 16),
-                  ),
+                  // DropdownButtonFormField(
+                  //   value: selectedType,
+                  //   items: userType.map((e) {
+                  //     return DropdownMenuItem(
+                  //       value: e,
+                  //       child: Text(e),
+                  //     );
+                  //   }).toList(),
+                  //   onChanged: (val) {
+                  //     setState(() {
+                  //       selectedType = val as String;
+                  //     });
+                  //   },
+                  //   decoration: InputDecoration(labelText: "User Type ", labelStyle: TextStyle(color: Colors.black)),
+                  //   style: TextStyle(color: Colors.grey, fontWeight: FontWeight.w500, fontSize: 16),
+                  // ),
                   const SizedBox(
                     height: 16,
                   ),

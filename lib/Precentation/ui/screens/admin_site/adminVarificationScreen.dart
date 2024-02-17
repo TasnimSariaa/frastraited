@@ -3,7 +3,6 @@ import 'package:frastraited/Precentation/ui/screens/main_bottom_nav_screen.dart'
 import 'package:frastraited/Precentation/ui/utility/app_colors.dart';
 import 'package:frastraited/Precentation/ui/widgets/app_logo.dart';
 import 'package:frastraited/screen/onboarding/forgotPasswordScreen.dart';
-import 'package:frastraited/screen/onboarding/loginScreen.dart';
 import 'package:frastraited/screen/onboarding/signUpScreen.dart';
 import 'package:frastraited/screen/widgets/bodyBackground.dart';
 
@@ -17,10 +16,9 @@ class AdminVerificationScreen extends StatefulWidget {
 class _AdminVerificationScreenState extends State<AdminVerificationScreen> {
   @override
   Widget build(BuildContext context) {
+    bool admin = true; //so that we can identify researcher
 
-    bool admin =true;//so that we can identify researcher
-
-    return  Scaffold(
+    return Scaffold(
       body: BodyBackground(
         child: SafeArea(
           child: Padding(
@@ -32,8 +30,10 @@ class _AdminVerificationScreenState extends State<AdminVerificationScreen> {
                   mainAxisAlignment: MainAxisAlignment.start,
                   children: [
                     IconButton(
-                      icon: Icon(Icons.arrow_back,
-                        color: AppColors.primaryColor,),
+                      icon: Icon(
+                        Icons.arrow_back,
+                        color: AppColors.primaryColor,
+                      ),
                       onPressed: () {
                         Navigator.pop(context);
                       },
@@ -76,10 +76,9 @@ class _AdminVerificationScreenState extends State<AdminVerificationScreen> {
                       Navigator.push(
                         context,
                         MaterialPageRoute(
-                          builder: (context) => MainBottomNavScreen(admin:admin),
+                          builder: (context) => MainBottomNavScreen(),
                         ),
                       );
-
                     },
                     child: const Text(
                       'Next',
