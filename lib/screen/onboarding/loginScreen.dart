@@ -1,6 +1,5 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:frastraited/Precentation/ui/screens/home_screen.dart';
 import 'package:frastraited/Precentation/ui/screens/main_bottom_nav_screen.dart';
 import 'package:frastraited/Precentation/ui/utility/app_colors.dart';
 import 'package:frastraited/Precentation/ui/widgets/app_logo.dart';
@@ -16,11 +15,13 @@ class loginScreen extends StatefulWidget {
 }
 
 class _loginScreenState extends State<loginScreen> {
-
   TextEditingController loginemailController = TextEditingController();
   TextEditingController loginpasswordController = TextEditingController();
 
-  bool admin=false;
+  bool admin = false;
+
+  bool isLoading = true;
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -35,8 +36,10 @@ class _loginScreenState extends State<loginScreen> {
                   mainAxisAlignment: MainAxisAlignment.start,
                   children: [
                     IconButton(
-                      icon: Icon(Icons.arrow_back,
-                      color: AppColors.primaryColor,),
+                      icon: const Icon(
+                        Icons.arrow_back,
+                        color: AppColors.primaryColor,
+                      ),
                       onPressed: () {
                         Navigator.pop(context);
                       },
@@ -77,27 +80,33 @@ class _loginScreenState extends State<loginScreen> {
                 SizedBox(
                   width: double.infinity,
                   child: ElevatedButton(
-                    onPressed: () async{
+                    onPressed: () async {
+                      isLoading = true;
+                      setState(() {});
                       var loginEmail = loginemailController.text.trim();
-                      var loginPass= loginpasswordController.text.trim();
-                      try{
-                        final User? firebaseUser =
-                        (await FirebaseAuth.instance.
-                        signInWithEmailAndPassword(email: loginEmail, password: loginPass)
-                        ).user;
+                      var loginPass = loginpasswordController.text.trim();
+                      try {
+                        final User? firebaseUser = (await FirebaseAuth.instance.signInWithEmailAndPassword(email: loginEmail, password: loginPass)).user;
 
-                        if(firebaseUser != null ){
+                        if (firebaseUser != null) {
+                          isLoading = false;
+                          setState(() {});
                           Navigator.push(
                             context,
                             MaterialPageRoute(
-                              builder: (context) => MainBottomNavScreen(admin: admin,),
+                              builder: (context) => MainBottomNavScreen(
+                                admin: admin,
+                              ),
                             ),
                           );
-                        }
-                        else{
+                        } else {
+                          isLoading = false;
+                          setState(() {});
                           print("Check Email and password");
                         }
-                      }on FirebaseAuthException catch(e){
+                      } on FirebaseAuthException catch (e) {
+                        isLoading = false;
+                        setState(() {});
                         showDialog(
                           context: context,
                           builder: (BuildContext context) {
@@ -116,12 +125,17 @@ class _loginScreenState extends State<loginScreen> {
                           },
                         );
                       }
-
                     },
-                    child: const Text(
-                      'Next',
-                      style: TextStyle(color: Colors.white),
-                    ),
+                    child: isLoading
+                        ? const SizedBox(
+                            height: 24,
+                            width: 24,
+                            child: CircularProgressIndicator(),
+                          )
+                        : const Text(
+                            'Next',
+                            style: TextStyle(color: Colors.white),
+                          ),
                   ),
                 ),
                 const SizedBox(height: 48),

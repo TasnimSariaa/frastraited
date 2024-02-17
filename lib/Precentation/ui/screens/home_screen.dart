@@ -6,10 +6,7 @@ import 'package:frastraited/Precentation/ui/screens/admin_site/adminHome/EditOpe
 import 'package:frastraited/Precentation/ui/screens/admin_site/adminHome/EditPandingTestScreen.dart';
 import 'package:frastraited/Precentation/ui/screens/admin_site/adminHome/EditReportCollectionScreen.dart';
 import 'package:frastraited/Precentation/ui/screens/admin_site/adminHome/EditVaccineScreen.dart';
-import 'package:frastraited/Precentation/ui/screens/history_screen.dart';
-import 'package:frastraited/Precentation/ui/screens/profile_screen.dart';
 import 'package:frastraited/Precentation/ui/utility/app_colors.dart';
-import 'package:frastraited/Precentation/ui/utility/assets_path.dart';
 import 'package:frastraited/Precentation/ui/widgets/home/circle_Icon_button.dart';
 import 'package:frastraited/screen/homeCardsScreens/activeDoctor_screen.dart';
 import 'package:frastraited/screen/homeCardsScreens/appointment_screen.dart';
@@ -23,7 +20,7 @@ import 'package:frastraited/screen/widgets/bodyBackground.dart';
 class HomeScreen extends StatefulWidget {
   final bool admin;
 
-  const HomeScreen({Key? key, required this.admin}) : super(key: key);
+  const HomeScreen({super.key, required this.admin});
 
   @override
   State<HomeScreen> createState() => _HomeScreenState();
@@ -84,7 +81,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   const SizedBox(height: 16),
                   GridView.builder(
                     shrinkWrap: true,
-                    physics: NeverScrollableScrollPhysics(),
+                    physics: const NeverScrollableScrollPhysics(),
                     gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
                       crossAxisCount: 2,
                       crossAxisSpacing: 1,
@@ -135,8 +132,8 @@ class _HomeScreenState extends State<HomeScreen> {
         onTap: onTap,
         child: Container(
           height: 50,
-          padding: EdgeInsets.symmetric(vertical: 10, horizontal: 10),
-          margin: EdgeInsets.symmetric(vertical: 20, horizontal: 20), // Example margin values
+          padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 10),
+          margin: const EdgeInsets.symmetric(vertical: 20, horizontal: 20), // Example margin values
           decoration: BoxDecoration(
             color: isHovered ? Colors.grey.shade100 : Colors.white,
             borderRadius: BorderRadius.circular(10),
@@ -155,7 +152,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   const SizedBox(height: 8),
                   Text(
                     category,
-                    style: TextStyle(fontSize: 14, fontWeight: FontWeight.w700),
+                    style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w700),
                     textAlign: TextAlign.center,
                   ),
                 ],

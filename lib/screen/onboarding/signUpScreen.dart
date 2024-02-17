@@ -1,16 +1,9 @@
-
-
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-
 import 'package:frastraited/Precentation/ui/utility/app_colors.dart';
 import 'package:frastraited/screen/onboarding/loginScreen.dart';
 import 'package:frastraited/screen/widgets/bodyBackground.dart';
-
-
-
 
 class signUpScreen extends StatefulWidget {
   const signUpScreen({super.key});
@@ -20,40 +13,33 @@ class signUpScreen extends StatefulWidget {
 }
 
 class _signUpScreenState extends State<signUpScreen> {
+  bool isLoading = true;
 
-  _signUpScreenState(){
+  _signUpScreenState() {
     selectedType = userType[0];
   }
 
+  final userType = ['User', 'Doctor', 'Admin'];
+  String? selectedType = "User";
 
-   final userType=['User','Doctor','Admin'];
-   String? selectedType="User";
+  final FirebaseAuth _auth = FirebaseAuth.instance;
 
-   final FirebaseAuth _auth = FirebaseAuth.instance;
-
-
-
-
-  Future<void> _signUp(String email, String firstName, String lastName,
-      String phone, String password) async {
+  Future<void> _signUp(String email, String firstName, String lastName, String phone, String password) async {
     try {
-      UserCredential userCredential = await _auth
-          .createUserWithEmailAndPassword(email: email, password: password);
+      UserCredential userCredential = await _auth.createUserWithEmailAndPassword(email: email, password: password);
 
       await userCredential.user?.updateDisplayName(firstName);
 
-      await FirebaseFirestore.instance
-          .collection('users')
-          .doc(userCredential.user?.uid)
-          .set({
+      await FirebaseFirestore.instance.collection('users').doc(userCredential.user?.uid).set({
         'firstName': firstName,
         'lastName': lastName,
         'userType': selectedType,
         'phone': phone,
         'email': email,
-        'userid': userCredential.user?.uid
-
+        'userid': userCredential.user?.uid,
       });
+      isLoading = false;
+      setState(() {});
       Navigator.push(
         context,
         MaterialPageRoute(builder: (context) {
@@ -82,15 +68,13 @@ class _signUpScreenState extends State<signUpScreen> {
     }
   }
 
-
   TextEditingController useremailController = TextEditingController();
   TextEditingController userfirstNameController = TextEditingController();
   TextEditingController userlastNameController = TextEditingController();
   TextEditingController userphoneController = TextEditingController();
   TextEditingController userpasswordController = TextEditingController();
 
-
-  User? currentUser= FirebaseAuth.instance.currentUser;
+  User? currentUser = FirebaseAuth.instance.currentUser;
 
   @override
   Widget build(BuildContext context) {
@@ -154,37 +138,20 @@ class _signUpScreenState extends State<signUpScreen> {
                   ),
                   DropdownButtonFormField(
                     value: selectedType,
-                      items: userType.map(
-                          (e){
-                            return DropdownMenuItem(
-                                child: Text(e),
-                                value: e,
-
-                            );
-                          }
-                      ).toList(),
-                      onChanged: (val){
+                    items: userType.map((e) {
+                      return DropdownMenuItem(
+                        value: e,
+                        child: Text(e),
+                      );
+                    }).toList(),
+                    onChanged: (val) {
                       setState(() {
-                        selectedType=val as String;
-
+                        selectedType = val as String;
                       });
-                      },
-                       decoration: InputDecoration(
-                         labelText: "User Type ",
-                         labelStyle: TextStyle(
-                           color: Colors.black
-                         )
-                       ),
-                    style: TextStyle(
-                      color: Colors.grey,
-                      fontWeight: FontWeight.w500,
-                      fontSize: 16
-
-                    ),
-
-                      ),
-
-
+                    },
+                    decoration: InputDecoration(labelText: "User Type ", labelStyle: TextStyle(color: Colors.black)),
+                    style: TextStyle(color: Colors.grey, fontWeight: FontWeight.w500, fontSize: 16),
+                  ),
                   const SizedBox(
                     height: 16,
                   ),
@@ -212,19 +179,22 @@ class _signUpScreenState extends State<signUpScreen> {
                     width: double.infinity,
                     child: ElevatedButton(
                       onPressed: () {
+                        isLoading = true;
+                        setState(() {});
                         _signUp(
-                            useremailController.text.trim(),
-                            userfirstNameController.text.trim(),
-                            userlastNameController.text.trim(),
-                            userphoneController.text.trim(),
-                            userpasswordController.text.trim());
-                        },
-
-
-                      child: const Text(
-                        'Next',
-                        style: TextStyle(color: Colors.white),
-                      ),
+                          useremailController.text.trim(),
+                          userfirstNameController.text.trim(),
+                          userlastNameController.text.trim(),
+                          userphoneController.text.trim(),
+                          userpasswordController.text.trim(),
+                        );
+                      },
+                      child: isLoading
+                          ? const CircularProgressIndicator()
+                          : const Text(
+                              'Next',
+                              style: TextStyle(color: Colors.white),
+                            ),
                     ),
                   ),
                   const SizedBox(
@@ -245,11 +215,13 @@ class _signUpScreenState extends State<signUpScreen> {
                         onPressed: () {
                           Navigator.pop(context);
                         },
-                        child: Text('Sign In',
-                            style: TextStyle(
-                              color: AppColors.primaryColor,
-                              fontSize: 16,
-                            )),
+                        child: Text(
+                          'Sign In',
+                          style: TextStyle(
+                            color: AppColors.primaryColor,
+                            fontSize: 16,
+                          ),
+                        ),
                       ),
                     ],
                   ),
