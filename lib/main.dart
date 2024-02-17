@@ -7,9 +7,6 @@ import 'package:frastraited/Precentation/ui/utility/app_theme_data.dart';
 import 'package:frastraited/firebase_options.dart';
 import 'package:frastraited/screen/onboarding/forgotPasswordScreen.dart';
 import 'package:frastraited/screen/onboarding/loginScreen.dart';
-import 'package:frastraited/screen/onboarding/registrationScreen.dart';
-import 'package:frastraited/screen/onboarding/pinVerificationScreen.dart';
-import 'package:frastraited/screen/onboarding/resetPasswordScreen.dart';
 import 'package:frastraited/screen/onboarding/signUpScreen.dart';
 import 'package:frastraited/screen/onboarding/splashScreen.dart';
 
@@ -30,27 +27,20 @@ class MyApp extends StatefulWidget {
 }
 
 class _MyAppState extends State<MyApp> {
+
+
   @override
   Widget build(BuildContext context) {
-    User? user;
-    @override
-    void initState(){
-      super.initState();
-      user= FirebaseAuth.instance.currentUser;
-    }
+
 
     return MaterialApp(
       theme: AppThemeData.lightThemeData,
       debugShowCheckedModeBanner: false,
       title: "My project",
-      initialRoute: user!= null ? "/" : '/userHome',
+      initialRoute: '/'
       routes: {
         '/': (context) => const splashScreen(),
         '/login': (context) => const loginScreen(),
-        '/pinVarification': (context) => const pinVerificationScreen(),
-        '/setPassword': (context) => const resetPasswordScreen(),
-        '/emailVarification': (context) => const emailVerificationScreen(),
-        '/registration': (context) => const registrationScreen(),
         '/signUp': (context) => const signUpScreen(),
         '/forgotPassword': (context) => const forgotPasswordScreen(),
         '/userHome' : (context) => const MainBottomNavScreen(admin: false,),

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:frastraited/Precentation/ui/screens/home_screen.dart';
 import 'package:frastraited/Precentation/ui/utility/app_colors.dart';
-import 'package:frastraited/screen/onboarding/resetPasswordScreen.dart';
+//import 'package:frastraited/screen/onboarding/resetPasswordScreen.dart';
 import 'package:frastraited/screen/widgets/bodyBackground.dart';
 
 class SettingScreen extends StatefulWidget {
@@ -52,7 +53,7 @@ class _SettingScreenState extends State<SettingScreen> {
                             Navigator.push(
                               context,
                               MaterialPageRoute(
-                                builder: (context) => const resetPasswordScreen(),
+                                builder: (context) => const HomeScreen (admin: true),
                               ),
                             );
                           },

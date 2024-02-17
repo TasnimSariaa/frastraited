@@ -1,3 +1,4 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:frastraited/Precentation/ui/utility/app_colors.dart';
@@ -7,17 +8,18 @@ import 'package:frastraited/screen/widgets/bodyBackground.dart';
 
 class splashScreen extends StatefulWidget {
   const splashScreen({super.key});
-
   @override
   State<splashScreen> createState() => _splashScreenState();
 }
 
 class _splashScreenState extends State<splashScreen> {
+
+  User? user;
+  @override
   void initState(){
     super.initState();
-    goToLogin();
+    user= FirebaseAuth.instance.currentUser;
   }
-
   void goToLogin(){
     Future.delayed(Duration(seconds:2)).then((value){
       Navigator.pushAndRemoveUntil(context,
