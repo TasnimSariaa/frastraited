@@ -15,7 +15,7 @@ import 'package:frastraited/screen/homeCardsScreens/activeDoctor_screen.dart';
 import 'package:frastraited/screen/homeCardsScreens/appointment_screen.dart';
 import 'package:frastraited/screen/homeCardsScreens/donation_screen.dart';
 import 'package:frastraited/screen/homeCardsScreens/operatinPac_screen.dart';
-import 'package:frastraited/screen/homeCardsScreens/pandingTests_screen.dart';
+import 'package:frastraited/screen/homeCardsScreens/pendingTests_screen.dart';
 import 'package:frastraited/screen/homeCardsScreens/reportCollection_screen.dart';
 import 'package:frastraited/screen/homeCardsScreens/vaccinePac_screen.dart';
 import 'package:frastraited/screen/widgets/bodyBackground.dart';
@@ -41,6 +41,7 @@ class _HomeScreenState extends State<HomeScreen> {
   ];
 
   int _selectedIndex = 0;
+  int _hoveredIndex = -1;
 
   List<Widget> get _screens {
     if (widget.admin) {
@@ -101,6 +102,12 @@ class _HomeScreenState extends State<HomeScreen> {
                           navigateToScreen(index);
                         },
                         isSelected: _selectedIndex == index,
+                        isHovered: _hoveredIndex == index,
+                        onHover: (value) {
+                          setState(() {
+                            _hoveredIndex = value ? index : -1;
+                          });
+                        },
                       );
                     },
                   ),
@@ -118,32 +125,41 @@ class _HomeScreenState extends State<HomeScreen> {
     required IconData icon,
     required VoidCallback onTap,
     required bool isSelected,
+    required bool isHovered,
+    required ValueChanged<bool> onHover,
   }) {
-    return GestureDetector(
-      onTap: onTap,
-      child: Card(
-        color: Colors.white,
-        elevation: 3,
-        shape: RoundedRectangleBorder(
-          side: isSelected
-              ? BorderSide(color: AppColors.primaryColor, width: 2)
-              : BorderSide.none,
-          borderRadius: BorderRadius.circular(10),
-        ),
-        child: Padding(
-          padding: const EdgeInsets.all(16),
-          child: Center(
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Icon(icon, color: AppColors.primaryColor, size: 36),
-                const SizedBox(height: 8),
-                Text(
-                  category,
-                  style: TextStyle(fontSize: 18),
-                  textAlign: TextAlign.center,
-                ),
-              ],
+    return MouseRegion(
+      onEnter: (_) => onHover(true),
+      onExit: (_) => onHover(false),
+      child: GestureDetector(
+        onTap: onTap,
+        child: Container(
+          height: 50,
+          padding: EdgeInsets.symmetric(vertical: 10, horizontal: 10),
+          margin: EdgeInsets.symmetric(vertical: 20, horizontal: 20), // Example margin values
+          decoration: BoxDecoration(
+            color: isHovered ? Colors.grey.shade100 : Colors.white,
+            borderRadius: BorderRadius.circular(10),
+            border: Border.all(
+              color: isSelected ? AppColors.primaryColor : Colors.transparent,
+              width: 2,
+            ),
+          ),
+          child: Padding(
+            padding: const EdgeInsets.all(16),
+            child: Center(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Icon(icon, color: AppColors.primaryColor, size: 36),
+                  const SizedBox(height: 8),
+                  Text(
+                    category,
+                    style: TextStyle(fontSize: 14, fontWeight: FontWeight.w700),
+                    textAlign: TextAlign.center,
+                  ),
+                ],
+              ),
             ),
           ),
         ),
@@ -163,7 +179,7 @@ class _HomeScreenState extends State<HomeScreen> {
       decoration: InputDecoration(
         hintText: 'Search',
         filled: true,
-        fillColor: Colors.grey.shade200,
+        fillColor: Colors.white,
         prefixIcon: const Icon(Icons.search, color: Colors.grey),
         border: OutlineInputBorder(
           borderSide: BorderSide.none,
@@ -178,7 +194,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
   AppBar get appBar {
     return AppBar(
-      backgroundColor: Colors.transparent,
+      backgroundColor: AppColors.primaryColor,
       actions: [
         const SizedBox(width: 8),
         CircleIconButton(

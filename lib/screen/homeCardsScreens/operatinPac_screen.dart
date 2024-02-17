@@ -15,17 +15,20 @@ class _OperationScreenState extends State<OperationScreen> {
     {
       'name': 'Heart Surgery',
       'description': 'Heart operation package',
-      'imageUrl': 'https://images.unsplash.com/photo-1593768432127-879c5808b793?q=80&w=1964&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
+      'imageUrl': 'https://example.com/heart_surgery.jpg',
+      'amount': 'BDT 10000',
     },
     {
       'name': 'Brain Surgery',
       'description': 'Brain operation package',
       'imageUrl': 'https://example.com/brain_surgery.jpg',
+      'amount': 'BDT 15000',
     },
     {
       'name': 'Knee Replacement',
       'description': 'Knee operation package',
       'imageUrl': 'https://example.com/knee_replacement.jpg',
+      'amount': 'BDT 8000',
     },
     // Add more operation package information here
   ];
@@ -54,7 +57,7 @@ class _OperationScreenState extends State<OperationScreen> {
                     ],
                   ),
                   const SizedBox(
-                    height: 40,
+                    height: 10,
                   ),
                   Text(
                     'Available Operation Packages',
@@ -64,7 +67,7 @@ class _OperationScreenState extends State<OperationScreen> {
                       color: AppColors.primaryColor,
                     ),
                   ),
-                  const SizedBox(height: 30),
+                  const SizedBox(height: 40),
                   ListView.builder(
                     shrinkWrap: true,
                     physics: NeverScrollableScrollPhysics(),
@@ -108,8 +111,30 @@ class _OperationScreenState extends State<OperationScreen> {
                                           package['description'],
                                           style: TextStyle(color: Colors.grey),
                                         ),
+                                        const SizedBox(height: 4),
+                                        Text(
+                                          'Amount: ${package['amount']}',
+                                          style: TextStyle(fontWeight: FontWeight.bold,color: Colors.blueGrey),
+                                        ),
                                       ],
                                     ),
+                                  ),
+                                  Column(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: [
+                                      IconButton(
+                                        icon: Icon(Icons.delete),
+                                        onPressed: () {
+                                          _showDeleteAlertDialog(context, index);
+                                        },
+                                      ),
+                                      IconButton(
+                                        icon: Icon(Icons.edit),
+                                        onPressed: () {
+                                          _showEditBottomSheet(context, package, index);
+                                        },
+                                      ),
+                                    ],
                                   ),
                                 ],
                               ),
@@ -125,6 +150,176 @@ class _OperationScreenState extends State<OperationScreen> {
           ),
         ),
       ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {
+          _showAddBottomSheet(context);
+        },
+        child: Icon(Icons.add),
+        backgroundColor: AppColors.primaryColor,
+      ),
+    );
+  }
+
+  void _showDeleteAlertDialog(BuildContext context, int index) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text("Delete Operation Package?"),
+          content: Text("Do you want to delete the Package from the list?"),
+          actions: [
+            TextButton(
+              onPressed: () {
+                setState(() {
+                  availableOperationPackages.removeAt(index);
+                });
+                Navigator.of(context).pop();
+              },
+              child: Text(
+                "Delete",
+                style: TextStyle(color: Colors.white),
+              ),
+              style: ButtonStyle(
+                backgroundColor: MaterialStateProperty.all<Color>(AppColors.primaryColor),
+              ),
+            ),
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+              child: Text("Cancel"),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  void _showEditBottomSheet(BuildContext context, Map<String, dynamic> package, int index) {
+    TextEditingController nameController = TextEditingController(text: package['name']);
+    TextEditingController descriptionController = TextEditingController(text: package['description']);
+    TextEditingController amountController = TextEditingController(text: package['amount']);
+    TextEditingController imageUrlController = TextEditingController(text: package['imageUrl']);
+
+    showModalBottomSheet(
+      context: context,
+      isScrollControlled: true,
+      builder: (context) {
+        return SingleChildScrollView(
+          child: Padding(
+            padding: EdgeInsets.only(
+              bottom: MediaQuery.of(context).viewInsets.bottom,
+            ),
+            child: Container(
+              padding: EdgeInsets.all(16),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  TextField(
+                    controller: nameController,
+                    decoration: InputDecoration(labelText: 'Name'),
+                  ),
+                  SizedBox(height: 16),
+                  TextField(
+                    controller: descriptionController,
+                    decoration: InputDecoration(labelText: 'Description'),
+                  ),
+                  SizedBox(height: 16),
+                  TextField(
+                    controller: amountController,
+                    decoration: InputDecoration(labelText: 'Amount'),
+                  ),
+                  SizedBox(height: 16),
+                  TextField(
+                    controller: imageUrlController,
+                    decoration: InputDecoration(labelText: 'Image URL'),
+                  ),
+                  SizedBox(height: 16),
+                  ElevatedButton(
+                    onPressed: () {
+                      setState(() {
+                        availableOperationPackages[index]['name'] = nameController.text;
+                        availableOperationPackages[index]['description'] = descriptionController.text;
+                        availableOperationPackages[index]['amount'] = amountController.text;
+                        availableOperationPackages[index]['imageUrl'] = imageUrlController.text;
+                      });
+                      Navigator.pop(context);
+                    },
+                    child: Text('Update',
+                      style: TextStyle(color: Colors.white),),
+                  ),
+                ],
+              ),
+            ),
+          ),
+        );
+      },
+    );
+  }
+
+  void _showAddBottomSheet(BuildContext context) {
+    TextEditingController nameController = TextEditingController();
+    TextEditingController descriptionController = TextEditingController();
+    TextEditingController amountController = TextEditingController();
+    TextEditingController imageUrlController = TextEditingController();
+
+    showModalBottomSheet(
+      context: context,
+      isScrollControlled: true,
+      builder: (context) {
+        return SingleChildScrollView(
+          child: Padding(
+            padding: EdgeInsets.only(
+              bottom: MediaQuery.of(context).viewInsets.bottom,
+            ),
+            child: Container(
+              padding: EdgeInsets.all(16),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  TextField(
+                    controller: nameController,
+                    decoration: InputDecoration(labelText: 'Name'),
+                  ),
+                  SizedBox(height: 16),
+                  TextField(
+                    controller: descriptionController,
+                    decoration: InputDecoration(labelText: 'Description'),
+                  ),
+                  SizedBox(height: 16),
+                  TextField(
+                    controller: amountController,
+                    decoration: InputDecoration(labelText: 'Amount'),
+                  ),
+                  SizedBox(height: 16),
+                  TextField(
+                    controller: imageUrlController,
+                    decoration: InputDecoration(labelText: 'Image URL'),
+                  ),
+                  SizedBox(height: 16),
+                  ElevatedButton(
+                    onPressed: () {
+                      setState(() {
+                        availableOperationPackages.add({
+                          'name': nameController.text,
+                          'description': descriptionController.text,
+                          'amount': amountController.text,
+                          'imageUrl': imageUrlController.text,
+                        });
+                      });
+                      Navigator.pop(context);
+                    },
+                    child: Text('Add',
+                      style: TextStyle(color: Colors.white),),
+                  ),
+                ],
+              ),
+            ),
+          ),
+        );
+      },
     );
   }
 }

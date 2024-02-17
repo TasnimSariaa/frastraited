@@ -5,10 +5,11 @@ import 'package:flutter/material.dart';
 import 'package:frastraited/Precentation/ui/screens/home_screen.dart';
 import 'package:frastraited/Precentation/ui/utility/app_theme_data.dart';
 import 'package:frastraited/firebase_options.dart';
-import 'package:frastraited/screen/onboarding/emailVerificationScreen.dart';
 import 'package:frastraited/screen/onboarding/forgotPasswordScreen.dart';
 import 'package:frastraited/screen/onboarding/loginScreen.dart';
 import 'package:frastraited/screen/onboarding/registrationScreen.dart';
+import 'package:frastraited/screen/onboarding/pinVerificationScreen.dart';
+import 'package:frastraited/screen/onboarding/resetPasswordScreen.dart';
 import 'package:frastraited/screen/onboarding/signUpScreen.dart';
 import 'package:frastraited/screen/onboarding/splashScreen.dart';
 
@@ -16,7 +17,6 @@ import 'package:frastraited/screen/onboarding/splashScreen.dart';
 import 'Precentation/ui/screens/main_bottom_nav_screen.dart';
 
 void main() async {
-  ///
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
   runApp(const MyApp());
@@ -47,6 +47,8 @@ class _MyAppState extends State<MyApp> {
       routes: {
         '/': (context) => const splashScreen(),
         '/login': (context) => const loginScreen(),
+        '/pinVarification': (context) => const pinVerificationScreen(),
+        '/setPassword': (context) => const resetPasswordScreen(),
         '/emailVarification': (context) => const emailVerificationScreen(),
         '/registration': (context) => const registrationScreen(),
         '/signUp': (context) => const signUpScreen(),
