@@ -42,7 +42,7 @@ class _EditActiveDoctorsState extends State<EditActiveDoctors> {
                     mainAxisAlignment: MainAxisAlignment.start,
                     children: [
                       IconButton(
-                        icon: Icon(
+                        icon: const Icon(
                           Icons.arrow_back,
                           color: AppColors.primaryColor,
                         ),
@@ -53,7 +53,7 @@ class _EditActiveDoctorsState extends State<EditActiveDoctors> {
                     ],
                   ),
                   const SizedBox(height: 20),
-                  Text(
+                  const Text(
                     'Active Doctors',
                     style: TextStyle(
                       fontSize: 24,
@@ -64,7 +64,7 @@ class _EditActiveDoctorsState extends State<EditActiveDoctors> {
                   const SizedBox(height: 20),
                   ListView.builder(
                     shrinkWrap: true,
-                    physics: NeverScrollableScrollPhysics(),
+                    physics: const NeverScrollableScrollPhysics(),
                     itemCount: activeDoctors.length,
                     itemBuilder: (BuildContext context, int index) {
                       final doctor = activeDoctors[index];
@@ -73,8 +73,7 @@ class _EditActiveDoctorsState extends State<EditActiveDoctors> {
                           children: [
                             CircleAvatar(
                               radius: 30,
-                              backgroundImage:
-                              NetworkImage(doctor['profilePicUrl']),
+                              backgroundImage: NetworkImage(doctor['profilePicUrl']),
                             ),
                             if (doctor['isActive'])
                               Positioned(
@@ -86,8 +85,7 @@ class _EditActiveDoctorsState extends State<EditActiveDoctors> {
                                   decoration: BoxDecoration(
                                     shape: BoxShape.circle,
                                     color: Colors.green,
-                                    border: Border.all(
-                                        color: Colors.white, width: 2),
+                                    border: Border.all(color: Colors.white, width: 2),
                                   ),
                                 ),
                               ),
@@ -98,18 +96,18 @@ class _EditActiveDoctorsState extends State<EditActiveDoctors> {
                         trailing: Row(
                           mainAxisSize: MainAxisSize.min,
                           children: [
-                               Switch(
-                                value: doctor['isActive'],
-                                onChanged: (newValue) {
-                                  setState(() {
-                                    doctor['isActive'] = newValue;
-                                  });
-                                },
-                              ),
+                            Switch(
+                              value: doctor['isActive'],
+                              onChanged: (newValue) {
+                                setState(() {
+                                  doctor['isActive'] = newValue;
+                                });
+                              },
+                            ),
 
                             // Dialog for update/delete options
                             IconButton(
-                              icon: Icon(Icons.more_vert),
+                              icon: const Icon(Icons.more_vert),
                               onPressed: () {
                                 _showEditDialog(context, index);
                               },
@@ -130,7 +128,7 @@ class _EditActiveDoctorsState extends State<EditActiveDoctors> {
           _showAddDoctorBottomSheet(context);
         },
         backgroundColor: AppColors.primaryColor, // Set the background color
-        child: Icon(
+        child: const Icon(
           Icons.add,
           color: Colors.white,
         ),
@@ -149,15 +147,15 @@ class _EditActiveDoctorsState extends State<EditActiveDoctors> {
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
-          title: Text('Modify Doctor'),
-          content: Text('Do you want to modify the Doctor list?'),
+          title: const Text('Modify Doctor'),
+          content: const Text('Do you want to modify the Doctor list?'),
           actions: [
             TextButton(
               onPressed: () {
                 Navigator.pop(context);
                 _showEditBottomSheet(context, doctor, index);
               },
-              child: Text('Update'),
+              child: const Text('Update'),
             ),
             TextButton(
               onPressed: () {
@@ -166,7 +164,7 @@ class _EditActiveDoctorsState extends State<EditActiveDoctors> {
                 });
                 Navigator.pop(context);
               },
-              child: Text('Delete'),
+              child: const Text('Delete'),
             ),
           ],
         );
@@ -189,26 +187,26 @@ class _EditActiveDoctorsState extends State<EditActiveDoctors> {
               bottom: MediaQuery.of(context).viewInsets.bottom,
             ),
             child: Container(
-              padding: EdgeInsets.all(16),
+              padding: const EdgeInsets.all(16),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 mainAxisSize: MainAxisSize.min,
                 children: [
                   TextField(
                     controller: nameController,
-                    decoration: InputDecoration(labelText: 'Name'),
+                    decoration: const InputDecoration(labelText: 'Name'),
                   ),
-                  SizedBox(height: 16),
+                  const SizedBox(height: 16),
                   TextField(
                     controller: specialityController,
-                    decoration: InputDecoration(labelText: 'Speciality'),
+                    decoration: const InputDecoration(labelText: 'Speciality'),
                   ),
-                  SizedBox(height: 16),
+                  const SizedBox(height: 16),
                   TextField(
                     controller: profilePicUrlController,
-                    decoration: InputDecoration(labelText: 'Profile Picture URL'),
+                    decoration: const InputDecoration(labelText: 'Profile Picture URL'),
                   ),
-                  SizedBox(height: 16),
+                  const SizedBox(height: 16),
                   ElevatedButton(
                     onPressed: () {
                       setState(() {
@@ -219,7 +217,7 @@ class _EditActiveDoctorsState extends State<EditActiveDoctors> {
                       });
                       Navigator.pop(context);
                     },
-                    child: Text(
+                    child: const Text(
                       'Update',
                       style: TextStyle(color: Colors.white),
                     ),
@@ -248,40 +246,43 @@ class _EditActiveDoctorsState extends State<EditActiveDoctors> {
               bottom: MediaQuery.of(context).viewInsets.bottom,
             ),
             child: Container(
-              padding: EdgeInsets.all(16),
+              padding: const EdgeInsets.all(16),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 mainAxisSize: MainAxisSize.min,
                 children: [
                   TextField(
                     controller: nameController,
-                    decoration: InputDecoration(labelText: 'Name'),
+                    decoration: const InputDecoration(labelText: 'Name'),
                   ),
-                  SizedBox(height: 16),
+                  const SizedBox(height: 16),
                   TextField(
                     controller: specialityController,
-                    decoration: InputDecoration(labelText: 'Speciality'),
+                    decoration: const InputDecoration(labelText: 'Speciality'),
                   ),
-                  SizedBox(height: 16),
+                  const SizedBox(height: 16),
                   TextField(
                     controller: profilePicUrlController,
-                    decoration: InputDecoration(labelText: 'Profile Picture URL'),
+                    decoration: const InputDecoration(labelText: 'Profile Picture URL'),
                   ),
-                  SizedBox(height: 16),
+                  const SizedBox(height: 16),
                   ElevatedButton(
                     onPressed: () {
-                      setState(() {
-                        // Add new doctor to the list
-                        activeDoctors.add({
-                          'name': nameController.text,
-                          'speciality': specialityController.text,
-                          'profilePicUrl': profilePicUrlController.text,
-                          'isActive': false, // Default to inactive
-                        });
-                      });
-                      Navigator.pop(context);
+                      // setState(() {
+                      //   // Add new doctor to the list
+                      //   activeDoctors.add({
+                      //     'name': nameController.text,
+                      //     'speciality': specialityController.text,
+                      //     'profilePicUrl': profilePicUrlController.text,
+                      //     'isActive': false, // Default to inactive
+                      //   });
+                      // });
+                      // Navigator.pop(context);
+                      final name = nameController.text;
+                      final speciality = specialityController.text;
+                      final profileImageUrl = profilePicUrlController.text;
                     },
-                    child: Text(
+                    child: const Text(
                       'Add Doctor',
                       style: TextStyle(color: Colors.white),
                     ),

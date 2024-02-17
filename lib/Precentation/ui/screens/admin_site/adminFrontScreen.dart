@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:frastraited/Precentation/ui/screens/admin_site/adminVarificationScreen.dart';
-import 'package:frastraited/screen/onboarding/loginScreen.dart';
 import 'package:frastraited/screen/widgets/bodyBackground.dart';
 
 class AdminFront extends StatefulWidget {
@@ -22,7 +21,7 @@ class _AdminFrontState extends State<AdminFront> {
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  SizedBox(height: 20),
+                  const SizedBox(height: 20),
                   SizedBox(
                     width: double.infinity,
                     child: ElevatedButton(
@@ -35,15 +34,15 @@ class _AdminFrontState extends State<AdminFront> {
                         );
                       },
                       style: ElevatedButton.styleFrom(
-                        shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.zero
-                        ),
+                        shape: const RoundedRectangleBorder(borderRadius: BorderRadius.zero),
                       ),
-                      child: Text('Patient Site',
-                        style: TextStyle(color: Colors.white),),
+                      child: const Text(
+                        'Patient Site',
+                        style: TextStyle(color: Colors.white),
+                      ),
                     ),
                   ),
-                  SizedBox(height: 20),
+                  const SizedBox(height: 20),
                   SizedBox(
                     width: double.infinity,
                     child: ElevatedButton(
@@ -51,14 +50,13 @@ class _AdminFrontState extends State<AdminFront> {
                         // Navigate to Patient Site
                       },
                       style: ElevatedButton.styleFrom(
-                        shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.zero
-                        ),
+                        shape: const RoundedRectangleBorder(borderRadius: BorderRadius.zero),
                       ),
-                      child: Text('Researcher Site',
-                        style: TextStyle(color: Colors.white),),
+                      child: const Text(
+                        'Researcher Site',
+                        style: TextStyle(color: Colors.white),
+                      ),
                     ),
-
                   ),
                 ],
               ),

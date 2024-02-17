@@ -6,8 +6,7 @@ import 'package:frastraited/Precentation/ui/screens/profile_screen.dart';
 import 'package:frastraited/Precentation/ui/utility/app_colors.dart';
 
 class MainBottomNavScreen extends StatefulWidget {
-  final bool admin;
-  const MainBottomNavScreen({Key? key, required this.admin}) : super(key: key);
+  const MainBottomNavScreen({super.key});
 
   @override
   State<MainBottomNavScreen> createState() => _MainBottomNavScreenState();
@@ -21,10 +20,10 @@ class _MainBottomNavScreenState extends State<MainBottomNavScreen> {
   void initState() {
     super.initState();
     _screens = [
-      HomeScreen(admin: widget.admin), // Pass admin parameter to HomeScreen
-      HistoryScreen(),
-      PaymentsScreen(category: '', type: '', payable: '',),
-      ProfileScreen(),
+      const HomeScreen(), // Pass admin parameter to HomeScreen
+      const HistoryScreen(),
+      PaymentsScreen(category: '', type: '', payable: ''),
+      const ProfileScreen(),
     ];
   }
 
