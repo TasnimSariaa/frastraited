@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:frastraited/Precentation/ui/utility/app_colors.dart';
+import 'package:frastraited/Precentation/ui/utility/search_field.dart'; // Import the SearchField widget
 import 'package:frastraited/screen/widgets/bodyBackground.dart';
 
 class VaccineScreen extends StatefulWidget {
@@ -40,6 +41,9 @@ class _VaccineScreenState extends State<VaccineScreen> {
     // Add more vaccine information here
   ];
 
+  // Controller for search text field
+  TextEditingController searchController = TextEditingController();
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -68,6 +72,13 @@ class _VaccineScreenState extends State<VaccineScreen> {
                   const SizedBox(
                     height: 10,
                   ),
+                  SearchField(
+                    controller: searchController,
+                    onTextChanged: (value) {
+                      setState(() {}); // Trigger rebuild on text change
+                    },
+                  ),
+                  const SizedBox(height: 10),
                   Text(
                     'Available Vaccines',
                     style: TextStyle(

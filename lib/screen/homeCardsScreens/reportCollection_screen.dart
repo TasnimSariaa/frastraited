@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:frastraited/Precentation/ui/screens/Payments_screen.dart';
 import 'package:frastraited/Precentation/ui/utility/app_colors.dart';
 import 'package:frastraited/screen/widgets/bodyBackground.dart';
 
@@ -11,8 +12,8 @@ class ReportCollection extends StatefulWidget {
 
 class _ReportCollectionState extends State<ReportCollection> {
   List<Map<String, dynamic>> testReports = [
-    {'type': 'Blood Test', 'ready': false, 'approximateTime': '11:00 A.M'},
-    {'type': 'Urine Test', 'ready': true}
+    {'type': 'Blood Test', 'ready': false, 'approximateTime': '11:00 A.M', 'payable': 'BDT 200'},
+    {'type': 'Urine Test', 'ready': true, 'payable': 'BDT 150'}
     // Add more test reports as needed
   ];
 
@@ -44,11 +45,7 @@ class _ReportCollectionState extends State<ReportCollection> {
                   const SizedBox(height: 30),
                   Text(
                     'Report Collection',
-                    style: TextStyle(
-                      fontSize: 24,
-                      fontWeight: FontWeight.bold,
-                      color: AppColors.primaryColor,
-                    ),
+                    style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold, color: AppColors.primaryColor),
                   ),
                   const SizedBox(height: 25),
                   ListView.builder(
@@ -79,6 +76,8 @@ class _ReportCollectionState extends State<ReportCollection> {
                                 );
                               },
                             );
+                          } else {
+                            _collectReport(testReports[index]['type'], testReports[index]['payable']);
                           }
                         },
                         child: Container(
@@ -101,20 +100,17 @@ class _ReportCollectionState extends State<ReportCollection> {
                             children: [
                               Text(
                                 'Report : ${testReports[index]['type']}',
-                                style: TextStyle(
-                                  fontSize: 18,
-                                  fontWeight: FontWeight.bold,
-                                ),
+                                style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
                               ),
                               SizedBox(height: 20),
                               if (testReports[index]['ready'])
                                 ElevatedButton(
                                   onPressed: () {
-                                    // Implement collect report functionality
+                                    _collectReport(testReports[index]['type'], testReports[index]['payable']);
                                   },
-                                  child: Text('  Collect Report  ',
-                                    style: TextStyle(color: Colors.white,
-                                        fontWeight: FontWeight.w500),
+                                  child: Text(
+                                    '  Collect Report  ',
+                                    style: TextStyle(color: Colors.white, fontWeight: FontWeight.w500),
                                   ),
                                 )
                               else
@@ -122,7 +118,11 @@ class _ReportCollectionState extends State<ReportCollection> {
                                   'This report is not ready yet! Tap for details.',
                                   style: TextStyle(color: Colors.red),
                                 ),
-
+                              SizedBox(height: 10),
+                              Text(
+                                'Payable: ${testReports[index]['payable']}',
+                                style: TextStyle(color: Colors.blueGrey),
+                              ),
                             ],
                           ),
                         ),
@@ -134,6 +134,16 @@ class _ReportCollectionState extends State<ReportCollection> {
             ),
           ),
         ),
+      ),
+    );
+  }
+
+  void _collectReport(String type, String payable) {
+    // Navigate to PaymentsScreen
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => PaymentsScreen(category: 'Test Report', type: type, payable: payable),
       ),
     );
   }

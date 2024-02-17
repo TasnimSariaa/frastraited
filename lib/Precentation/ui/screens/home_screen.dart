@@ -10,6 +10,7 @@ import 'package:frastraited/Precentation/ui/screens/history_screen.dart';
 import 'package:frastraited/Precentation/ui/screens/profile_screen.dart';
 import 'package:frastraited/Precentation/ui/utility/app_colors.dart';
 import 'package:frastraited/Precentation/ui/utility/assets_path.dart';
+import 'package:frastraited/Precentation/ui/utility/search_field.dart';
 import 'package:frastraited/Precentation/ui/widgets/home/circle_Icon_button.dart';
 import 'package:frastraited/screen/homeCardsScreens/activeDoctor_screen.dart';
 import 'package:frastraited/screen/homeCardsScreens/appointment_screen.dart';
@@ -19,6 +20,7 @@ import 'package:frastraited/screen/homeCardsScreens/pendingTests_screen.dart';
 import 'package:frastraited/screen/homeCardsScreens/reportCollection_screen.dart';
 import 'package:frastraited/screen/homeCardsScreens/vaccinePac_screen.dart';
 import 'package:frastraited/screen/widgets/bodyBackground.dart';
+// Import the SearchField widget
 
 class HomeScreen extends StatefulWidget {
   final bool admin;
@@ -67,6 +69,15 @@ class _HomeScreenState extends State<HomeScreen> {
     }
   }
 
+  TextEditingController searchController = TextEditingController();
+
+
+
+  List<Map<String, dynamic>> get filteredCategories {
+    String query = searchController.text.toLowerCase();
+    return categories.where((cat) => cat['category'].toLowerCase().contains(query)).toList();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -80,7 +91,12 @@ class _HomeScreenState extends State<HomeScreen> {
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
                   const SizedBox(height: 8),
-                  searchTextField,
+                  SearchField(
+                    controller: searchController,
+                    onTextChanged: (value) {
+                      setState(() {}); // Trigger rebuild on text change
+                    },
+                  ), // Use the SearchField widget
                   const SizedBox(height: 16),
                   GridView.builder(
                     shrinkWrap: true,
@@ -90,11 +106,12 @@ class _HomeScreenState extends State<HomeScreen> {
                       crossAxisSpacing: 1,
                       mainAxisSpacing: 1,
                     ),
-                    itemCount: categories.length,
+                    itemCount: filteredCategories.length,
                     itemBuilder: (BuildContext context, int index) {
+                      final category = filteredCategories[index];
                       return _buildCategoryCard(
-                        category: categories[index]['category'],
-                        icon: categories[index]['icon'],
+                        category: category['category'],
+                        icon: category['icon'],
                         onTap: () {
                           setState(() {
                             _selectedIndex = index;
@@ -171,24 +188,6 @@ class _HomeScreenState extends State<HomeScreen> {
     Navigator.push(
       context,
       MaterialPageRoute(builder: (context) => _screens[index]),
-    );
-  }
-
-  TextFormField get searchTextField {
-    return TextFormField(
-      decoration: InputDecoration(
-        hintText: 'Search',
-        filled: true,
-        fillColor: Colors.white,
-        prefixIcon: const Icon(Icons.search, color: Colors.grey),
-        border: OutlineInputBorder(
-          borderSide: BorderSide.none,
-          borderRadius: BorderRadius.circular(10),
-        ),
-        errorBorder: InputBorder.none,
-        focusedBorder: InputBorder.none,
-        enabledBorder: InputBorder.none,
-      ),
     );
   }
 

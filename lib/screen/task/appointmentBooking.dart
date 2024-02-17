@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:frastraited/Precentation/ui/screens/Payments_screen.dart';
 import 'package:frastraited/Precentation/ui/utility/app_colors.dart';
 import 'package:frastraited/screen/widgets/bodyBackground.dart';
 
@@ -141,8 +142,7 @@ class _AppointmentBookingState extends State<AppointmentBooking> {
         actions: [
           TextButton(
             onPressed: () {
-              // Perform payment logic
-              Navigator.pop(context);
+
             },
             child: Text('Pay'),
           ),

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:frastraited/Precentation/ui/screens/Payments_screen.dart';
 import 'package:frastraited/Precentation/ui/utility/app_colors.dart';
 import 'package:frastraited/screen/widgets/bodyBackground.dart';
 
@@ -11,7 +12,12 @@ class PendingTests extends StatefulWidget {
 
 class _PendingTestsState extends State<PendingTests> {
   // Sample list of pending tests (replace with actual data)
-  List<String> pendingTests = ['Blood Test', 'Urine Test', 'X-ray', 'MRI'];
+  List<Map<String, dynamic>> pendingTests = [
+    {'name': 'Blood Test', 'amount': 'BDT 200'},
+    {'name': 'Urine Test', 'amount': 'BDT 150'},
+    {'name': 'X-ray', 'amount': 'BDT 300'},
+    {'name': 'MRI', 'amount': 'BDT 500'},
+  ];
 
   @override
   Widget build(BuildContext context) {
@@ -41,11 +47,7 @@ class _PendingTestsState extends State<PendingTests> {
                   const SizedBox(height: 20),
                   Text(
                     'Pending Tests',
-                    style: TextStyle(
-                      fontSize: 24,
-                      fontWeight: FontWeight.bold,
-                      color: AppColors.primaryColor,
-                    ),
+                    style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold, color: AppColors.primaryColor),
                   ),
                   const SizedBox(height: 40),
                   // Displaying list of pending tests
@@ -54,6 +56,7 @@ class _PendingTestsState extends State<PendingTests> {
                     physics: NeverScrollableScrollPhysics(),
                     itemCount: pendingTests.length,
                     itemBuilder: (context, index) {
+                      final test = pendingTests[index];
                       return Container(
                         height: 87,
                         margin: EdgeInsets.only(bottom: 20),
@@ -73,19 +76,26 @@ class _PendingTestsState extends State<PendingTests> {
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
-                            Text(
-                              pendingTests[index],
-                              style: TextStyle(
-                                fontSize: 18,
-                                fontWeight: FontWeight.bold,
-                              ),
+                            Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  test['name'],
+                                  style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                                ),
+                                Text(
+                                  'Amount: ${test['amount']}',
+                                  style: TextStyle(color: Colors.blueGrey),
+                                ),
+                              ],
                             ),
                             ElevatedButton(
-                              onPressed: _bookTest,
-                              child: Text('  Book Test  ',
-                                style: TextStyle(color: Colors.white,
-                                    fontWeight: FontWeight.w500),
-
+                              onPressed: () {
+                                _bookTest(test['name'], test['amount']);
+                              },
+                              child: Text(
+                                '  Book Test  ',
+                                style: TextStyle(color: Colors.white, fontWeight: FontWeight.w500),
                               ),
                             ),
                           ],
@@ -101,30 +111,14 @@ class _PendingTestsState extends State<PendingTests> {
       ),
     );
   }
-  void _bookTest() {
-    // Show payment confirmation dialog
-    showDialog(
-      context: context,
-      builder: (context) => AlertDialog(
-        title: Text('Payment Confirmation'),
-        content: Text('You have to pay BDT 200 for the test booking.'),
-        actions: [
-          TextButton(
-            onPressed: () {
-              // Perform payment logic
-              Navigator.pop(context);
-            },
-            child: Text('Pay'),
-          ),
-          TextButton(
-            onPressed: () {
-              Navigator.pop(context);
-            },
-            child: Text('Cancel'),
-          ),
-        ],
+
+  void _bookTest(String testName, String amount) {
+    // Navigate to PaymentsScreen
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => PaymentsScreen(category: 'Test Booking', type: testName, payable: amount),
       ),
     );
   }
-
 }

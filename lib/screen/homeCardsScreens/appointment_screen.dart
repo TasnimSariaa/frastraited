@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:frastraited/Precentation/ui/screens/Payments_screen.dart';
 import 'package:frastraited/Precentation/ui/utility/app_colors.dart';
 import 'package:frastraited/screen/task/appointmentBooking.dart';
 import 'package:frastraited/screen/widgets/bodyBackground.dart';
-//import 'appointment_booking.dart';
 
 class Appointment extends StatefulWidget {
   const Appointment({Key? key}) : super(key: key);
@@ -19,16 +19,19 @@ class _AppointmentState extends State<Appointment> {
       'name': 'Dr. Alice Johnson',
       'specialty': 'Dermatologist',
       'profilePicUrl': 'https://example.com/doctor1.jpg',
+      'fees': 'BDT 2000', // New field added
     },
     {
       'name': 'Dr. Michael Smith',
       'specialty': 'Orthopedic Surgeon',
       'profilePicUrl': 'https://example.com/doctor2.jpg',
+      'fees': 'BDT 2500', // New field added
     },
     {
       'name': 'Dr. Emily Brown',
       'specialty': 'Pediatrician',
       'profilePicUrl': 'https://example.com/doctor3.jpg',
+      'fees': 'BDT 1800', // New field added
     },
     // Add more doctors here
   ];
@@ -116,15 +119,7 @@ class _AppointmentState extends State<Appointment> {
                         ),
                         onPressed: () {
                           if (selectedDoctorIndex != null) {
-                            // Navigate to AppointmentBooking screen
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) => AppointmentBooking(
-                                  selectedDoctor: doctorsForAppointment[selectedDoctorIndex!],
-                                ),
-                              ),
-                            );
+                            _showAppointmentConfirmationDialog(context, selectedDoctorIndex!);
                           } else {
                             showDialog(
                               context: context,
@@ -209,6 +204,11 @@ class _AppointmentState extends State<Appointment> {
                                         doctor['specialty'],
                                         style: TextStyle(color: Colors.grey),
                                       ),
+                                      const SizedBox(height: 4),
+                                      Text(
+                                        'Fees: ${doctor['fees']}',
+                                        style: TextStyle(fontWeight: FontWeight.bold, color: Colors.blueGrey),
+                                      ),
                                     ],
                                   ),
                                 ),
@@ -224,6 +224,43 @@ class _AppointmentState extends State<Appointment> {
             ),
           ),
         ),
+      ),
+    );
+  }
+
+  void _showAppointmentConfirmationDialog(BuildContext context, int selectedDoctorIndex) {
+    final Map<String, dynamic> selectedDoctor = doctorsForAppointment[selectedDoctorIndex];
+    final String fees = selectedDoctor['fees'];
+
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: Text('Appointment Confirmation'),
+        content: Text('You have to pay $fees for the appointment.'),
+        actions: [
+          TextButton(
+            onPressed: () {
+              // Navigate to Payment Screen with required information
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => PaymentsScreen(
+                    category: 'Appointment',
+                    type: selectedDoctor['name'],
+                    payable: fees,
+                  ),
+                ),
+              );
+            },
+            child: Text('Pay'),
+          ),
+          TextButton(
+            onPressed: () {
+              Navigator.pop(context);
+            },
+            child: Text('Cancel'),
+          ),
+        ],
       ),
     );
   }

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:frastraited/Precentation/ui/screens/Payments_screen.dart';
 import 'package:frastraited/Precentation/ui/screens/history_screen.dart';
 import 'package:frastraited/Precentation/ui/screens/home_screen.dart';
 import 'package:frastraited/Precentation/ui/screens/profile_screen.dart';
@@ -22,6 +23,7 @@ class _MainBottomNavScreenState extends State<MainBottomNavScreen> {
     _screens = [
       HomeScreen(admin: widget.admin), // Pass admin parameter to HomeScreen
       HistoryScreen(),
+      PaymentsScreen(category: '', type: '', payable: '',),
       ProfileScreen(),
     ];
   }
