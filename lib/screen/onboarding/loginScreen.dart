@@ -20,7 +20,7 @@ class _loginScreenState extends State<loginScreen> {
 
   bool admin = false;
 
-  bool isLoading = true;
+  bool isLoading = false;
 
   @override
   Widget build(BuildContext context) {
