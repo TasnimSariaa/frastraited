@@ -78,7 +78,6 @@ flutter:
      - assets/images/logo.png
      - assets/images/logo_nav.png
      - assets/images/plus.png
-     - assets/images/1.png
 
   # To add assets to your application, add an assets section, like this:
   # assets:

@@ -4,6 +4,7 @@ import 'package:frastraited/Precentation/ui/screens/main_bottom_nav_screen.dart'
 import 'package:frastraited/Precentation/ui/utility/app_theme_data.dart';
 import 'package:frastraited/firebase_options.dart';
 import 'package:frastraited/screen/onboarding/forgotPasswordScreen.dart';
+import 'package:frastraited/screen/onboarding/frontPage.dart';
 import 'package:frastraited/screen/onboarding/loginScreen.dart';
 import 'package:frastraited/screen/onboarding/signUpScreen.dart';
 import 'package:frastraited/screen/onboarding/splashScreen.dart';
@@ -33,6 +34,7 @@ class _MyAppState extends State<MyApp> {
       routes: {
         '/': (context) => const splashScreen(),
         '/login': (context) => const loginScreen(),
+        '/front': (context) => const frontPage(),
         '/signUp': (context) => const signUpScreen(),
         '/forgotPassword': (context) => const forgotPasswordScreen(),
         '/userHome': (context) => const MainBottomNavScreen(),
