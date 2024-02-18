@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:frastraited/Precentation/ui/utility/app_colors.dart';
 import 'package:frastraited/screen/service/database_service.dart';
-import 'package:frastraited/screen/service/models/doctors.dart';
 import 'package:frastraited/screen/service/models/vaccines.dart';
 import 'package:frastraited/screen/widgets/bodyBackground.dart';
 
@@ -30,6 +29,7 @@ class _EditVaccineState extends State<EditVaccine> {
     isLoading = false;
     setState(() {});
   }
+
 
   @override
   Widget build(BuildContext context) {
@@ -152,7 +152,7 @@ class _EditVaccineState extends State<EditVaccine> {
                                     _showEditDialog(context, vaccine);
                                   },
                                 ),
-                                
+
                               ],
                             ),
                           ),
@@ -193,11 +193,9 @@ class _EditVaccineState extends State<EditVaccine> {
             ),
             TextButton(
               onPressed: () async {
-                vaccineList.remove(vaccine);
-                await DatabaseService.instance.deleteVaccine(vaccine);
-                _getVaccineList();
-                setState(() {});
-                Navigator.pop(context);
+                 Navigator.pop(context);
+                _showDeleteAlertDialog(context, vaccine);
+
               },
               child: const Text('Delete'),
             ),
@@ -207,7 +205,7 @@ class _EditVaccineState extends State<EditVaccine> {
     );
   }
 
-  void _showDeleteAlertDialog(BuildContext context, int index) {
+  void _showDeleteAlertDialog(BuildContext context, VaccineModel vaccine) {
     showDialog(
       context: context,
       builder: (BuildContext context) {
@@ -216,10 +214,13 @@ class _EditVaccineState extends State<EditVaccine> {
           content: Text("Do you want to delete the vaccine from the list?"),
           actions: [
             TextButton(
-              onPressed: () {
-                setState(() {
-                  vaccineList.removeAt(index);
-                });
+              onPressed: () async {
+
+                  vaccineList.remove(vaccine);
+                  await DatabaseService.instance.deleteVaccine(vaccine);
+                  _getVaccineList();
+                  setState(() {});
+
                 Navigator.of(context).pop();
               },
               child: Text(

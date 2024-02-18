@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:frastraited/screen/service/models/doctors.dart';
+import 'package:frastraited/screen/service/models/operationPackages.dart';
 import 'package:frastraited/screen/service/models/users.dart';
 import 'package:frastraited/screen/service/models/vaccines.dart';
 
@@ -7,6 +8,7 @@ class DatabaseTables {
   static const users = "users";
   static const doctors = "doctors";
   static const vaccines="vaccines";
+  static const operationPackages="operationPackages";
 }
 
 class DatabaseService {
@@ -94,6 +96,40 @@ class DatabaseService {
     return vaccineList;
   }
 
+ //For Operation
+
+  Future<void> setOperationInformation(OperationModel model) async {
+    CollectionReference result = fireStore.collection(DatabaseTables.operationPackages);
+    final operaId = result.doc().id;
+
+    result.doc(operaId).set(model.copyWith(id: operaId).toJson());
+  }
+
+  Future<void> deleteOperation(OperationModel model) async {
+    CollectionReference result = fireStore.collection(DatabaseTables.operationPackages);
+    result.doc(model.id).delete();
+  }
+
+
+  Future<void> updateOperationInformation(OperationModel model) async {
+    CollectionReference result = fireStore.collection(DatabaseTables.operationPackages);
+    result.doc(model.id).update(model.toJson());
+  }
+
+  Future<List<OperationModel>> getOperationInformation() async {
+    List<OperationModel> operationList = [];
+
+    await fireStore.collection(DatabaseTables.operationPackages).get().then((QuerySnapshot querySnapshot) {
+      operationList.clear();
+      for (var doc in querySnapshot.docs) {
+        Map<String, dynamic> data = doc.data() as Map<String, dynamic>;
+        OperationModel operation = OperationModel.fromJson(data);
+        operationList.add(operation);
+      }
+    });
+
+    return operationList;
+  }
 
 
 

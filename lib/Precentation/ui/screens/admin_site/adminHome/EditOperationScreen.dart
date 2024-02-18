@@ -1,5 +1,9 @@
+import 'dart:js_interop';
+
 import 'package:flutter/material.dart';
 import 'package:frastraited/Precentation/ui/utility/app_colors.dart';
+import 'package:frastraited/screen/service/database_service.dart';
+import 'package:frastraited/screen/service/models/operationPackages.dart';
 import 'package:frastraited/screen/widgets/bodyBackground.dart';
 
 class EditOperation extends StatefulWidget {
@@ -10,28 +14,24 @@ class EditOperation extends StatefulWidget {
 }
 
 class _EditOperationState extends State<EditOperation> {
-  // Sample list of available operation packages
-  final List<Map<String, dynamic>> availableOperationPackages = [
-    {
-      'name': 'Heart Surgery',
-      'description': 'Heart operation package',
-      'imageUrl': 'https://example.com/heart_surgery.jpg',
-      'amount': 'BDT 10000',
-    },
-    {
-      'name': 'Brain Surgery',
-      'description': 'Brain operation package',
-      'imageUrl': 'https://example.com/brain_surgery.jpg',
-      'amount': 'BDT 15000',
-    },
-    {
-      'name': 'Knee Replacement',
-      'description': 'Knee operation package',
-      'imageUrl': 'https://example.com/knee_replacement.jpg',
-      'amount': 'BDT 8000',
-    },
-    // Add more operation package information here
-  ];
+
+  List<OperationModel> operationList = [];
+  bool isLoading = true;
+
+  @override
+  void initState() {
+    super.initState();
+    _getOperationList();
+  }
+
+  void _getOperationList() async {
+    operationList.clear();
+    final result = await DatabaseService.instance.getOperationInformation();
+    operationList.addAll(result);
+    isLoading = false;
+    setState(() {});
+  }
+
 
   @override
   Widget build(BuildContext context) {
@@ -64,13 +64,14 @@ class _EditOperationState extends State<EditOperation> {
                       color: AppColors.primaryColor,
                     ),
                   ),
+
                   const SizedBox(height: 40),
                   ListView.builder(
                     shrinkWrap: true,
                     physics: NeverScrollableScrollPhysics(),
-                    itemCount: availableOperationPackages.length,
+                    itemCount: operationList.length,
                     itemBuilder: (BuildContext context, int index) {
-                      final package = availableOperationPackages[index];
+                      final package =operationList[index];
                       return Column(
                         children: [
                           Container(
@@ -99,7 +100,7 @@ class _EditOperationState extends State<EditOperation> {
                                       bottomLeft: Radius.circular(12),
                                     ),
                                     image: DecorationImage(
-                                      image: NetworkImage(package['imageUrl']),
+                                      image: NetworkImage(package.operationImageUrl),
                                       fit: BoxFit.cover,
                                     ),
                                   ),
@@ -111,39 +112,29 @@ class _EditOperationState extends State<EditOperation> {
                                     crossAxisAlignment: CrossAxisAlignment.start,
                                     children: [
                                       Text(
-                                        package['name'],
+                                        package.name,
                                         style: TextStyle(fontSize: 18, color: AppColors.primaryColor),
                                       ),
                                       const SizedBox(height: 4),
                                       Text(
-                                        package['description'],
+                                        package.description,
                                         style: TextStyle(color: Colors.grey),
                                       ),
                                       const SizedBox(height: 4),
                                       Text(
-                                        'Amount: ${package['amount']}',
+                                        'Amount: ${package.amount}',
                                         style: TextStyle(fontWeight: FontWeight.bold,color: Colors.blueGrey),
                                       ),
                                     ],
                                   ),
                                 ),
-                                Column(
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  children: [
-                                    IconButton(
-                                      icon: Icon(Icons.delete),
-                                      onPressed: () {
-                                        _showDeleteAlertDialog(context, index);
-                                      },
-                                    ),
-                                    IconButton(
-                                      icon: Icon(Icons.edit),
-                                      onPressed: () {
-                                        _showEditBottomSheet(context, package, index);
-                                      },
-                                    ),
-                                  ],
+                                IconButton(
+                                  icon: const Icon(Icons.more_vert),
+                                  onPressed: () {
+                                    _showEditDialog(context, package);
+                                  },
                                 ),
+
                               ],
                             ),
                           ),
@@ -167,7 +158,35 @@ class _EditOperationState extends State<EditOperation> {
     );
   }
 
-  void _showDeleteAlertDialog(BuildContext context, int index) {
+  void _showEditDialog(BuildContext context, OperationModel package) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Text('Modify Operation Packages'),
+          content: const Text('Do you want to modify Operation Package?'),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.pop(context);
+                _showEditBottomSheet(context,package);
+              },
+              child: const Text('Update'),
+            ),
+            TextButton(
+              onPressed: () async {
+                Navigator.pop(context);
+                _showDeleteAlertDialog(context, package);
+              },
+              child: const Text('Delete'),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  void _showDeleteAlertDialog(BuildContext context, OperationModel package) {
     showDialog(
       context: context,
       builder: (BuildContext context) {
@@ -176,10 +195,11 @@ class _EditOperationState extends State<EditOperation> {
           content: Text("Do you want to delete the Package from the list?"),
           actions: [
             TextButton(
-              onPressed: () {
-                setState(() {
-                  availableOperationPackages.removeAt(index);
-                });
+              onPressed: () async {
+                operationList.remove(package);
+                await DatabaseService.instance.deleteOperation(package);
+                _getOperationList();
+                setState(() {});
                 Navigator.of(context).pop();
               },
               child: Text(
@@ -202,11 +222,11 @@ class _EditOperationState extends State<EditOperation> {
     );
   }
 
-  void _showEditBottomSheet(BuildContext context, Map<String, dynamic> package, int index) {
-    TextEditingController nameController = TextEditingController(text: package['name']);
-    TextEditingController descriptionController = TextEditingController(text: package['description']);
-    TextEditingController amountController = TextEditingController(text: package['amount']);
-    TextEditingController imageUrlController = TextEditingController(text: package['imageUrl']);
+  void _showEditBottomSheet(BuildContext context, OperationModel package) {
+    TextEditingController nameController = TextEditingController(text: package.name);
+    TextEditingController descriptionController = TextEditingController(text: package.description);
+    TextEditingController amountController = TextEditingController(text: package.amount);
+    TextEditingController imageUrlController = TextEditingController(text: package.operationImageUrl);
 
     showModalBottomSheet(
       context: context,
@@ -244,13 +264,20 @@ class _EditOperationState extends State<EditOperation> {
                   ),
                   SizedBox(height: 16),
                   ElevatedButton(
-                    onPressed: () {
-                      setState(() {
-                        availableOperationPackages[index]['name'] = nameController.text;
-                        availableOperationPackages[index]['description'] = descriptionController.text;
-                        availableOperationPackages[index]['amount'] = amountController.text;
-                        availableOperationPackages[index]['imageUrl'] = imageUrlController.text;
-                      });
+                    onPressed: () async {
+                      final name = nameController.text;
+                      final description = descriptionController.text;
+                      final amount= amountController.text;
+                      final imageUrl= imageUrlController.text;
+                      final model = package.copyWith(
+                        name: name,
+                        amount: amount,
+                        operationImageUrl: imageUrl,
+                        description: description
+                      );
+
+                      await DatabaseService.instance.updateOperationInformation(model);
+                      _getOperationList();
                       Navigator.pop(context);
                     },
                     child: Text('Update', style: TextStyle(color: Colors.white)),
@@ -306,16 +333,24 @@ class _EditOperationState extends State<EditOperation> {
                   ),
                   SizedBox(height: 16),
                   ElevatedButton(
-                    onPressed: () {
-                      setState(() {
-                        availableOperationPackages.add({
-                          'name': nameController.text,
-                          'description': descriptionController.text,
-                          'amount': amountController.text,
-                          'imageUrl': imageUrlController.text,
-                        });
-                      });
+                    onPressed: () async {
+                      final name = nameController.text;
+                      final description = descriptionController.text;
+                      final amount= amountController.text;
+                      final imageUrl= imageUrlController.text;
+
+                      OperationModel model = OperationModel(
+                          id: '',
+                          name: name,
+                          description: description,
+                          amount: amount,
+                          operationImageUrl: imageUrl
+                      );
+
+                      await DatabaseService.instance.setOperationInformation(model);
+                      _getOperationList();
                       Navigator.pop(context);
+
                     },
                     child: Text('Add', style: TextStyle(color: Colors.white)),
                   ),
