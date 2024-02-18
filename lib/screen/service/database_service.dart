@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:frastraited/screen/service/models/doctors.dart';
+import 'package:frastraited/screen/service/models/donation_model.dart';
 import 'package:frastraited/screen/service/models/operationPackages.dart';
 import 'package:frastraited/screen/service/models/pending_test_model.dart';
 import 'package:frastraited/screen/service/models/users.dart';
@@ -12,6 +13,7 @@ class DatabaseTables {
   static const operationPackages = "operationPackages";
   static const pendingTests = "pendingTests";
   static const pendingTestsUser = "pendingTestsUser";
+  static const donations = "donations";
 }
 
 class DatabaseService {
@@ -166,5 +168,37 @@ class DatabaseService {
     final pendingTestId = result.doc().id;
 
     result.doc(pendingTestId).update(model.toJson());
+  }
+
+  Future<List<DonationModel>> getDonationList() async {
+    List<DonationModel> donationList = [];
+
+    await fireStore.collection(DatabaseTables.donations).get().then((QuerySnapshot querySnapshot) {
+      donationList.clear();
+      for (var doc in querySnapshot.docs) {
+        Map<String, dynamic> data = doc.data() as Map<String, dynamic>;
+        DonationModel donation = DonationModel.fromJson(data);
+        donationList.add(donation);
+      }
+    });
+
+    return donationList;
+  }
+
+  Future<void> addDonations(DonationModel model) async {
+    CollectionReference result = fireStore.collection(DatabaseTables.donations);
+    final donationId = result.doc().id;
+
+    result.doc(donationId).set(model.copyWith(id: donationId).toJson());
+  }
+
+  Future<void> updateDonations(DonationModel model) async {
+    CollectionReference result = fireStore.collection(DatabaseTables.donations);
+    result.doc(model.id).update(model.toJson());
+  }
+
+  Future<void> deleteDonations(DonationModel model) async {
+    CollectionReference result = fireStore.collection(DatabaseTables.donations);
+    result.doc(model.id).delete();
   }
 }
