@@ -236,7 +236,7 @@ class _signUpScreenState extends State<signUpScreen> {
                           );
                         },
                         child: isLoading
-                            ? const CircularProgressIndicator()
+                            ? const CircularProgressIndicator(color: Colors.white,)
                             : const Text(
                                 'Next',
                                 style: TextStyle(color: Colors.white),
