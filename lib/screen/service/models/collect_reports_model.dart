@@ -1,18 +1,24 @@
 class CollectReportsModel {
   final String id;
   final String medicalId;
+  final bool isReady;
+  final String payable;
   final List<ReportInfoModel> reportList;
 
   CollectReportsModel({
     required this.id,
+    required this.isReady,
     required this.medicalId,
+    required this.payable,
     required this.reportList,
   });
 
   factory CollectReportsModel.fromJson(Map<String, dynamic> json) {
     return CollectReportsModel(
       id: json["id"] ?? "",
+      isReady: json["isReady"] ?? "",
       medicalId: json["medicalId"] ?? "",
+      payable: json["payable"] ?? "",
       reportList: json["reportList"] == null
           ? []
           : List<ReportInfoModel>.from(
@@ -24,19 +30,25 @@ class CollectReportsModel {
   factory CollectReportsModel.empty() {
     return CollectReportsModel(
       id: "",
+      isReady: true,
       medicalId: "",
+      payable: "",
       reportList: [],
     );
   }
 
   CollectReportsModel copyWith({
     String? id,
+    bool? isReady,
     String? medicalId,
+    String? payable,
     List<ReportInfoModel>? reportList,
   }) {
     return CollectReportsModel(
       id: id ?? this.id,
+      isReady: isReady ?? this.isReady,
       medicalId: medicalId ?? this.medicalId,
+      payable: payable ?? this.payable,
       reportList: reportList ?? this.reportList,
     );
   }
@@ -44,7 +56,9 @@ class CollectReportsModel {
   Map<String, dynamic> toJson() {
     return {
       "id": id,
+      "isReady": isReady,
       "medicalId": medicalId,
+      "payable": payable,
       "reportList": reportList.map((e) => e.toJson()),
     };
   }

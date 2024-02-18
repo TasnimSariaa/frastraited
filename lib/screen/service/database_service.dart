@@ -226,4 +226,21 @@ class DatabaseService {
 
     result.doc(reportId).set(model.copyWith(id: reportId).toJson());
   }
+
+  Future<List<CollectReportsModel>> getUserCollectReportsList(String medicalId) async {
+    List<CollectReportsModel> collectReportsList = [];
+
+    await fireStore.collection(DatabaseTables.collectReports).get().then((QuerySnapshot querySnapshot) {
+      collectReportsList.clear();
+      for (var doc in querySnapshot.docs) {
+        Map<String, dynamic> data = doc.data() as Map<String, dynamic>;
+        CollectReportsModel reports = CollectReportsModel.fromJson(data);
+        if (reports.medicalId == medicalId) {
+          collectReportsList.add(reports);
+        }
+      }
+    });
+
+    return collectReportsList;
+  }
 }

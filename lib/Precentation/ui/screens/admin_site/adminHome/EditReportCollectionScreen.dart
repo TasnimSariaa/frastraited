@@ -195,6 +195,8 @@ class _EditReportCollectionState extends State<EditReportCollection> {
                       CollectReportsModel model = CollectReportsModel(
                         id: "",
                         medicalId: medicalId,
+                        payable: "100",
+                        isReady: true,
                         reportList: [
                           ReportInfoModel(reportName: testName, reportUrl: "url"),
                           ReportInfoModel(reportName: testName, reportUrl: "2url"),
