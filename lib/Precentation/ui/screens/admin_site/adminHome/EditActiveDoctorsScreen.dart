@@ -41,109 +41,111 @@ class _EditActiveDoctorsState extends State<EditActiveDoctors> {
       body: BodyBackground(
         child: isLoading
             ? const Center(child: CircularProgressIndicator())
-            : SafeArea(
-                child: SingleChildScrollView(
-                  child: Padding(
-                    padding: const EdgeInsets.all(24),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: [
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.start,
+            : activeDoctors.isEmpty
+                ? const Center(child: Text("List is Empty"))
+                : SafeArea(
+                    child: SingleChildScrollView(
+                      child: Padding(
+                        padding: const EdgeInsets.all(24),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.center,
                           children: [
-                            IconButton(
-                              icon: const Icon(
-                                Icons.arrow_back,
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.start,
+                              children: [
+                                IconButton(
+                                  icon: const Icon(
+                                    Icons.arrow_back,
+                                    color: AppColors.primaryColor,
+                                  ),
+                                  onPressed: () {
+                                    Navigator.pop(context);
+                                  },
+                                ),
+                              ],
+                            ),
+                            const SizedBox(height: 20),
+                            SearchField(
+                              controller: searchController,
+                              onTextChanged: (value) {
+                                setState(() {}); // Trigger rebuild on text change
+                              },
+                            ),
+                            const SizedBox(height: 20),
+                            const Text(
+                              'Active Doctors',
+                              style: TextStyle(
+                                fontSize: 24,
+                                fontWeight: FontWeight.bold,
                                 color: AppColors.primaryColor,
                               ),
-                              onPressed: () {
-                                Navigator.pop(context);
+                            ),
+                            const SizedBox(height: 20),
+                            ListView.builder(
+                              shrinkWrap: true,
+                              physics: const NeverScrollableScrollPhysics(),
+                              itemCount: activeDoctors.length,
+                              itemBuilder: (BuildContext context, int index) {
+                                final doctor = activeDoctors[index];
+                                return ListTile(
+                                  leading: Stack(
+                                    children: [
+                                      CustomImageView(
+                                        height: 60,
+                                        width: 60,
+                                        path: doctor.profileImageUrl,
+                                        borderRadius: BorderRadius.circular(15),
+                                      ),
+                                      if (doctor.isActive)
+                                        Positioned(
+                                          right: 0,
+                                          top: 0,
+                                          child: Container(
+                                            width: 15,
+                                            height: 15,
+                                            decoration: BoxDecoration(
+                                              shape: BoxShape.circle,
+                                              color: Colors.green,
+                                              border: Border.all(color: Colors.white, width: 2),
+                                            ),
+                                          ),
+                                        ),
+                                    ],
+                                  ),
+                                  title: Text(doctor.name),
+                                  subtitle: Text(doctor.speciality),
+                                  trailing: Row(
+                                    mainAxisSize: MainAxisSize.min,
+                                    children: [
+                                      Switch(
+                                        value: doctor.isActive,
+                                        onChanged: (newValue) async {
+                                          List<DoctorModel> updatedDoctorsList = List.from(activeDoctors);
+                                          final index = updatedDoctorsList.indexWhere((element) => element.id == doctor.id);
+
+                                          if (index != -1) {
+                                            updatedDoctorsList[index] = doctor.copyWith(isActive: newValue);
+                                            await DatabaseService.instance.updateDoctorInformation(doctor.copyWith(isActive: newValue));
+                                            setState(() => activeDoctors = updatedDoctorsList);
+                                          }
+                                        },
+                                      ),
+                                      IconButton(
+                                        icon: const Icon(Icons.more_vert),
+                                        onPressed: () {
+                                          _showEditDialog(context, doctor);
+                                        },
+                                      ),
+                                    ],
+                                  ),
+                                );
                               },
                             ),
                           ],
                         ),
-                        const SizedBox(height: 20),
-                        SearchField(
-                          controller: searchController,
-                          onTextChanged: (value) {
-                            setState(() {}); // Trigger rebuild on text change
-                          },
-                        ),
-                        const SizedBox(height: 20),
-                        const Text(
-                          'Active Doctors',
-                          style: TextStyle(
-                            fontSize: 24,
-                            fontWeight: FontWeight.bold,
-                            color: AppColors.primaryColor,
-                          ),
-                        ),
-                        const SizedBox(height: 20),
-                        ListView.builder(
-                          shrinkWrap: true,
-                          physics: const NeverScrollableScrollPhysics(),
-                          itemCount: activeDoctors.length,
-                          itemBuilder: (BuildContext context, int index) {
-                            final doctor = activeDoctors[index];
-                            return ListTile(
-                              leading: Stack(
-                                children: [
-                                  CustomImageView(
-                                    height: 60,
-                                    width: 60,
-                                    path: doctor.profileImageUrl,
-                                    borderRadius: BorderRadius.circular(15),
-                                  ),
-                                  if (doctor.isActive)
-                                    Positioned(
-                                      right: 0,
-                                      top: 0,
-                                      child: Container(
-                                        width: 15,
-                                        height: 15,
-                                        decoration: BoxDecoration(
-                                          shape: BoxShape.circle,
-                                          color: Colors.green,
-                                          border: Border.all(color: Colors.white, width: 2),
-                                        ),
-                                      ),
-                                    ),
-                                ],
-                              ),
-                              title: Text(doctor.name),
-                              subtitle: Text(doctor.speciality),
-                              trailing: Row(
-                                mainAxisSize: MainAxisSize.min,
-                                children: [
-                                  Switch(
-                                    value: doctor.isActive,
-                                    onChanged: (newValue) async {
-                                      List<DoctorModel> updatedDoctorsList = List.from(activeDoctors);
-                                      final index = updatedDoctorsList.indexWhere((element) => element.id == doctor.id);
-
-                                      if (index != -1) {
-                                        updatedDoctorsList[index] = doctor.copyWith(isActive: newValue);
-                                        await DatabaseService.instance.updateDoctorInformation(doctor.copyWith(isActive: newValue));
-                                        setState(() => activeDoctors = updatedDoctorsList);
-                                      }
-                                    },
-                                  ),
-                                  IconButton(
-                                    icon: const Icon(Icons.more_vert),
-                                    onPressed: () {
-                                      _showEditDialog(context, doctor);
-                                    },
-                                  ),
-                                ],
-                              ),
-                            );
-                          },
-                        ),
-                      ],
+                      ),
                     ),
                   ),
-                ),
-              ),
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {

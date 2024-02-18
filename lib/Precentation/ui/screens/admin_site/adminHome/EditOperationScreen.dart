@@ -53,124 +53,128 @@ class _EditOperationState extends State<EditOperation> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: BodyBackground(
-        child: SafeArea(
-          child: SingleChildScrollView(
-            child: Padding(
-              padding: const EdgeInsets.all(24),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    children: [
-                      IconButton(
-                        icon: const Icon(
-                          Icons.arrow_back,
-                          color: AppColors.primaryColor,
-                        ),
-                        onPressed: () {
-                          Navigator.pop(context);
-                        },
-                      ),
-                    ],
-                  ),
-                  const SizedBox(height: 10),
-                  const Text(
-                    'Available Operation Packages',
-                    style: TextStyle(
-                      fontSize: 24,
-                      fontWeight: FontWeight.bold,
-                      color: AppColors.primaryColor,
-                    ),
-                  ),
-                  const SizedBox(height: 20),
-                  SearchField(
-                    controller: searchController,
-                    onTextChanged: (value) {
-                      setState(() {});
-                    },
-                  ),
-                  const SizedBox(height: 20),
-                  ListView.builder(
-                    shrinkWrap: true,
-                    physics: const NeverScrollableScrollPhysics(),
-                    itemCount: operationList.length,
-                    itemBuilder: (BuildContext context, int index) {
-                      final package = operationList[index];
-                      return Column(
-                        children: [
-                          Container(
-                            height: 120, // Adjusted height
-                            margin: const EdgeInsets.symmetric(vertical: 10), // Adjusted margin
-                            decoration: BoxDecoration(
-                              color: Colors.white,
-                              borderRadius: BorderRadius.circular(12),
-                              boxShadow: [
-                                BoxShadow(
-                                  color: Colors.grey.withOpacity(0.5),
-                                  spreadRadius: 1,
-                                  blurRadius: 4,
-                                  offset: const Offset(0, 3),
-                                ),
-                              ],
-                            ),
-                            child: Row(
+        child: isLoading
+            ? const Center(child: CircularProgressIndicator())
+            : operationList.isEmpty
+                ? const Center(child: Text("List is Empty"))
+                : SafeArea(
+                    child: SingleChildScrollView(
+                      child: Padding(
+                        padding: const EdgeInsets.all(24),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: [
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.start,
                               children: [
-                                Container(
-                                  width: 120,
-                                  height: double.infinity,
-                                  decoration: BoxDecoration(
-                                    borderRadius: const BorderRadius.only(
-                                      topLeft: Radius.circular(12),
-                                      bottomLeft: Radius.circular(12),
-                                    ),
-                                    image: DecorationImage(
-                                      image: NetworkImage(package.operationImageUrl),
-                                      fit: BoxFit.cover,
-                                    ),
-                                  ),
-                                ),
-                                const SizedBox(width: 20),
-                                Expanded(
-                                  child: Column(
-                                    mainAxisAlignment: MainAxisAlignment.center,
-                                    crossAxisAlignment: CrossAxisAlignment.start,
-                                    children: [
-                                      Text(
-                                        package.name,
-                                        style: const TextStyle(fontSize: 18, color: AppColors.primaryColor),
-                                      ),
-                                      const SizedBox(height: 4),
-                                      Text(
-                                        package.description,
-                                        style: const TextStyle(color: Colors.grey),
-                                      ),
-                                      const SizedBox(height: 4),
-                                      Text(
-                                        'Amount: ${package.amount}',
-                                        style: const TextStyle(fontWeight: FontWeight.bold, color: Colors.blueGrey),
-                                      ),
-                                    ],
-                                  ),
-                                ),
                                 IconButton(
-                                  icon: const Icon(Icons.more_vert),
+                                  icon: const Icon(
+                                    Icons.arrow_back,
+                                    color: AppColors.primaryColor,
+                                  ),
                                   onPressed: () {
-                                    _showEditDialog(context, package);
+                                    Navigator.pop(context);
                                   },
                                 ),
                               ],
                             ),
-                          ),
-                        ],
-                      );
-                    },
+                            const SizedBox(height: 10),
+                            const Text(
+                              'Available Operation Packages',
+                              style: TextStyle(
+                                fontSize: 24,
+                                fontWeight: FontWeight.bold,
+                                color: AppColors.primaryColor,
+                              ),
+                            ),
+                            const SizedBox(height: 20),
+                            SearchField(
+                              controller: searchController,
+                              onTextChanged: (value) {
+                                setState(() {});
+                              },
+                            ),
+                            const SizedBox(height: 20),
+                            ListView.builder(
+                              shrinkWrap: true,
+                              physics: const NeverScrollableScrollPhysics(),
+                              itemCount: operationList.length,
+                              itemBuilder: (BuildContext context, int index) {
+                                final package = operationList[index];
+                                return Column(
+                                  children: [
+                                    Container(
+                                      height: 120, // Adjusted height
+                                      margin: const EdgeInsets.symmetric(vertical: 10), // Adjusted margin
+                                      decoration: BoxDecoration(
+                                        color: Colors.white,
+                                        borderRadius: BorderRadius.circular(12),
+                                        boxShadow: [
+                                          BoxShadow(
+                                            color: Colors.grey.withOpacity(0.5),
+                                            spreadRadius: 1,
+                                            blurRadius: 4,
+                                            offset: const Offset(0, 3),
+                                          ),
+                                        ],
+                                      ),
+                                      child: Row(
+                                        children: [
+                                          Container(
+                                            width: 120,
+                                            height: double.infinity,
+                                            decoration: BoxDecoration(
+                                              borderRadius: const BorderRadius.only(
+                                                topLeft: Radius.circular(12),
+                                                bottomLeft: Radius.circular(12),
+                                              ),
+                                              image: DecorationImage(
+                                                image: NetworkImage(package.operationImageUrl),
+                                                fit: BoxFit.cover,
+                                              ),
+                                            ),
+                                          ),
+                                          const SizedBox(width: 20),
+                                          Expanded(
+                                            child: Column(
+                                              mainAxisAlignment: MainAxisAlignment.center,
+                                              crossAxisAlignment: CrossAxisAlignment.start,
+                                              children: [
+                                                Text(
+                                                  package.name,
+                                                  style: const TextStyle(fontSize: 18, color: AppColors.primaryColor),
+                                                ),
+                                                const SizedBox(height: 4),
+                                                Text(
+                                                  package.description,
+                                                  style: const TextStyle(color: Colors.grey),
+                                                ),
+                                                const SizedBox(height: 4),
+                                                Text(
+                                                  'Amount: ${package.amount}',
+                                                  style: const TextStyle(fontWeight: FontWeight.bold, color: Colors.blueGrey),
+                                                ),
+                                              ],
+                                            ),
+                                          ),
+                                          IconButton(
+                                            icon: const Icon(Icons.more_vert),
+                                            onPressed: () {
+                                              _showEditDialog(context, package);
+                                            },
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                  ],
+                                );
+                              },
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
                   ),
-                ],
-              ),
-            ),
-          ),
-        ),
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
