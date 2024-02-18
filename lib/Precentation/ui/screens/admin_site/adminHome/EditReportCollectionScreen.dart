@@ -4,26 +4,15 @@ import 'package:frastraited/screen/onboarding/loginScreen.dart';
 import 'package:frastraited/screen/widgets/bodyBackground.dart';
 
 class EditReportCollection extends StatefulWidget {
-  const EditReportCollection({super.key});
+  const EditReportCollection({Key? key}) : super(key: key);
 
   @override
   State<EditReportCollection> createState() => _EditReportCollectionState();
 }
 
 class _EditReportCollectionState extends State<EditReportCollection> {
-  final List<Map<String, dynamic>> availableVaccines = [
-    {
-      'name': 'Hepatitis B Vaccine',
-      'description': 'Protects against hepatitis B virus',
-      'imageUrl': 'https://example.com/hepatitis_b_vaccine.jpg',
-    },
-    {
-      'name': 'HPV Vaccine',
-      'description': 'Protects against human papillomavirus',
-      'imageUrl': 'https://example.com/hpv_vaccine.jpg',
-    },
-    // Add more vaccine information here
-  ];
+  TextEditingController medicalIdController = TextEditingController();
+  TextEditingController testNameController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -40,79 +29,33 @@ class _EditReportCollectionState extends State<EditReportCollection> {
                     mainAxisAlignment: MainAxisAlignment.start,
                     children: [
                       IconButton(
-                        icon: Icon(Icons.arrow_back,
-                          color: AppColors.primaryColor,),
+                        icon: const Icon(
+                          Icons.arrow_back,
+                          color: AppColors.primaryColor,
+                        ),
                         onPressed: () {
                           Navigator.pop(context);
                         },
                       ),
                     ],
                   ),
-                  const SizedBox(
-                    height: 40,
-                  ),
+                  const SizedBox(height: 10),
                   Text(
-                    'Available Vaccines',
-                    style: TextStyle(
-                      fontSize: 24,
-                      fontWeight: FontWeight.bold,
-                      color: AppColors.primaryColor,
-                    ),
+                    'Upload Reports',
+                    style: Theme.of(context).textTheme.titleLarge,
                   ),
-                  const SizedBox(height: 30),
-                  ListView.builder(
-                    shrinkWrap: true,
-                    physics: NeverScrollableScrollPhysics(),
-                    itemCount: availableVaccines.length,
-                    itemBuilder: (BuildContext context, int index) {
-                      final vaccine = availableVaccines[index];
-                      return Column(
-                        children: [
-                          Card(
-                            borderOnForeground: true,
-                            color: Colors.white, // Common color for all cards
-                            elevation: 3,
-                            child: Container(
-                              height: 120, // Adjust the height of the container
-                              padding: const EdgeInsets.all(8),
-                              child: Row(
-                                children: [
-                                  Container(
-                                    width: 120,
-                                    height: double.infinity,
-                                    decoration: BoxDecoration(
-                                      borderRadius: BorderRadius.circular(8),
-                                      image: DecorationImage(
-                                        image: NetworkImage(vaccine['imageUrl']),
-                                        fit: BoxFit.cover,
-                                      ),
-                                    ),
-                                  ),
-                                  const SizedBox(width: 16),
-                                  Expanded(
-                                    child: Column(
-                                      crossAxisAlignment: CrossAxisAlignment.start,
-                                      mainAxisAlignment: MainAxisAlignment.center,
-                                      children: [
-                                        Text(
-                                          vaccine['name'],
-                                          style: TextStyle(fontSize: 18, color: AppColors.primaryColor),
-                                        ),
-                                        const SizedBox(height: 4),
-                                        Text(
-                                          vaccine['description'],
-                                          style: TextStyle(color: Colors.grey),
-                                        ),
-                                      ],
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ),
-                          ),
-                        ],
-                      );
+                  const SizedBox(height: 20),
+                  ElevatedButton(
+                    onPressed: () {
+                      _showUploadReportBottomSheet(context);
                     },
+                    child: const Text(
+                      '   Upload Report  ',
+                      style: TextStyle(color: Colors.white),
+                    ),
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: AppColors.primaryColor,
+                    ),
                   ),
                 ],
               ),
@@ -120,6 +63,56 @@ class _EditReportCollectionState extends State<EditReportCollection> {
           ),
         ),
       ),
+    );
+  }
+
+  void _showUploadReportBottomSheet(BuildContext context) {
+    showModalBottomSheet(
+      context: context,
+      isScrollControlled: true,
+      builder: (BuildContext context) {
+        return SingleChildScrollView(
+          child: Padding(
+            padding: EdgeInsets.only(
+              bottom: MediaQuery.of(context).viewInsets.bottom,
+            ),
+            child: Container(
+              padding: const EdgeInsets.all(16),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  TextField(
+                    controller: medicalIdController,
+                    decoration: const InputDecoration(labelText: 'Medical ID'),
+                  ),
+                  const SizedBox(height: 16),
+                  TextField(
+                    controller: testNameController,
+                    decoration: const InputDecoration(labelText: 'Name of the Test'),
+                  ),
+                  const SizedBox(height: 16),
+                  ElevatedButton(
+                    onPressed: () {
+                      // Handle the action for uploading report file
+                      // You can access the entered medical ID and test name via medicalIdController.text and testNameController.text respectively
+                      Navigator.pop(context); // Close the bottom sheet
+                    },
+                     child:const Row(
+                       children: [
+                         Icon(Icons.upload_rounded,color: Colors.white,),
+                         Text(' Upload Report File',
+                         style: TextStyle(color: Colors.white),),
+
+                       ],
+                     ),
+                  ),
+                ],
+              ),
+            ),
+          ),
+        );
+      },
     );
   }
 }

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:frastraited/Precentation/ui/utility/app_colors.dart';
+import 'package:frastraited/Precentation/ui/utility/search_field.dart'; // Import the SearchField widget
 import 'package:frastraited/screen/widgets/bodyBackground.dart';
 
 class OperationScreen extends StatefulWidget {
@@ -33,6 +34,34 @@ class _OperationScreenState extends State<OperationScreen> {
     // Add more operation package information here
   ];
 
+  // Controller for search text field
+  TextEditingController searchController = TextEditingController();
+  List<Map<String, dynamic>> filteredOperationPackages = [];
+
+  @override
+  void initState() {
+    super.initState();
+    filteredOperationPackages = availableOperationPackages;
+    searchController.addListener(_onSearchChanged);
+  }
+
+  @override
+  void dispose() {
+    searchController.dispose();
+    super.dispose();
+  }
+
+  // Function to handle changes in the search text field
+  void _onSearchChanged() {
+    String query = searchController.text.toLowerCase();
+    setState(() {
+      filteredOperationPackages = availableOperationPackages.where((package) {
+        String packageName = package['name'].toLowerCase();
+        return packageName.contains(query);
+      }).toList();
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -61,6 +90,13 @@ class _OperationScreenState extends State<OperationScreen> {
                   const SizedBox(
                     height: 10,
                   ),
+                  SearchField(
+                    controller: searchController,
+                    onTextChanged: (value) {
+                      setState(() {}); // Trigger rebuild on text change
+                    },
+                  ),
+                  const SizedBox(height: 10),
                   Text(
                     'Available Operations',
                     style: TextStyle(
@@ -73,9 +109,9 @@ class _OperationScreenState extends State<OperationScreen> {
                   ListView.builder(
                     shrinkWrap: true,
                     physics: NeverScrollableScrollPhysics(),
-                    itemCount: availableOperationPackages.length,
+                    itemCount: filteredOperationPackages.length,
                     itemBuilder: (BuildContext context, int index) {
-                      final package = availableOperationPackages[index];
+                      final package = filteredOperationPackages[index];
                       return Column(
                         children: [
                           GestureDetector(

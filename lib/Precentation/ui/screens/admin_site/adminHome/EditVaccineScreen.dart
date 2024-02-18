@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:frastraited/Precentation/ui/utility/app_colors.dart';
+import 'package:frastraited/Precentation/ui/utility/search_field.dart';
 import 'package:frastraited/screen/widgets/bodyBackground.dart';
 
 class EditVaccine extends StatefulWidget {
@@ -40,6 +41,32 @@ class _EditVaccineState extends State<EditVaccine> {
     // Add more vaccine information here
   ];
 
+  TextEditingController searchController = TextEditingController();
+  List<Map<String, dynamic>> filteredVaccines = [];
+
+  @override
+  void initState() {
+    super.initState();
+    filteredVaccines = availableVaccines;
+    searchController.addListener(_onSearchChanged);
+  }
+
+  @override
+  void dispose() {
+    searchController.dispose();
+    super.dispose();
+  }
+
+  void _onSearchChanged() {
+    String query = searchController.text.toLowerCase();
+    setState(() {
+      filteredVaccines = availableVaccines.where((vaccine) {
+        String vaccineName = vaccine['name'].toLowerCase();
+        return vaccineName.contains(query);
+      }).toList();
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -66,7 +93,7 @@ class _EditVaccineState extends State<EditVaccine> {
                     ],
                   ),
                   const SizedBox(
-                    height: 40,
+                    height: 10,
                   ),
                   Text(
                     'Available Vaccines',
@@ -77,12 +104,19 @@ class _EditVaccineState extends State<EditVaccine> {
                     ),
                   ),
                   const SizedBox(height: 30),
+                  SearchField(
+                    controller: searchController,
+                    onTextChanged: (value) {
+                      setState(() {});
+                    },
+                  ),
+                  const SizedBox(height: 30),
                   ListView.builder(
                     shrinkWrap: true,
                     physics: NeverScrollableScrollPhysics(),
-                    itemCount: availableVaccines.length,
+                    itemCount: filteredVaccines.length,
                     itemBuilder: (BuildContext context, int index) {
-                      final vaccine = availableVaccines[index];
+                      final vaccine = filteredVaccines[index];
                       return Column(
                         children: [
                           Container(
@@ -186,7 +220,7 @@ class _EditVaccineState extends State<EditVaccine> {
         onPressed: () {
           _showAddBottomSheet(context);
         },
-        child: Icon(Icons.add),
+        child: Icon(Icons.add,color: Colors.white,),
         backgroundColor: AppColors.primaryColor,
       ),
     );

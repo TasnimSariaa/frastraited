@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:frastraited/Precentation/ui/utility/app_colors.dart';
+import 'package:frastraited/Precentation/ui/utility/search_field.dart'; // Import the SearchField widget
 import 'package:frastraited/screen/widgets/bodyBackground.dart';
 
 class ActiveDoctor extends StatefulWidget {
@@ -39,6 +40,34 @@ class _ActiveDoctorState extends State<ActiveDoctor> {
     // Add more doctor information here
   ];
 
+  // Controller for search text field
+  TextEditingController searchController = TextEditingController();
+  List<Map<String, dynamic>> filteredDoctors = [];
+
+  @override
+  void initState() {
+    super.initState();
+    filteredDoctors = activeDoctors;
+    searchController.addListener(_onSearchChanged);
+  }
+
+  @override
+  void dispose() {
+    searchController.dispose();
+    super.dispose();
+  }
+
+  // Function to handle changes in the search text field
+  void _onSearchChanged() {
+    String query = searchController.text.toLowerCase();
+    setState(() {
+      filteredDoctors = activeDoctors.where((doctor) {
+        String doctorName = doctor['name'].toLowerCase();
+        return doctorName.contains(query);
+      }).toList();
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -67,6 +96,13 @@ class _ActiveDoctorState extends State<ActiveDoctor> {
                   const SizedBox(
                     height: 20,
                   ),
+                  SearchField(
+                    controller: searchController,
+                    onTextChanged: (value) {
+                      setState(() {}); // Trigger rebuild on text change
+                    },
+                  ),
+                  const SizedBox(height: 20),
                   Text(
                     'Doctors On Duty',
                     style: TextStyle(
@@ -81,17 +117,16 @@ class _ActiveDoctorState extends State<ActiveDoctor> {
                   ListView.builder(
                     shrinkWrap: true,
                     physics: NeverScrollableScrollPhysics(),
-                    itemCount: activeDoctors.length,
+                    itemCount: filteredDoctors.length,
                     itemBuilder: (BuildContext context, int index) {
-                      final doctor = activeDoctors[index];
+                      final doctor = filteredDoctors[index];
                       return ListTile(
                         leading: Stack(
-                          children:
-                          [
+                          children: [
                             CircleAvatar(
-                            radius: 30,
-                            backgroundImage: NetworkImage(doctor['profilePicUrl']),
-                          ),
+                              radius: 30,
+                              backgroundImage: NetworkImage(doctor['profilePicUrl']),
+                            ),
                             if (doctor['isActive'])
                               Positioned(
                                 right: 0,
@@ -106,18 +141,19 @@ class _ActiveDoctorState extends State<ActiveDoctor> {
                                   ),
                                 ),
                               ),
-
                           ],
                         ),
                         title: Text(doctor['name']),
                         subtitle: Text(doctor['speciality']),
-                        trailing: doctor['isActive'] ? Text(
+                        trailing: doctor['isActive']
+                            ? Text(
                           'On Duty',
                           style: TextStyle(
                             color: Colors.grey,
                             fontSize: 14,
                           ),
-                        ) : null,
+                        )
+                            : null,
                         onTap: () {
                           // Handle doctor selection
                         },

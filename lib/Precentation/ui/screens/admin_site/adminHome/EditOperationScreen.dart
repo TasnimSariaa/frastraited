@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:frastraited/Precentation/ui/utility/app_colors.dart';
+import 'package:frastraited/Precentation/ui/utility/search_field.dart';
 import 'package:frastraited/screen/widgets/bodyBackground.dart';
 
 class EditOperation extends StatefulWidget {
@@ -33,6 +34,32 @@ class _EditOperationState extends State<EditOperation> {
     // Add more operation package information here
   ];
 
+  TextEditingController searchController = TextEditingController();
+  List<Map<String, dynamic>> filteredOperationPackages = [];
+
+  @override
+  void initState() {
+    super.initState();
+    filteredOperationPackages = availableOperationPackages;
+    searchController.addListener(_onSearchChanged);
+  }
+
+  @override
+  void dispose() {
+    searchController.dispose();
+    super.dispose();
+  }
+
+  void _onSearchChanged() {
+    String query = searchController.text.toLowerCase();
+    setState(() {
+      filteredOperationPackages = availableOperationPackages.where((operationPackage) {
+        String packageName = operationPackage['name'].toLowerCase();
+        return packageName.contains(query);
+      }).toList();
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -64,13 +91,20 @@ class _EditOperationState extends State<EditOperation> {
                       color: AppColors.primaryColor,
                     ),
                   ),
-                  const SizedBox(height: 40),
+                  const SizedBox(height: 20),
+                  SearchField(
+                    controller: searchController,
+                    onTextChanged: (value) {
+                      setState(() {});
+                    },
+                  ),
+                  const SizedBox(height: 20),
                   ListView.builder(
                     shrinkWrap: true,
                     physics: NeverScrollableScrollPhysics(),
-                    itemCount: availableOperationPackages.length,
+                    itemCount: filteredOperationPackages.length,
                     itemBuilder: (BuildContext context, int index) {
-                      final package = availableOperationPackages[index];
+                      final package = filteredOperationPackages[index];
                       return Column(
                         children: [
                           Container(
@@ -161,7 +195,7 @@ class _EditOperationState extends State<EditOperation> {
         onPressed: () {
           _showAddBottomSheet(context);
         },
-        child: Icon(Icons.add),
+        child: Icon(Icons.add,color: Colors.white,),
         backgroundColor: AppColors.primaryColor,
       ),
     );

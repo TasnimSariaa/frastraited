@@ -43,6 +43,31 @@ class _VaccineScreenState extends State<VaccineScreen> {
 
   // Controller for search text field
   TextEditingController searchController = TextEditingController();
+  List<Map<String, dynamic>> filteredVaccines = [];
+
+  @override
+  void initState() {
+    super.initState();
+    filteredVaccines = availableVaccines;
+    searchController.addListener(_onSearchChanged);
+  }
+
+  @override
+  void dispose() {
+    searchController.dispose();
+    super.dispose();
+  }
+
+  // Function to handle changes in the search text field
+  void _onSearchChanged() {
+    String query = searchController.text.toLowerCase();
+    setState(() {
+      filteredVaccines = availableVaccines.where((vaccine) {
+        String vaccineName = vaccine['name'].toLowerCase();
+        return vaccineName.contains(query);
+      }).toList();
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -91,9 +116,9 @@ class _VaccineScreenState extends State<VaccineScreen> {
                   ListView.builder(
                     shrinkWrap: true,
                     physics: NeverScrollableScrollPhysics(),
-                    itemCount: availableVaccines.length,
+                    itemCount: filteredVaccines.length,
                     itemBuilder: (BuildContext context, int index) {
-                      final vaccine = availableVaccines[index];
+                      final vaccine = filteredVaccines[index];
                       return Column(
                         children: [
                           Container(
