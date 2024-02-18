@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:frastraited/Precentation/ui/utility/app_colors.dart';
+import 'package:frastraited/Precentation/ui/utility/search_field.dart';
 import 'package:frastraited/screen/service/database_service.dart';
 import 'package:frastraited/screen/service/models/doctors.dart';
 import 'package:frastraited/screen/widgets/bodyBackground.dart';
@@ -31,6 +32,9 @@ class _EditActiveDoctorsState extends State<EditActiveDoctors> {
     setState(() {});
   }
 
+  // Controller for search text field
+  TextEditingController searchController = TextEditingController();
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -57,6 +61,13 @@ class _EditActiveDoctorsState extends State<EditActiveDoctors> {
                               },
                             ),
                           ],
+                        ),
+                        const SizedBox(height: 20),
+                        SearchField(
+                          controller: searchController,
+                          onTextChanged: (value) {
+                            setState(() {}); // Trigger rebuild on text change
+                          },
                         ),
                         const SizedBox(height: 20),
                         const Text(
@@ -300,5 +311,11 @@ class _EditActiveDoctorsState extends State<EditActiveDoctors> {
         );
       },
     );
+  }
+
+  @override
+  void dispose() {
+    searchController.dispose();
+    super.dispose();
   }
 }

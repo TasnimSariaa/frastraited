@@ -79,19 +79,19 @@ class _EditPendingTestState extends State<EditPendingTest> {
                     ],
                   ),
                   const SizedBox(height: 20),
-                  SearchField( // Use the SearchField widget
-                    controller: searchController,
-                    onTextChanged: (value) {
-                      setState(() {}); // Trigger rebuild on text change
-                    },
-                  ),
-                  const SizedBox(height: 20),
                   Text(
                     'All Tests',
                     style: TextStyle(
                         fontSize: 24,
                         fontWeight: FontWeight.bold,
                         color: AppColors.primaryColor),
+                  ),
+                  const SizedBox(height: 20),
+                   SearchField( // Use the SearchField widget
+                    controller: searchController,
+                    onTextChanged: (value) {
+                      setState(() {}); // Trigger rebuild on text change
+                    },
                   ),
                   const SizedBox(height: 40),
                   // Displaying list of pending tests

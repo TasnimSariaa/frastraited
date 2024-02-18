@@ -18,6 +18,12 @@ class DatabaseService {
 
   FirebaseFirestore fireStore = FirebaseFirestore.instance;
 
+  Future<void> setUserInformation(UsersModel model) async {
+    CollectionReference result = fireStore.collection(DatabaseTables.users);
+
+    result.doc(model.userid).set(model.toJson());
+  }
+
   Future<UsersModel> getUserInfo(String userUid) async {
     CollectionReference result = fireStore.collection(DatabaseTables.users);
 

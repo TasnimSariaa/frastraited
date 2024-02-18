@@ -21,7 +21,9 @@ class _MainBottomNavScreenState extends State<MainBottomNavScreen> {
     super.initState();
     _screens = [
       const HomeScreen(), // Pass admin parameter to HomeScreen
-      const HistoryScreen(),
+      const HistoryScreen(
+        paymentInfo: {},
+      ),
       PaymentsScreen(category: '', type: '', payable: ''),
       const ProfileScreen(),
     ];

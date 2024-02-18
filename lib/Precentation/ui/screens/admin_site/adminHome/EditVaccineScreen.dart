@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:frastraited/Precentation/ui/utility/app_colors.dart';
+import 'package:frastraited/Precentation/ui/utility/search_field.dart';
 import 'package:frastraited/screen/service/database_service.dart';
 import 'package:frastraited/screen/service/models/vaccines.dart';
 import 'package:frastraited/screen/widgets/bodyBackground.dart';
 
 class EditVaccine extends StatefulWidget {
-  const EditVaccine({Key? key}) : super(key: key);
+  const EditVaccine({super.key});
 
   @override
   State<EditVaccine> createState() => _EditVaccineState();
@@ -20,6 +21,7 @@ class _EditVaccineState extends State<EditVaccine> {
   void initState() {
     super.initState();
     _getVaccineList();
+    searchController.addListener(_onSearchChanged);
   }
 
   void _getVaccineList() async {
@@ -30,147 +32,172 @@ class _EditVaccineState extends State<EditVaccine> {
     setState(() {});
   }
 
+  TextEditingController searchController = TextEditingController();
+
+  @override
+  void dispose() {
+    searchController.dispose();
+    super.dispose();
+  }
+
+  void _onSearchChanged() {
+    String query = searchController.text.toLowerCase();
+    setState(() {
+      vaccineList = vaccineList.where((vaccine) {
+        String vaccineName = vaccine.name.toLowerCase();
+        return vaccineName.contains(query);
+      }).toList();
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: BodyBackground(
         child: isLoading
-          ? const Center(child: CircularProgressIndicator())
-        :SafeArea(
-          child: SingleChildScrollView(
-            child: Padding(
-              padding: const EdgeInsets.all(24),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    children: [
-                      IconButton(
-                        icon: Icon(
-                          Icons.arrow_back,
-                          color: AppColors.primaryColor,
-                        ),
-                        onPressed: () {
-                          Navigator.pop(context);
-                        },
-                      ),
-                    ],
-                  ),
-                  const SizedBox(
-                    height: 40,
-                  ),
-                  Text(
-                    'Available Vaccines',
-                    style: TextStyle(
-                      fontSize: 24,
-                      fontWeight: FontWeight.bold,
-                      color: AppColors.primaryColor,
-                    ),
-                  ),
-                  const SizedBox(height: 30),
-                  ListView.builder(
-                    shrinkWrap: true,
-                    physics: NeverScrollableScrollPhysics(),
-                    itemCount: vaccineList.length,
-                    itemBuilder: (BuildContext context, int index) {
-                      final vaccine = vaccineList[index];
-                      return Column(
-                        children: [
-                          Container(
-                            height: 120,
-                            margin: EdgeInsets.symmetric(vertical: 10),
-                            decoration: BoxDecoration(
-                              color: Colors.white,
-                              borderRadius: BorderRadius.circular(12),
-                              boxShadow: [
-                                BoxShadow(
-                                  color: Colors.grey.withOpacity(0.5),
-                                  spreadRadius: 1,
-                                  blurRadius: 4,
-                                  offset: Offset(0, 3),
-                                ),
-                              ],
+            ? const Center(child: CircularProgressIndicator())
+            : SafeArea(
+                child: SingleChildScrollView(
+                  child: Padding(
+                    padding: const EdgeInsets.all(24),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          children: [
+                            IconButton(
+                              icon: Icon(
+                                Icons.arrow_back,
+                                color: AppColors.primaryColor,
+                              ),
+                              onPressed: () {
+                                Navigator.pop(context);
+                              },
                             ),
-                            child: Row(
-                              crossAxisAlignment: CrossAxisAlignment.center,
+                          ],
+                        ),
+                        const SizedBox(
+                          height: 10,
+                        ),
+                        Text(
+                          'Available Vaccines',
+                          style: TextStyle(
+                            fontSize: 24,
+                            fontWeight: FontWeight.bold,
+                            color: AppColors.primaryColor,
+                          ),
+                        ),
+                        const SizedBox(height: 30),
+                        SearchField(
+                          controller: searchController,
+                          onTextChanged: (value) {
+                            setState(() {});
+                          },
+                        ),
+                        const SizedBox(height: 30),
+                        ListView.builder(
+                          shrinkWrap: true,
+                          physics: NeverScrollableScrollPhysics(),
+                          itemCount: vaccineList.length,
+                          itemBuilder: (BuildContext context, int index) {
+                            final vaccine = vaccineList[index];
+                            return Column(
                               children: [
                                 Container(
-                                  padding: const EdgeInsets.symmetric(horizontal: 10),
-                                  width: 120,
-                                  height: double.infinity,
+                                  height: 120,
+                                  margin: EdgeInsets.symmetric(vertical: 10),
                                   decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.only(
-                                      topLeft: Radius.circular(12),
-                                      bottomLeft: Radius.circular(12),
-                                    ),
-                                    image: DecorationImage(
-                                      image: NetworkImage(vaccine.vaccineImageUrl),
-                                      fit: BoxFit.cover,
-                                    ),
+                                    color: Colors.white,
+                                    borderRadius: BorderRadius.circular(12),
+                                    boxShadow: [
+                                      BoxShadow(
+                                        color: Colors.grey.withOpacity(0.5),
+                                        spreadRadius: 1,
+                                        blurRadius: 4,
+                                        offset: Offset(0, 3),
+                                      ),
+                                    ],
                                   ),
-                                ),
-                                SizedBox(width: 20),
-                                Expanded(
-                                  child: Column(
-                                    mainAxisAlignment: MainAxisAlignment.center,
-                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                  child: Row(
+                                    crossAxisAlignment: CrossAxisAlignment.center,
                                     children: [
-                                      Text(
-                                        vaccine.name,
-                                        style: TextStyle(
-                                          fontSize: 18,
-                                          fontWeight: FontWeight.bold,
-                                          color: AppColors.primaryColor,
+                                      Container(
+                                        padding: const EdgeInsets.symmetric(horizontal: 10),
+                                        width: 120,
+                                        height: double.infinity,
+                                        decoration: BoxDecoration(
+                                          borderRadius: BorderRadius.only(
+                                            topLeft: Radius.circular(12),
+                                            bottomLeft: Radius.circular(12),
+                                          ),
+                                          image: DecorationImage(
+                                            image: NetworkImage(vaccine.vaccineImageUrl),
+                                            fit: BoxFit.cover,
+                                          ),
                                         ),
                                       ),
-                                      SizedBox(height: 5),
-                                      Text(
-                                        'Available at: ${vaccine.place}',
-                                        style: TextStyle(
-                                          color: Colors.black54,
-                                          fontSize: 14,
+                                      SizedBox(width: 20),
+                                      Expanded(
+                                        child: Column(
+                                          mainAxisAlignment: MainAxisAlignment.center,
+                                          crossAxisAlignment: CrossAxisAlignment.start,
+                                          children: [
+                                            Text(
+                                              vaccine.name,
+                                              style: TextStyle(
+                                                fontSize: 18,
+                                                fontWeight: FontWeight.bold,
+                                                color: AppColors.primaryColor,
+                                              ),
+                                            ),
+                                            SizedBox(height: 5),
+                                            Text(
+                                              'Available at: ${vaccine.place}',
+                                              style: TextStyle(
+                                                color: Colors.black54,
+                                                fontSize: 14,
+                                              ),
+                                            ),
+                                            SizedBox(height: 5),
+                                            Text(
+                                              'Price: ${vaccine.price}',
+                                              style: TextStyle(
+                                                color: Colors.blueGrey,
+                                                fontSize: 14,
+                                                fontWeight: FontWeight.bold,
+                                              ),
+                                            ),
+                                          ],
                                         ),
                                       ),
-                                      SizedBox(height: 5),
-                                      Text(
-                                        'Price: ${vaccine.price}',
-                                        style: TextStyle(
-                                          color: Colors.blueGrey,
-                                          fontSize: 14,
-                                          fontWeight: FontWeight.bold,
-                                        ),
+                                      IconButton(
+                                        icon: const Icon(Icons.more_vert),
+                                        onPressed: () {
+                                          _showEditDialog(context, vaccine);
+                                        },
                                       ),
                                     ],
                                   ),
                                 ),
-
-                                IconButton(
-                                  icon: const Icon(Icons.more_vert),
-                                  onPressed: () {
-                                    _showEditDialog(context, vaccine);
-                                  },
-                                ),
-
                               ],
-                            ),
-                          ),
-                        ],
-                      );
-                    },
+                            );
+                          },
+                        ),
+                      ],
+                    ),
                   ),
-                ],
+                ),
               ),
-            ),
-          ),
-        ),
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
           _showAddBottomSheet(context);
         },
-        child: Icon(Icons.add),
+        child: Icon(
+          Icons.add,
+          color: Colors.white,
+        ),
         backgroundColor: AppColors.primaryColor,
       ),
     );
@@ -193,9 +220,8 @@ class _EditVaccineState extends State<EditVaccine> {
             ),
             TextButton(
               onPressed: () async {
-                 Navigator.pop(context);
+                Navigator.pop(context);
                 _showDeleteAlertDialog(context, vaccine);
-
               },
               child: const Text('Delete'),
             ),
@@ -215,11 +241,10 @@ class _EditVaccineState extends State<EditVaccine> {
           actions: [
             TextButton(
               onPressed: () async {
-
-                  vaccineList.remove(vaccine);
-                  await DatabaseService.instance.deleteVaccine(vaccine);
-                  _getVaccineList();
-                  setState(() {});
+                vaccineList.remove(vaccine);
+                await DatabaseService.instance.deleteVaccine(vaccine);
+                _getVaccineList();
+                setState(() {});
 
                 Navigator.of(context).pop();
               },
@@ -286,18 +311,13 @@ class _EditVaccineState extends State<EditVaccine> {
                   SizedBox(height: 16),
                   ElevatedButton(
                     onPressed: () async {
-                       final name= nameController.text;
-                       final imageUrl =imageUrlController.text;
-                       final price= priceController.text;
-                       final place = placeController.text;
-                       final model = vaccine.copyWith(
-                         name: name,
-                         vaccineImageUrl: imageUrl,
-                         place: place,
-                         price: price
-                       );
-                       await DatabaseService.instance.updateVaccineInformation(model);
-                       _getVaccineList();
+                      final name = nameController.text;
+                      final imageUrl = imageUrlController.text;
+                      final price = priceController.text;
+                      final place = placeController.text;
+                      final model = vaccine.copyWith(name: name, vaccineImageUrl: imageUrl, place: place, price: price);
+                      await DatabaseService.instance.updateVaccineInformation(model);
+                      _getVaccineList();
                       Navigator.pop(context);
                     },
                     child: Text('Update', style: TextStyle(color: Colors.white)),
@@ -354,20 +374,14 @@ class _EditVaccineState extends State<EditVaccine> {
                   SizedBox(height: 16),
                   ElevatedButton(
                     onPressed: () async {
-                      final name= nameController.text;
-                      final imageUrl =imageUrlController.text;
-                      final price= priceController.text;
+                      final name = nameController.text;
+                      final imageUrl = imageUrlController.text;
+                      final price = priceController.text;
                       final place = placeController.text;
 
-                      VaccineModel model = VaccineModel(
-                          id: '',
-                          name: name,
-                          price: price,
-                          place: place,
-                          vaccineImageUrl: imageUrl
-                      );
+                      VaccineModel model = VaccineModel(id: '', name: name, price: price, place: place, vaccineImageUrl: imageUrl);
                       await DatabaseService.instance.setVaccineInformation(model);
-                     _getVaccineList();
+                      _getVaccineList();
 
                       Navigator.pop(context);
                     },
@@ -381,6 +395,4 @@ class _EditVaccineState extends State<EditVaccine> {
       },
     );
   }
-
-
 }

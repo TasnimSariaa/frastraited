@@ -7,6 +7,7 @@ import 'package:frastraited/Precentation/ui/screens/admin_site/adminHome/EditOpe
 import 'package:frastraited/Precentation/ui/screens/admin_site/adminHome/EditPandingTestScreen.dart';
 import 'package:frastraited/Precentation/ui/screens/admin_site/adminHome/EditReportCollectionScreen.dart';
 import 'package:frastraited/Precentation/ui/screens/admin_site/adminHome/EditVaccineScreen.dart';
+import 'package:frastraited/Precentation/ui/screens/notification_screen.dart';
 import 'package:frastraited/Precentation/ui/utility/app_colors.dart';
 import 'package:frastraited/Precentation/ui/utility/search_field.dart';
 import 'package:frastraited/Precentation/ui/widgets/home/circle_Icon_button.dart';
@@ -65,7 +66,7 @@ class _HomeScreenState extends State<HomeScreen> {
         EditActiveDoctors(),
         EditOperation(),
         EditVaccine(),
-        EditAppointment(),
+        EditAppointment(category: '', type: '', payable: '',),
         EditReportCollection(),
         EditDonation(),
         EditPendingTest(),
@@ -215,7 +216,15 @@ class _HomeScreenState extends State<HomeScreen> {
         ),
         const SizedBox(width: 8),
         CircleIconButton(
-          onTap: () {},
+          onTap: () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => NotificationScreen(category: '', type: '', payable: ''),
+              ),
+            );
+
+          },
           iconData: Icons.notifications_active_outlined,
         ),
         const SizedBox(width: 8),

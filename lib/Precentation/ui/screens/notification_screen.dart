@@ -2,25 +2,25 @@ import 'package:flutter/material.dart';
 import 'package:frastraited/Precentation/ui/utility/app_colors.dart';
 import 'package:frastraited/screen/widgets/bodyBackground.dart';
 
-class EditAppointment extends StatefulWidget {
+class NotificationScreen extends StatefulWidget {
   final String category;
   final String type;
   final String payable;
 
-  const EditAppointment({
+  const NotificationScreen({
     required this.category,
     required this.type,
     required this.payable,
+
     Key? key,
   }) : super(key: key);
 
   @override
-  State<EditAppointment> createState() => _EditAppointmentState();
+  State<NotificationScreen> createState() => _NotificationScreenState();
 }
 
-class _EditAppointmentState extends State<EditAppointment> {
-  String? _selectedDate;
-  String? _selectedTime;
+class _NotificationScreenState extends State<NotificationScreen> {
+  String? _selectedDateTime;
 
   @override
   Widget build(BuildContext context) {
@@ -49,7 +49,7 @@ class _EditAppointmentState extends State<EditAppointment> {
                   ),
                   const SizedBox(height: 10),
                   Text(
-                    'Appointment List',
+                    'Notifications',
                     style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
                   ),
                   SizedBox(height: 40),
@@ -75,28 +75,20 @@ class _EditAppointmentState extends State<EditAppointment> {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Text(
-                              'Booked ${widget.category}',
+                              'Your : ${widget.category}',
                               style: TextStyle(fontSize: 18, color: AppColors.primaryColor),
                             ),
                             Text(
-                              'With Doctor:  ${widget.type}',
+                              'Booking with Doctor:  ${widget.type}',
                               style: TextStyle(fontSize: 18, color: Colors.black),
                             ),
                             Text(
                               'Paid:   ${widget.payable}',
                               style: TextStyle(fontSize: 18, color: Colors.grey),
                             ),
+                            SizedBox(height: 20),
+                            //Add Date here
                           ],
-                        ),
-                        ElevatedButton(
-                          onPressed: () {
-                            // Show dialog box for providing schedule
-                            _showScheduleDialog(context);
-                          },
-                          child: Text(
-                            'Accept',
-                            style: TextStyle(color: Colors.white),
-                          ),
                         ),
                       ],
                     ),
@@ -110,52 +102,4 @@ class _EditAppointmentState extends State<EditAppointment> {
     );
   }
 
-  void _showScheduleDialog(BuildContext context) {
-    showDialog(
-      context: context,
-      builder: (context) {
-        return AlertDialog(
-          title: Text('Provide Schedule'),
-          content: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              TextField(
-                onChanged: (value) {
-                  setState(() {
-                    _selectedDate = value;
-                  });
-                },
-                decoration: InputDecoration(labelText: 'Date'),
-              ),
-              SizedBox(height: 10),
-              TextField(
-                onChanged: (value) {
-                  setState(() {
-                    _selectedTime = value;
-                  });
-                },
-                decoration: InputDecoration(labelText: 'Time'),
-              ),
-            ],
-          ),
-          actions: [
-            TextButton(
-              onPressed: () {
-                // Perform your action here with the selected date and time
-                Navigator.pop(context);
-                // You can use _selectedDate and _selectedTime for further actions
-              },
-              child: Text('Confirm'),
-            ),
-            TextButton(
-              onPressed: () {
-                Navigator.pop(context);
-              },
-              child: Text('Cancel'),
-            ),
-          ],
-        );
-      },
-    );
-  }
 }
