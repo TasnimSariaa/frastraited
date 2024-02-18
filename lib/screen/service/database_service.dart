@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:frastraited/screen/service/models/collect_reports_model.dart';
 import 'package:frastraited/screen/service/models/doctors.dart';
 import 'package:frastraited/screen/service/models/donation_model.dart';
 import 'package:frastraited/screen/service/models/operationPackages.dart';
@@ -14,6 +15,7 @@ class DatabaseTables {
   static const pendingTests = "pendingTests";
   static const pendingTestsUser = "pendingTestsUser";
   static const donations = "donations";
+  static const collectReports = "collectReports";
 }
 
 class DatabaseService {
@@ -200,5 +202,28 @@ class DatabaseService {
   Future<void> deleteDonations(DonationModel model) async {
     CollectionReference result = fireStore.collection(DatabaseTables.donations);
     result.doc(model.id).delete();
+  }
+
+  ///Collect reports
+  Future<List<CollectReportsModel>> getCollectReportsList() async {
+    List<CollectReportsModel> collectReportsList = [];
+
+    await fireStore.collection(DatabaseTables.collectReports).get().then((QuerySnapshot querySnapshot) {
+      collectReportsList.clear();
+      for (var doc in querySnapshot.docs) {
+        Map<String, dynamic> data = doc.data() as Map<String, dynamic>;
+        CollectReportsModel reports = CollectReportsModel.fromJson(data);
+        collectReportsList.add(reports);
+      }
+    });
+
+    return collectReportsList;
+  }
+
+  Future<void> addCollectReports(CollectReportsModel model) async {
+    CollectionReference result = fireStore.collection(DatabaseTables.collectReports);
+    final reportId = result.doc().id;
+
+    result.doc(reportId).set(model.copyWith(id: reportId).toJson());
   }
 }
