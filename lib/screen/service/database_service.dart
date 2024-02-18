@@ -1,10 +1,12 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:frastraited/screen/service/models/doctors.dart';
 import 'package:frastraited/screen/service/models/users.dart';
+import 'package:frastraited/screen/service/models/vaccines.dart';
 
 class DatabaseTables {
   static const users = "users";
   static const doctors = "doctors";
+  static const vaccines="vaccines";
 }
 
 class DatabaseService {
@@ -23,6 +25,8 @@ class DatabaseService {
 
     return user;
   }
+
+  //For Active Doctor
 
   Future<void> setDoctorInformation(DoctorModel model) async {
     CollectionReference result = fireStore.collection(DatabaseTables.doctors);
@@ -55,4 +59,42 @@ class DatabaseService {
 
     return doctorsList;
   }
+
+  //For Vaccine
+
+  Future<void> setVaccineInformation(VaccineModel model) async {
+    CollectionReference result = fireStore.collection(DatabaseTables.vaccines);
+    final vaccineId = result.doc().id;
+
+    result.doc(vaccineId).set(model.copyWith(id: vaccineId).toJson());
+  }
+
+  Future<void> deleteVaccine(VaccineModel model) async {
+    CollectionReference result = fireStore.collection(DatabaseTables.vaccines);
+    result.doc(model.id).delete();
+  }
+
+  Future<void> updateVaccineInformation(VaccineModel model) async {
+    CollectionReference result = fireStore.collection(DatabaseTables.vaccines);
+    result.doc(model.id).update(model.toJson());
+  }
+
+  Future<List<VaccineModel>> getVaccineInformation() async {
+    List<VaccineModel> vaccineList = [];
+
+    await fireStore.collection(DatabaseTables.vaccines).get().then((QuerySnapshot querySnapshot) {
+      vaccineList.clear();
+      for (var doc in querySnapshot.docs) {
+        Map<String, dynamic> data = doc.data() as Map<String, dynamic>;
+        VaccineModel vaccine = VaccineModel.fromJson(data);
+        vaccineList.add(vaccine);
+      }
+    });
+
+    return vaccineList;
+  }
+
+
+
+
 }

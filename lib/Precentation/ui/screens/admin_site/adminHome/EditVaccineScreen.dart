@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:frastraited/Precentation/ui/utility/app_colors.dart';
+import 'package:frastraited/screen/service/database_service.dart';
+import 'package:frastraited/screen/service/models/doctors.dart';
+import 'package:frastraited/screen/service/models/vaccines.dart';
 import 'package:frastraited/screen/widgets/bodyBackground.dart';
 
 class EditVaccine extends StatefulWidget {
@@ -10,41 +13,31 @@ class EditVaccine extends StatefulWidget {
 }
 
 class _EditVaccineState extends State<EditVaccine> {
-  // Sample list of available vaccines
-  final List<Map<String, dynamic>> availableVaccines = [
-    {
-      'name': 'COVID-19 Vaccine',
-      'place': 'Annex building, 1st floor(Room 102)',
-      'price': 'Free',
-      'imageUrl':
-      'https://images.unsplash.com/photo-1605289982774-9a6fef564df8?q=80&w=1964&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
-    },
-    {
-      'name': 'Influenza Vaccine',
-      'place': 'Main hospital, 2nd floor(Room 201)',
-      'price': 'BDT 500',
-      'imageUrl': 'https://example.com/influenza_vaccine.jpg',
-    },
-    {
-      'name': 'Hepatitis B Vaccine',
-      'place': 'North Wing, 3rd floor(Room 301)',
-      'price': 'BDT 1000',
-      'imageUrl': 'https://example.com/hepatitis_b_vaccine.jpg',
-    },
-    {
-      'name': 'HPV Vaccine',
-      'place': 'South Wing, 4th floor(Room 401)',
-      'price': 'BDT 750',
-      'imageUrl': 'https://example.com/hpv_vaccine.jpg',
-    },
-    // Add more vaccine information here
-  ];
+  List<VaccineModel> vaccineList = [];
+
+  bool isLoading = true;
+
+  @override
+  void initState() {
+    super.initState();
+    _getVaccineList();
+  }
+
+  void _getVaccineList() async {
+    vaccineList.clear();
+    final result = await DatabaseService.instance.getVaccineInformation();
+    vaccineList.addAll(result);
+    isLoading = false;
+    setState(() {});
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: BodyBackground(
-        child: SafeArea(
+        child: isLoading
+          ? const Center(child: CircularProgressIndicator())
+        :SafeArea(
           child: SingleChildScrollView(
             child: Padding(
               padding: const EdgeInsets.all(24),
@@ -80,9 +73,9 @@ class _EditVaccineState extends State<EditVaccine> {
                   ListView.builder(
                     shrinkWrap: true,
                     physics: NeverScrollableScrollPhysics(),
-                    itemCount: availableVaccines.length,
+                    itemCount: vaccineList.length,
                     itemBuilder: (BuildContext context, int index) {
-                      final vaccine = availableVaccines[index];
+                      final vaccine = vaccineList[index];
                       return Column(
                         children: [
                           Container(
@@ -113,7 +106,7 @@ class _EditVaccineState extends State<EditVaccine> {
                                       bottomLeft: Radius.circular(12),
                                     ),
                                     image: DecorationImage(
-                                      image: NetworkImage(vaccine['imageUrl']),
+                                      image: NetworkImage(vaccine.vaccineImageUrl),
                                       fit: BoxFit.cover,
                                     ),
                                   ),
@@ -125,7 +118,7 @@ class _EditVaccineState extends State<EditVaccine> {
                                     crossAxisAlignment: CrossAxisAlignment.start,
                                     children: [
                                       Text(
-                                        vaccine['name'],
+                                        vaccine.name,
                                         style: TextStyle(
                                           fontSize: 18,
                                           fontWeight: FontWeight.bold,
@@ -134,7 +127,7 @@ class _EditVaccineState extends State<EditVaccine> {
                                       ),
                                       SizedBox(height: 5),
                                       Text(
-                                        'Available at: ${vaccine['place']}',
+                                        'Available at: ${vaccine.place}',
                                         style: TextStyle(
                                           color: Colors.black54,
                                           fontSize: 14,
@@ -142,7 +135,7 @@ class _EditVaccineState extends State<EditVaccine> {
                                       ),
                                       SizedBox(height: 5),
                                       Text(
-                                        'Price: ${vaccine['price']}',
+                                        'Price: ${vaccine.price}',
                                         style: TextStyle(
                                           color: Colors.blueGrey,
                                           fontSize: 14,
@@ -152,23 +145,14 @@ class _EditVaccineState extends State<EditVaccine> {
                                     ],
                                   ),
                                 ),
-                                Column(
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  children: [
-                                    IconButton(
-                                      icon: Icon(Icons.delete),
-                                      onPressed: () {
-                                        _showDeleteAlertDialog(context, index);
-                                      },
-                                    ),
-                                    IconButton(
-                                      icon: Icon(Icons.edit),
-                                      onPressed: () {
-                                        _showEditBottomSheet(context, vaccine, index);
-                                      },
-                                    ),
-                                  ],
+
+                                IconButton(
+                                  icon: const Icon(Icons.more_vert),
+                                  onPressed: () {
+                                    _showEditDialog(context, vaccine);
+                                  },
                                 ),
+                                
                               ],
                             ),
                           ),
@@ -192,6 +176,37 @@ class _EditVaccineState extends State<EditVaccine> {
     );
   }
 
+  void _showEditDialog(BuildContext context, VaccineModel vaccine) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Text('Modify Vaccine'),
+          content: const Text('Do you want to modify Vaccine list?'),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.pop(context);
+                _showEditBottomSheet(context, vaccine);
+              },
+              child: const Text('Update'),
+            ),
+            TextButton(
+              onPressed: () async {
+                vaccineList.remove(vaccine);
+                await DatabaseService.instance.deleteVaccine(vaccine);
+                _getVaccineList();
+                setState(() {});
+                Navigator.pop(context);
+              },
+              child: const Text('Delete'),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
   void _showDeleteAlertDialog(BuildContext context, int index) {
     showDialog(
       context: context,
@@ -203,7 +218,7 @@ class _EditVaccineState extends State<EditVaccine> {
             TextButton(
               onPressed: () {
                 setState(() {
-                  availableVaccines.removeAt(index);
+                  vaccineList.removeAt(index);
                 });
                 Navigator.of(context).pop();
               },
@@ -227,11 +242,11 @@ class _EditVaccineState extends State<EditVaccine> {
     );
   }
 
-  void _showEditBottomSheet(BuildContext context, Map<String, dynamic> vaccine, int index) {
-    TextEditingController nameController = TextEditingController(text: vaccine['name']);
-    TextEditingController imageUrlController = TextEditingController(text: vaccine['imageUrl']);
-    TextEditingController placeController = TextEditingController(text: vaccine['place']);
-    TextEditingController priceController = TextEditingController(text: vaccine['price']);
+  void _showEditBottomSheet(BuildContext context, VaccineModel vaccine) {
+    TextEditingController nameController = TextEditingController(text: vaccine.name);
+    TextEditingController imageUrlController = TextEditingController(text: vaccine.vaccineImageUrl);
+    TextEditingController placeController = TextEditingController(text: vaccine.place);
+    TextEditingController priceController = TextEditingController(text: vaccine.price);
 
     showModalBottomSheet(
       context: context,
@@ -269,13 +284,19 @@ class _EditVaccineState extends State<EditVaccine> {
                   ),
                   SizedBox(height: 16),
                   ElevatedButton(
-                    onPressed: () {
-                      setState(() {
-                        availableVaccines[index]['name'] = nameController.text;
-                        availableVaccines[index]['imageUrl'] = imageUrlController.text;
-                        availableVaccines[index]['place'] = placeController.text;
-                        availableVaccines[index]['price'] = priceController.text;
-                      });
+                    onPressed: () async {
+                       final name= nameController.text;
+                       final imageUrl =imageUrlController.text;
+                       final price= priceController.text;
+                       final place = placeController.text;
+                       final model = vaccine.copyWith(
+                         name: name,
+                         vaccineImageUrl: imageUrl,
+                         place: place,
+                         price: price
+                       );
+                       await DatabaseService.instance.updateVaccineInformation(model);
+                       _getVaccineList();
                       Navigator.pop(context);
                     },
                     child: Text('Update', style: TextStyle(color: Colors.white)),
@@ -331,15 +352,22 @@ class _EditVaccineState extends State<EditVaccine> {
                   ),
                   SizedBox(height: 16),
                   ElevatedButton(
-                    onPressed: () {
-                      setState(() {
-                        availableVaccines.add({
-                          'name': nameController.text,
-                          'imageUrl': imageUrlController.text,
-                          'place': placeController.text,
-                          'price': priceController.text,
-                        });
-                      });
+                    onPressed: () async {
+                      final name= nameController.text;
+                      final imageUrl =imageUrlController.text;
+                      final price= priceController.text;
+                      final place = placeController.text;
+
+                      VaccineModel model = VaccineModel(
+                          id: '',
+                          name: name,
+                          price: price,
+                          place: place,
+                          vaccineImageUrl: imageUrl
+                      );
+                      await DatabaseService.instance.setVaccineInformation(model);
+                     _getVaccineList();
+
                       Navigator.pop(context);
                     },
                     child: Text('Add', style: TextStyle(color: Colors.white)),
@@ -352,4 +380,6 @@ class _EditVaccineState extends State<EditVaccine> {
       },
     );
   }
+
+
 }
