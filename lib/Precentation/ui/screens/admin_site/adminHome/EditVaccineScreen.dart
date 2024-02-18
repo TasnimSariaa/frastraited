@@ -67,7 +67,7 @@ class _EditVaccineState extends State<EditVaccine> {
                           mainAxisAlignment: MainAxisAlignment.start,
                           children: [
                             IconButton(
-                              icon: Icon(
+                              icon: const Icon(
                                 Icons.arrow_back,
                                 color: AppColors.primaryColor,
                               ),
@@ -80,7 +80,7 @@ class _EditVaccineState extends State<EditVaccine> {
                         const SizedBox(
                           height: 10,
                         ),
-                        Text(
+                        const Text(
                           'Available Vaccines',
                           style: TextStyle(
                             fontSize: 24,
@@ -98,7 +98,7 @@ class _EditVaccineState extends State<EditVaccine> {
                         const SizedBox(height: 30),
                         ListView.builder(
                           shrinkWrap: true,
-                          physics: NeverScrollableScrollPhysics(),
+                          physics: const NeverScrollableScrollPhysics(),
                           itemCount: vaccineList.length,
                           itemBuilder: (BuildContext context, int index) {
                             final vaccine = vaccineList[index];
@@ -106,7 +106,7 @@ class _EditVaccineState extends State<EditVaccine> {
                               children: [
                                 Container(
                                   height: 120,
-                                  margin: EdgeInsets.symmetric(vertical: 10),
+                                  margin: const EdgeInsets.symmetric(vertical: 10),
                                   decoration: BoxDecoration(
                                     color: Colors.white,
                                     borderRadius: BorderRadius.circular(12),
@@ -115,7 +115,7 @@ class _EditVaccineState extends State<EditVaccine> {
                                         color: Colors.grey.withOpacity(0.5),
                                         spreadRadius: 1,
                                         blurRadius: 4,
-                                        offset: Offset(0, 3),
+                                        offset: const Offset(0, 3),
                                       ),
                                     ],
                                   ),
@@ -127,7 +127,7 @@ class _EditVaccineState extends State<EditVaccine> {
                                         width: 120,
                                         height: double.infinity,
                                         decoration: BoxDecoration(
-                                          borderRadius: BorderRadius.only(
+                                          borderRadius: const BorderRadius.only(
                                             topLeft: Radius.circular(12),
                                             bottomLeft: Radius.circular(12),
                                           ),
@@ -137,7 +137,7 @@ class _EditVaccineState extends State<EditVaccine> {
                                           ),
                                         ),
                                       ),
-                                      SizedBox(width: 20),
+                                      const SizedBox(width: 20),
                                       Expanded(
                                         child: Column(
                                           mainAxisAlignment: MainAxisAlignment.center,
@@ -145,24 +145,24 @@ class _EditVaccineState extends State<EditVaccine> {
                                           children: [
                                             Text(
                                               vaccine.name,
-                                              style: TextStyle(
+                                              style: const TextStyle(
                                                 fontSize: 18,
                                                 fontWeight: FontWeight.bold,
                                                 color: AppColors.primaryColor,
                                               ),
                                             ),
-                                            SizedBox(height: 5),
+                                            const SizedBox(height: 5),
                                             Text(
                                               'Available at: ${vaccine.place}',
-                                              style: TextStyle(
+                                              style: const TextStyle(
                                                 color: Colors.black54,
                                                 fontSize: 14,
                                               ),
                                             ),
-                                            SizedBox(height: 5),
+                                            const SizedBox(height: 5),
                                             Text(
                                               'Price: ${vaccine.price}',
-                                              style: TextStyle(
+                                              style: const TextStyle(
                                                 color: Colors.blueGrey,
                                                 fontSize: 14,
                                                 fontWeight: FontWeight.bold,
@@ -194,7 +194,7 @@ class _EditVaccineState extends State<EditVaccine> {
         onPressed: () {
           _showAddBottomSheet(context);
         },
-        child: Icon(
+        child: const Icon(
           Icons.add,
           color: Colors.white,
         ),
@@ -236,8 +236,8 @@ class _EditVaccineState extends State<EditVaccine> {
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
-          title: Text("Delete Vaccine?"),
-          content: Text("Do you want to delete the vaccine from the list?"),
+          title: const Text("Delete Vaccine?"),
+          content: const Text("Do you want to delete the vaccine from the list?"),
           actions: [
             TextButton(
               onPressed: () async {
@@ -248,7 +248,7 @@ class _EditVaccineState extends State<EditVaccine> {
 
                 Navigator.of(context).pop();
               },
-              child: Text(
+              child: const Text(
                 "Delete",
                 style: TextStyle(color: Colors.white),
               ),
@@ -260,7 +260,7 @@ class _EditVaccineState extends State<EditVaccine> {
               onPressed: () {
                 Navigator.of(context).pop();
               },
-              child: Text("Cancel"),
+              child: const Text("Cancel"),
             ),
           ],
         );
@@ -284,31 +284,31 @@ class _EditVaccineState extends State<EditVaccine> {
               bottom: MediaQuery.of(context).viewInsets.bottom,
             ),
             child: Container(
-              padding: EdgeInsets.all(16),
+              padding: const EdgeInsets.all(16),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 mainAxisSize: MainAxisSize.min,
                 children: [
                   TextField(
                     controller: nameController,
-                    decoration: InputDecoration(labelText: 'Name'),
+                    decoration: const InputDecoration(labelText: 'Name'),
                   ),
-                  SizedBox(height: 16),
+                  const SizedBox(height: 16),
                   TextField(
                     controller: imageUrlController,
-                    decoration: InputDecoration(labelText: 'Image URL'),
+                    decoration: const InputDecoration(labelText: 'Image URL'),
                   ),
-                  SizedBox(height: 16),
+                  const SizedBox(height: 16),
                   TextField(
                     controller: placeController,
-                    decoration: InputDecoration(labelText: 'Place'),
+                    decoration: const InputDecoration(labelText: 'Place'),
                   ),
-                  SizedBox(height: 16),
+                  const SizedBox(height: 16),
                   TextField(
                     controller: priceController,
-                    decoration: InputDecoration(labelText: 'Price'),
+                    decoration: const InputDecoration(labelText: 'Price'),
                   ),
-                  SizedBox(height: 16),
+                  const SizedBox(height: 16),
                   ElevatedButton(
                     onPressed: () async {
                       final name = nameController.text;
@@ -320,7 +320,7 @@ class _EditVaccineState extends State<EditVaccine> {
                       _getVaccineList();
                       Navigator.pop(context);
                     },
-                    child: Text('Update', style: TextStyle(color: Colors.white)),
+                    child: const Text('Update', style: TextStyle(color: Colors.white)),
                   ),
                 ],
               ),
@@ -347,31 +347,31 @@ class _EditVaccineState extends State<EditVaccine> {
               bottom: MediaQuery.of(context).viewInsets.bottom,
             ),
             child: Container(
-              padding: EdgeInsets.all(16),
+              padding: const EdgeInsets.all(16),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 mainAxisSize: MainAxisSize.min,
                 children: [
                   TextField(
                     controller: nameController,
-                    decoration: InputDecoration(labelText: 'Name'),
+                    decoration: const InputDecoration(labelText: 'Name'),
                   ),
-                  SizedBox(height: 16),
+                  const SizedBox(height: 16),
                   TextField(
                     controller: imageUrlController,
-                    decoration: InputDecoration(labelText: 'Image URL'),
+                    decoration: const InputDecoration(labelText: 'Image URL'),
                   ),
-                  SizedBox(height: 16),
+                  const SizedBox(height: 16),
                   TextField(
                     controller: placeController,
-                    decoration: InputDecoration(labelText: 'Place'),
+                    decoration: const InputDecoration(labelText: 'Place'),
                   ),
-                  SizedBox(height: 16),
+                  const SizedBox(height: 16),
                   TextField(
                     controller: priceController,
-                    decoration: InputDecoration(labelText: 'Price'),
+                    decoration: const InputDecoration(labelText: 'Price'),
                   ),
-                  SizedBox(height: 16),
+                  const SizedBox(height: 16),
                   ElevatedButton(
                     onPressed: () async {
                       final name = nameController.text;
@@ -385,7 +385,7 @@ class _EditVaccineState extends State<EditVaccine> {
 
                       Navigator.pop(context);
                     },
-                    child: Text('Add', style: TextStyle(color: Colors.white)),
+                    child: const Text('Add', style: TextStyle(color: Colors.white)),
                   ),
                 ],
               ),

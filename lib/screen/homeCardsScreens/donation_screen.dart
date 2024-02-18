@@ -69,7 +69,7 @@ class _DonationState extends State<Donation> {
                     mainAxisAlignment: MainAxisAlignment.start,
                     children: [
                       IconButton(
-                        icon: Icon(
+                        icon: const Icon(
                           Icons.arrow_back,
                           color: AppColors.primaryColor,
                         ),
@@ -84,13 +84,13 @@ class _DonationState extends State<Donation> {
                   ),
                   TextField(
                     controller: searchController,
-                    decoration: InputDecoration(
+                    decoration: const InputDecoration(
                       labelText: 'Search',
                       border: OutlineInputBorder(),
                     ),
                   ),
                   const SizedBox(height: 30),
-                  Text(
+                  const Text(
                     'Admitted Needy Patients',
                     style: TextStyle(
                       fontSize: 24,
@@ -101,13 +101,13 @@ class _DonationState extends State<Donation> {
                   const SizedBox(height: 30),
                   ListView.builder(
                     shrinkWrap: true,
-                    physics: NeverScrollableScrollPhysics(),
+                    physics: const NeverScrollableScrollPhysics(),
                     itemCount: filteredPatients.length,
                     itemBuilder: (BuildContext context, int index) {
                       final patient = filteredPatients[index];
                       return Container(
-                        margin: EdgeInsets.only(bottom: 20),
-                        padding: EdgeInsets.all(10),
+                        margin: const EdgeInsets.only(bottom: 20),
+                        padding: const EdgeInsets.all(10),
                         decoration: BoxDecoration(
                           color: Colors.white,
                           borderRadius: BorderRadius.circular(12),
@@ -116,7 +116,7 @@ class _DonationState extends State<Donation> {
                               color: Colors.grey.withOpacity(0.5),
                               spreadRadius: 1,
                               blurRadius: 4,
-                              offset: Offset(0, 3),
+                              offset: const Offset(0, 3),
                             ),
                           ],
                         ),
@@ -133,6 +133,10 @@ class _DonationState extends State<Donation> {
                                   Text('Bed Number: ${patient['bedNumber']}'),
                                   Text('Disease: ${patient['disease']}'),
                                 ],
+                              ),
+                              trailing: TextButton(
+                                onPressed: () {},
+                                child: const Text("Donate"),
                               ),
                             ),
                           ],
