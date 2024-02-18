@@ -37,7 +37,7 @@ class _EditAppointmentState extends State<EditAppointment> {
                     mainAxisAlignment: MainAxisAlignment.start,
                     children: [
                       IconButton(
-                        icon: Icon(
+                        icon: const Icon(
                           Icons.arrow_back,
                           color: AppColors.primaryColor,
                         ),
@@ -48,14 +48,14 @@ class _EditAppointmentState extends State<EditAppointment> {
                     ],
                   ),
                   const SizedBox(height: 10),
-                  Text(
+                  const Text(
                     'Appointment List',
                     style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
                   ),
-                  SizedBox(height: 40),
+                  const SizedBox(height: 40),
                   Container(
                     width: double.infinity,
-                    padding: EdgeInsets.all(20),
+                    padding: const EdgeInsets.all(20),
                     decoration: BoxDecoration(
                       color: Colors.white,
                       borderRadius: BorderRadius.circular(10),
@@ -64,7 +64,7 @@ class _EditAppointmentState extends State<EditAppointment> {
                           color: Colors.grey.withOpacity(0.5),
                           spreadRadius: 2,
                           blurRadius: 5,
-                          offset: Offset(0, 3),
+                          offset: const Offset(0, 3),
                         ),
                       ],
                     ),
@@ -76,27 +76,46 @@ class _EditAppointmentState extends State<EditAppointment> {
                           children: [
                             Text(
                               'Booked ${widget.category}',
-                              style: TextStyle(fontSize: 18, color: AppColors.primaryColor),
+                              style: const TextStyle(fontSize: 18, color: AppColors.primaryColor),
                             ),
                             Text(
                               'With Doctor:  ${widget.type}',
-                              style: TextStyle(fontSize: 18, color: Colors.black),
+                              style: const TextStyle(fontSize: 18, color: Colors.black),
                             ),
                             Text(
                               'Paid:   ${widget.payable}',
-                              style: TextStyle(fontSize: 18, color: Colors.grey),
+                              style: const TextStyle(fontSize: 18, color: Colors.grey),
                             ),
                           ],
                         ),
-                        ElevatedButton(
-                          onPressed: () {
-                            // Show dialog box for providing schedule
-                            _showScheduleDialog(context);
-                          },
-                          child: Text(
-                            'Accept',
-                            style: TextStyle(color: Colors.white),
-                          ),
+                        Row(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            ElevatedButton(
+                              style: ElevatedButton.styleFrom(
+                                backgroundColor: Colors.redAccent,
+                              ),
+                              onPressed: () {
+                                // Show dialog box for providing schedule
+                                _showScheduleDialog(context, "Reject");
+                              },
+                              child: const Text(
+                                'Reject',
+                                style: TextStyle(color: Colors.white),
+                              ),
+                            ),
+                            const SizedBox(width: 10),
+                            ElevatedButton(
+                              onPressed: () {
+                                // Show dialog box for providing schedule
+                                _showScheduleDialog(context, "Accept");
+                              },
+                              child: const Text(
+                                'Accept',
+                                style: TextStyle(color: Colors.white),
+                              ),
+                            ),
+                          ],
                         ),
                       ],
                     ),
@@ -110,12 +129,12 @@ class _EditAppointmentState extends State<EditAppointment> {
     );
   }
 
-  void _showScheduleDialog(BuildContext context) {
+  void _showScheduleDialog(BuildContext context, String value) {
     showDialog(
       context: context,
       builder: (context) {
         return AlertDialog(
-          title: Text('Provide Schedule'),
+          title: const Text('Provide Schedule'),
           content: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
@@ -125,16 +144,16 @@ class _EditAppointmentState extends State<EditAppointment> {
                     _selectedDate = value;
                   });
                 },
-                decoration: InputDecoration(labelText: 'Date'),
+                decoration: const InputDecoration(labelText: 'Date'),
               ),
-              SizedBox(height: 10),
+              const SizedBox(height: 10),
               TextField(
                 onChanged: (value) {
                   setState(() {
                     _selectedTime = value;
                   });
                 },
-                decoration: InputDecoration(labelText: 'Time'),
+                decoration: const InputDecoration(labelText: 'Time'),
               ),
             ],
           ),
@@ -145,13 +164,13 @@ class _EditAppointmentState extends State<EditAppointment> {
                 Navigator.pop(context);
                 // You can use _selectedDate and _selectedTime for further actions
               },
-              child: Text('Confirm'),
+              child: const Text('Confirm'),
             ),
             TextButton(
               onPressed: () {
                 Navigator.pop(context);
               },
-              child: Text('Cancel'),
+              child: const Text('Cancel'),
             ),
           ],
         );

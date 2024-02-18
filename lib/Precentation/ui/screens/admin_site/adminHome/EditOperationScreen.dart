@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:frastraited/Precentation/ui/utility/app_colors.dart';
 import 'package:frastraited/Precentation/ui/utility/search_field.dart';
+import 'package:frastraited/screen/service/database_service.dart';
+import 'package:frastraited/screen/service/models/operationPackages.dart';
 import 'package:frastraited/screen/widgets/bodyBackground.dart';
 
 class EditOperation extends StatefulWidget {
@@ -11,38 +13,25 @@ class EditOperation extends StatefulWidget {
 }
 
 class _EditOperationState extends State<EditOperation> {
-  // Sample list of available operation packages
-  final List<Map<String, dynamic>> availableOperationPackages = [
-    {
-      'name': 'Heart Surgery',
-      'description': 'Heart operation package',
-      'imageUrl': 'https://example.com/heart_surgery.jpg',
-      'amount': 'BDT 10000',
-    },
-    {
-      'name': 'Brain Surgery',
-      'description': 'Brain operation package',
-      'imageUrl': 'https://example.com/brain_surgery.jpg',
-      'amount': 'BDT 15000',
-    },
-    {
-      'name': 'Knee Replacement',
-      'description': 'Knee operation package',
-      'imageUrl': 'https://example.com/knee_replacement.jpg',
-      'amount': 'BDT 8000',
-    },
-    // Add more operation package information here
-  ];
-
-  TextEditingController searchController = TextEditingController();
-  List<Map<String, dynamic>> filteredOperationPackages = [];
+  List<OperationModel> operationList = [];
+  bool isLoading = true;
 
   @override
   void initState() {
     super.initState();
-    filteredOperationPackages = availableOperationPackages;
+    _getOperationList();
     searchController.addListener(_onSearchChanged);
   }
+
+  void _getOperationList() async {
+    operationList.clear();
+    final result = await DatabaseService.instance.getOperationInformation();
+    operationList.addAll(result);
+    isLoading = false;
+    setState(() {});
+  }
+
+  TextEditingController searchController = TextEditingController();
 
   @override
   void dispose() {
@@ -53,8 +42,8 @@ class _EditOperationState extends State<EditOperation> {
   void _onSearchChanged() {
     String query = searchController.text.toLowerCase();
     setState(() {
-      filteredOperationPackages = availableOperationPackages.where((operationPackage) {
-        String packageName = operationPackage['name'].toLowerCase();
+      operationList = operationList.where((operationPackage) {
+        String packageName = operationPackage.name.toLowerCase();
         return packageName.contains(query);
       }).toList();
     });
@@ -64,171 +53,163 @@ class _EditOperationState extends State<EditOperation> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: BodyBackground(
-        child: SafeArea(
-          child: SingleChildScrollView(
-            child: Padding(
-              padding: const EdgeInsets.all(24),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    children: [
-                      IconButton(
-                        icon: Icon(Icons.arrow_back, color: AppColors.primaryColor,),
-                        onPressed: () {
-                          Navigator.pop(context);
-                        },
-                      ),
-                    ],
-                  ),
-                  const SizedBox(height: 10),
-                  Text(
-                    'Available Operation Packages',
-                    style: TextStyle(
-                      fontSize: 24,
-                      fontWeight: FontWeight.bold,
-                      color: AppColors.primaryColor,
-                    ),
-                  ),
-                  const SizedBox(height: 20),
-                  SearchField(
-                    controller: searchController,
-                    onTextChanged: (value) {
-                      setState(() {});
-                    },
-                  ),
-                  const SizedBox(height: 20),
-                  ListView.builder(
-                    shrinkWrap: true,
-                    physics: NeverScrollableScrollPhysics(),
-                    itemCount: filteredOperationPackages.length,
-                    itemBuilder: (BuildContext context, int index) {
-                      final package = filteredOperationPackages[index];
-                      return Column(
-                        children: [
-                          Container(
-                            height: 120, // Adjusted height
-                            margin: EdgeInsets.symmetric(vertical: 10), // Adjusted margin
-                            decoration: BoxDecoration(
-                              color: Colors.white,
-                              borderRadius: BorderRadius.circular(12),
-                              boxShadow: [
-                                BoxShadow(
-                                  color: Colors.grey.withOpacity(0.5),
-                                  spreadRadius: 1,
-                                  blurRadius: 4,
-                                  offset: Offset(0, 3),
+        child: isLoading
+            ? const Center(child: CircularProgressIndicator())
+            : operationList.isEmpty
+                ? const Center(child: Text("List is Empty"))
+                : SafeArea(
+                    child: SingleChildScrollView(
+                      child: Padding(
+                        padding: const EdgeInsets.all(24),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: [
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.start,
+                              children: [
+                                IconButton(
+                                  icon: const Icon(
+                                    Icons.arrow_back,
+                                    color: AppColors.primaryColor,
+                                  ),
+                                  onPressed: () {
+                                    Navigator.pop(context);
+                                  },
                                 ),
                               ],
                             ),
-                            child: Row(
-                              children: [
-                                Container(
-                                  width: 120,
-                                  height: double.infinity,
-                                  decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.only(
-                                      topLeft: Radius.circular(12),
-                                      bottomLeft: Radius.circular(12),
-                                    ),
-                                    image: DecorationImage(
-                                      image: NetworkImage(package['imageUrl']),
-                                      fit: BoxFit.cover,
-                                    ),
-                                  ),
-                                ),
-                                const SizedBox(width: 20),
-                                Expanded(
-                                  child: Column(
-                                    mainAxisAlignment: MainAxisAlignment.center,
-                                    crossAxisAlignment: CrossAxisAlignment.start,
-                                    children: [
-                                      Text(
-                                        package['name'],
-                                        style: TextStyle(fontSize: 18, color: AppColors.primaryColor),
-                                      ),
-                                      const SizedBox(height: 4),
-                                      Text(
-                                        package['description'],
-                                        style: TextStyle(color: Colors.grey),
-                                      ),
-                                      const SizedBox(height: 4),
-                                      Text(
-                                        'Amount: ${package['amount']}',
-                                        style: TextStyle(fontWeight: FontWeight.bold,color: Colors.blueGrey),
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                                Column(
-                                  mainAxisAlignment: MainAxisAlignment.center,
+                            const SizedBox(height: 10),
+                            const Text(
+                              'Available Operation Packages',
+                              style: TextStyle(
+                                fontSize: 24,
+                                fontWeight: FontWeight.bold,
+                                color: AppColors.primaryColor,
+                              ),
+                            ),
+                            const SizedBox(height: 20),
+                            SearchField(
+                              controller: searchController,
+                              onTextChanged: (value) {
+                                setState(() {});
+                              },
+                            ),
+                            const SizedBox(height: 20),
+                            ListView.builder(
+                              shrinkWrap: true,
+                              physics: const NeverScrollableScrollPhysics(),
+                              itemCount: operationList.length,
+                              itemBuilder: (BuildContext context, int index) {
+                                final package = operationList[index];
+                                return Column(
                                   children: [
-                                    IconButton(
-                                      icon: Icon(Icons.delete),
-                                      onPressed: () {
-                                        _showDeleteAlertDialog(context, index);
-                                      },
-                                    ),
-                                    IconButton(
-                                      icon: Icon(Icons.edit),
-                                      onPressed: () {
-                                        _showEditBottomSheet(context, package, index);
-                                      },
+                                    Container(
+                                      height: 120, // Adjusted height
+                                      margin: const EdgeInsets.symmetric(vertical: 10), // Adjusted margin
+                                      decoration: BoxDecoration(
+                                        color: Colors.white,
+                                        borderRadius: BorderRadius.circular(12),
+                                        boxShadow: [
+                                          BoxShadow(
+                                            color: Colors.grey.withOpacity(0.5),
+                                            spreadRadius: 1,
+                                            blurRadius: 4,
+                                            offset: const Offset(0, 3),
+                                          ),
+                                        ],
+                                      ),
+                                      child: Row(
+                                        children: [
+                                          Container(
+                                            width: 120,
+                                            height: double.infinity,
+                                            decoration: BoxDecoration(
+                                              borderRadius: const BorderRadius.only(
+                                                topLeft: Radius.circular(12),
+                                                bottomLeft: Radius.circular(12),
+                                              ),
+                                              image: DecorationImage(
+                                                image: NetworkImage(package.operationImageUrl),
+                                                fit: BoxFit.cover,
+                                              ),
+                                            ),
+                                          ),
+                                          const SizedBox(width: 20),
+                                          Expanded(
+                                            child: Column(
+                                              mainAxisAlignment: MainAxisAlignment.center,
+                                              crossAxisAlignment: CrossAxisAlignment.start,
+                                              children: [
+                                                Text(
+                                                  package.name,
+                                                  style: const TextStyle(fontSize: 18, color: AppColors.primaryColor),
+                                                ),
+                                                const SizedBox(height: 4),
+                                                Text(
+                                                  package.description,
+                                                  style: const TextStyle(color: Colors.grey),
+                                                ),
+                                                const SizedBox(height: 4),
+                                                Text(
+                                                  'Amount: ${package.amount}',
+                                                  style: const TextStyle(fontWeight: FontWeight.bold, color: Colors.blueGrey),
+                                                ),
+                                              ],
+                                            ),
+                                          ),
+                                          IconButton(
+                                            icon: const Icon(Icons.more_vert),
+                                            onPressed: () {
+                                              _showEditDialog(context, package);
+                                            },
+                                          ),
+                                        ],
+                                      ),
                                     ),
                                   ],
-                                ),
-                              ],
+                                );
+                              },
                             ),
-                          ),
-                        ],
-                      );
-                    },
+                          ],
+                        ),
+                      ),
+                    ),
                   ),
-                ],
-              ),
-            ),
-          ),
-        ),
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
           _showAddBottomSheet(context);
         },
-        child: Icon(Icons.add,color: Colors.white,),
         backgroundColor: AppColors.primaryColor,
+        child: const Icon(
+          Icons.add,
+          color: Colors.white,
+        ),
       ),
     );
   }
 
-  void _showDeleteAlertDialog(BuildContext context, int index) {
+  void _showEditDialog(BuildContext context, OperationModel package) {
     showDialog(
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
-          title: Text("Delete Operation Package?"),
-          content: Text("Do you want to delete the Package from the list?"),
+          title: const Text('Modify Operation Packages'),
+          content: const Text('Do you want to modify Operation Package?'),
           actions: [
             TextButton(
               onPressed: () {
-                setState(() {
-                  availableOperationPackages.removeAt(index);
-                });
-                Navigator.of(context).pop();
+                Navigator.pop(context);
+                _showEditBottomSheet(context, package);
               },
-              child: Text(
-                "Delete",
-                style: TextStyle(color: Colors.white),
-              ),
-              style: ButtonStyle(
-                backgroundColor: MaterialStateProperty.all<Color>(AppColors.primaryColor),
-              ),
+              child: const Text('Update'),
             ),
             TextButton(
-              onPressed: () {
-                Navigator.of(context).pop();
+              onPressed: () async {
+                Navigator.pop(context);
+                _showDeleteAlertDialog(context, package);
               },
-              child: Text("Cancel"),
+              child: const Text('Delete'),
             ),
           ],
         );
@@ -236,11 +217,47 @@ class _EditOperationState extends State<EditOperation> {
     );
   }
 
-  void _showEditBottomSheet(BuildContext context, Map<String, dynamic> package, int index) {
-    TextEditingController nameController = TextEditingController(text: package['name']);
-    TextEditingController descriptionController = TextEditingController(text: package['description']);
-    TextEditingController amountController = TextEditingController(text: package['amount']);
-    TextEditingController imageUrlController = TextEditingController(text: package['imageUrl']);
+  void _showDeleteAlertDialog(BuildContext context, OperationModel package) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Text("Delete Operation Package?"),
+          content: const Text("Do you want to delete the Package from the list?"),
+          actions: [
+            TextButton(
+              onPressed: () async {
+                operationList.remove(package);
+                await DatabaseService.instance.deleteOperation(package);
+                _getOperationList();
+                setState(() {});
+                Navigator.of(context).pop();
+              },
+              style: ButtonStyle(
+                backgroundColor: MaterialStateProperty.all<Color>(AppColors.primaryColor),
+              ),
+              child: const Text(
+                "Delete",
+                style: TextStyle(color: Colors.white),
+              ),
+            ),
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+              child: const Text("Cancel"),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  void _showEditBottomSheet(BuildContext context, OperationModel package) {
+    TextEditingController nameController = TextEditingController(text: package.name);
+    TextEditingController descriptionController = TextEditingController(text: package.description);
+    TextEditingController amountController = TextEditingController(text: package.amount);
+    TextEditingController imageUrlController = TextEditingController(text: package.operationImageUrl);
 
     showModalBottomSheet(
       context: context,
@@ -252,42 +269,44 @@ class _EditOperationState extends State<EditOperation> {
               bottom: MediaQuery.of(context).viewInsets.bottom,
             ),
             child: Container(
-              padding: EdgeInsets.all(16),
+              padding: const EdgeInsets.all(16),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 mainAxisSize: MainAxisSize.min,
                 children: [
                   TextField(
                     controller: nameController,
-                    decoration: InputDecoration(labelText: 'Name'),
+                    decoration: const InputDecoration(labelText: 'Name'),
                   ),
-                  SizedBox(height: 16),
+                  const SizedBox(height: 16),
                   TextField(
                     controller: descriptionController,
-                    decoration: InputDecoration(labelText: 'Description'),
+                    decoration: const InputDecoration(labelText: 'Description'),
                   ),
-                  SizedBox(height: 16),
+                  const SizedBox(height: 16),
                   TextField(
                     controller: amountController,
-                    decoration: InputDecoration(labelText: 'Amount'),
+                    decoration: const InputDecoration(labelText: 'Amount'),
                   ),
-                  SizedBox(height: 16),
+                  const SizedBox(height: 16),
                   TextField(
                     controller: imageUrlController,
-                    decoration: InputDecoration(labelText: 'Image URL'),
+                    decoration: const InputDecoration(labelText: 'Image URL'),
                   ),
-                  SizedBox(height: 16),
+                  const SizedBox(height: 16),
                   ElevatedButton(
-                    onPressed: () {
-                      setState(() {
-                        availableOperationPackages[index]['name'] = nameController.text;
-                        availableOperationPackages[index]['description'] = descriptionController.text;
-                        availableOperationPackages[index]['amount'] = amountController.text;
-                        availableOperationPackages[index]['imageUrl'] = imageUrlController.text;
-                      });
+                    onPressed: () async {
+                      final name = nameController.text;
+                      final description = descriptionController.text;
+                      final amount = amountController.text;
+                      final imageUrl = imageUrlController.text;
+                      final model = package.copyWith(name: name, amount: amount, operationImageUrl: imageUrl, description: description);
+
+                      await DatabaseService.instance.updateOperationInformation(model);
+                      _getOperationList();
                       Navigator.pop(context);
                     },
-                    child: Text('Update', style: TextStyle(color: Colors.white)),
+                    child: const Text('Update', style: TextStyle(color: Colors.white)),
                   ),
                 ],
               ),
@@ -314,44 +333,45 @@ class _EditOperationState extends State<EditOperation> {
               bottom: MediaQuery.of(context).viewInsets.bottom,
             ),
             child: Container(
-              padding: EdgeInsets.all(16),
+              padding: const EdgeInsets.all(16),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 mainAxisSize: MainAxisSize.min,
                 children: [
                   TextField(
                     controller: nameController,
-                    decoration: InputDecoration(labelText: 'Name'),
+                    decoration: const InputDecoration(labelText: 'Name'),
                   ),
-                  SizedBox(height: 16),
+                  const SizedBox(height: 16),
                   TextField(
                     controller: descriptionController,
-                    decoration: InputDecoration(labelText: 'Description'),
+                    decoration: const InputDecoration(labelText: 'Description'),
                   ),
-                  SizedBox(height: 16),
+                  const SizedBox(height: 16),
                   TextField(
                     controller: amountController,
-                    decoration: InputDecoration(labelText: 'Amount'),
+                    decoration: const InputDecoration(labelText: 'Amount'),
                   ),
-                  SizedBox(height: 16),
+                  const SizedBox(height: 16),
                   TextField(
                     controller: imageUrlController,
-                    decoration: InputDecoration(labelText: 'Image URL'),
+                    decoration: const InputDecoration(labelText: 'Image URL'),
                   ),
-                  SizedBox(height: 16),
+                  const SizedBox(height: 16),
                   ElevatedButton(
-                    onPressed: () {
-                      setState(() {
-                        availableOperationPackages.add({
-                          'name': nameController.text,
-                          'description': descriptionController.text,
-                          'amount': amountController.text,
-                          'imageUrl': imageUrlController.text,
-                        });
-                      });
+                    onPressed: () async {
+                      final name = nameController.text;
+                      final description = descriptionController.text;
+                      final amount = amountController.text;
+                      final imageUrl = imageUrlController.text;
+
+                      OperationModel model = OperationModel(id: '', name: name, description: description, amount: amount, operationImageUrl: imageUrl);
+
+                      await DatabaseService.instance.setOperationInformation(model);
+                      _getOperationList();
                       Navigator.pop(context);
                     },
-                    child: Text('Add', style: TextStyle(color: Colors.white)),
+                    child: const Text('Add', style: TextStyle(color: Colors.white)),
                   ),
                 ],
               ),
