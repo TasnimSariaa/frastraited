@@ -1,8 +1,9 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:frastraited/Precentation/ui/utility/app_colors.dart';
 import 'package:frastraited/screen/onboarding/loginScreen.dart';
+import 'package:frastraited/screen/service/database_service.dart';
+import 'package:frastraited/screen/service/models/users.dart';
 import 'package:frastraited/screen/widgets/bodyBackground.dart';
 
 class signUpScreen extends StatefulWidget {
@@ -30,14 +31,15 @@ class _signUpScreenState extends State<signUpScreen> {
 
       await userCredential.user?.updateDisplayName(firstName);
 
-      await FirebaseFirestore.instance.collection('users').doc(userCredential.user?.uid).set({
-        'firstName': firstName,
-        'lastName': lastName,
-        'userType': "User",
-        'phone': phone,
-        'email': email,
-        'userid': userCredential.user?.uid,
-      });
+      final model = UsersModel(
+        firstName: firstName,
+        lastName: lastName,
+        userType: "User",
+        phone: phone,
+        email: email,
+        userid: userCredential.user?.uid ?? "",
+      );
+      await DatabaseService.instance.setUserInformation(model);
       isLoading = false;
       setState(() {});
       Navigator.push(

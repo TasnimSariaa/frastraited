@@ -27,7 +27,14 @@ class UsersModel {
   }
 
   factory UsersModel.empty() {
-    return UsersModel(email: "", firstName: "", lastName: "", phone: "", userType: "", userid: "");
+    return UsersModel(
+      email: "",
+      firstName: "",
+      lastName: "",
+      phone: "",
+      userType: "",
+      userid: "",
+    );
   }
 
   Map<String, dynamic> toJson() {
