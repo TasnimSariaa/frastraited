@@ -5,6 +5,7 @@ class UsersModel {
   final String phone;
   final String userType;
   final String userid;
+  final String medicalId;
 
   UsersModel({
     required this.email,
@@ -13,6 +14,7 @@ class UsersModel {
     required this.phone,
     required this.userType,
     required this.userid,
+    required this.medicalId,
   });
 
   factory UsersModel.fromJson(Map<String, dynamic> json) {
@@ -23,6 +25,7 @@ class UsersModel {
       phone: json["phone"] ?? "",
       userType: json["userType"] ?? "",
       userid: json["userid"] ?? "",
+      medicalId: json["medicalId"] ?? "",
     );
   }
 
@@ -34,6 +37,7 @@ class UsersModel {
       phone: "",
       userType: "",
       userid: "",
+      medicalId: "",
     );
   }
 
@@ -45,6 +49,7 @@ class UsersModel {
       "phone": phone,
       "userType": userType,
       "userid": userid,
+      "medicalId": medicalId,
     };
   }
 }
