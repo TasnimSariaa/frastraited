@@ -8,6 +8,7 @@ class BookAppointmentModel {
   final String transactionId;
   final String name;
   final String email;
+  final String status;
 
   BookAppointmentModel({
     required this.id,
@@ -16,6 +17,7 @@ class BookAppointmentModel {
     required this.currentDateTime,
     required this.transactionId,
     required this.name,
+    required this.status,
     required this.email,
   });
 
@@ -27,6 +29,7 @@ class BookAppointmentModel {
       currentDateTime: json["currentDateTime"] ?? "",
       transactionId: json["transactionId"] ?? "",
       name: json["name"] ?? "",
+      status: json["status"] ?? "",
       email: json["email"] ?? "",
     );
   }
@@ -40,6 +43,7 @@ class BookAppointmentModel {
       transactionId: "",
       name: "",
       email: "",
+      status: "",
     );
   }
 
@@ -51,6 +55,7 @@ class BookAppointmentModel {
     String? transactionId,
     String? name,
     String? email,
+    String? status,
   }) {
     return BookAppointmentModel(
       id: id ?? this.id,
@@ -60,6 +65,7 @@ class BookAppointmentModel {
       transactionId: transactionId ?? this.transactionId,
       name: name ?? this.name,
       email: email ?? this.email,
+      status: status ?? this.status,
     );
   }
 
@@ -72,6 +78,7 @@ class BookAppointmentModel {
       "transactionId": transactionId,
       "name": name,
       "email": email,
+      "status": status,
     };
   }
 }

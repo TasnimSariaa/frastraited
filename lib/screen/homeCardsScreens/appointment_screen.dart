@@ -2,13 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:frastraited/Precentation/ui/screens/Payments_screen.dart';
 import 'package:frastraited/Precentation/ui/utility/app_colors.dart';
-import 'package:frastraited/screen/service/models/users.dart';
 import 'package:frastraited/screen/widgets/bodyBackground.dart';
 
 class Appointment extends StatefulWidget {
-  final UsersModel? user;
-
-  const Appointment({super.key, this.user});
+  const Appointment({super.key});
 
   @override
   State<Appointment> createState() => _AppointmentState();

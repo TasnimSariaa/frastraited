@@ -19,7 +19,6 @@ import 'package:frastraited/screen/homeCardsScreens/pendingTests_screen.dart';
 import 'package:frastraited/screen/homeCardsScreens/reportCollection_screen.dart';
 import 'package:frastraited/screen/homeCardsScreens/vaccinePac_screen.dart';
 import 'package:frastraited/screen/service/database_service.dart';
-import 'package:frastraited/screen/service/models/users.dart';
 import 'package:frastraited/screen/widgets/bodyBackground.dart';
 // Import the SearchField widget
 
@@ -46,8 +45,6 @@ class _HomeScreenState extends State<HomeScreen> {
 
   bool isAdmin = false;
 
-  UsersModel userModel = UsersModel.empty();
-
   @override
   void initState() {
     super.initState();
@@ -59,7 +56,6 @@ class _HomeScreenState extends State<HomeScreen> {
   void _getUser(String uid) async {
     final user = await DatabaseService.instance.getUserInfo(uid);
     setState(() {
-      userModel = user;
       isAdmin = user.userType.toLowerCase() == "admin";
     });
   }
@@ -84,7 +80,7 @@ class _HomeScreenState extends State<HomeScreen> {
         const ActiveDoctor(),
         const OperationScreen(),
         const VaccineScreen(),
-        Appointment(user: userModel),
+        Appointment(),
         const ReportCollection(),
         const Donation(),
         const PendingTests(),

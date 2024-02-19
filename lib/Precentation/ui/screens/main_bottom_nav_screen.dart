@@ -33,7 +33,7 @@ class _MainBottomNavScreenState extends State<MainBottomNavScreen> {
     _usersScreens = [
       const HomeScreen(),
       const HistoryScreen(paymentInfo: {}),
-      PaymentsScreen(category: '', type: '', payable: ''),
+      const PaymentsScreen(category: '', type: '', payable: ''),
       const ProfileScreen(),
     ];
   }

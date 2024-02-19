@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:frastraited/screen/service/models/book_apointment_model.dart';
 import 'package:frastraited/screen/service/models/collect_reports_model.dart';
 import 'package:frastraited/screen/service/models/doctors.dart';
@@ -261,5 +262,43 @@ class DatabaseService {
     final paymentId = result.doc().id;
 
     result.doc(paymentId).set(model.copyWith(id: paymentId).toJson());
+  }
+
+  Future<List<PaymentModel>> getHistory() async {
+    List<PaymentModel> historyList = [];
+    final uid = FirebaseAuth.instance.currentUser?.uid ?? "";
+
+    await fireStore.collection(DatabaseTables.payments).get().then((QuerySnapshot querySnapshot) {
+      historyList.clear();
+      for (var doc in querySnapshot.docs) {
+        Map<String, dynamic> data = doc.data() as Map<String, dynamic>;
+        PaymentModel payment = PaymentModel.fromJson(data);
+        if (payment.user.userid == uid) {
+          historyList.add(payment);
+        }
+      }
+    });
+
+    return historyList;
+  }
+
+  Future<List<BookAppointmentModel>> getAdminBookAppointment() async {
+    List<BookAppointmentModel> appointmentList = [];
+
+    await fireStore.collection(DatabaseTables.bookAppointments).get().then((QuerySnapshot querySnapshot) {
+      appointmentList.clear();
+      for (var doc in querySnapshot.docs) {
+        Map<String, dynamic> data = doc.data() as Map<String, dynamic>;
+        BookAppointmentModel appointment = BookAppointmentModel.fromJson(data);
+        appointmentList.add(appointment);
+      }
+    });
+
+    return appointmentList;
+  }
+
+  Future<void> updateAppointmentStatus(BookAppointmentModel model) async {
+    CollectionReference result = fireStore.collection(DatabaseTables.bookAppointments);
+    result.doc(model.id).update(model.toJson());
   }
 }

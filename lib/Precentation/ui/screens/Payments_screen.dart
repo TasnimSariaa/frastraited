@@ -1,3 +1,4 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:frastraited/Precentation/ui/utility/app_colors.dart';
 import 'package:frastraited/screen/service/database_service.dart';
@@ -7,12 +8,11 @@ import 'package:frastraited/screen/service/models/users.dart';
 import 'package:frastraited/screen/widgets/bodyBackground.dart';
 //import 'package:intl/intl.dart'; // Import DateFormat for date formatting
 
-class PaymentsScreen extends StatelessWidget {
+class PaymentsScreen extends StatefulWidget {
   final String category;
   final String type;
   final String payable;
   final Map<String, dynamic>? doctor;
-  final UsersModel? user;
 
   const PaymentsScreen({
     super.key,
@@ -20,8 +20,29 @@ class PaymentsScreen extends StatelessWidget {
     required this.type,
     required this.payable,
     this.doctor,
-    this.user,
   });
+
+  @override
+  State<PaymentsScreen> createState() => _PaymentsScreenState();
+}
+
+class _PaymentsScreenState extends State<PaymentsScreen> {
+  late UsersModel userModel;
+
+  @override
+  void initState() {
+    super.initState();
+    if (FirebaseAuth.instance.currentUser != null) {
+      _getUser(FirebaseAuth.instance.currentUser!.uid);
+    }
+  }
+
+  void _getUser(String uid) async {
+    final user = await DatabaseService.instance.getUserInfo(uid);
+    setState(() {
+      userModel = user;
+    });
+  }
 
   void _showPaymentForm(BuildContext context) {
     TextEditingController nameEditController = TextEditingController();
@@ -65,27 +86,33 @@ class PaymentsScreen extends StatelessWidget {
                   final currentTime = DateTime.now().toString();
                   BookAppointmentModel appointment = BookAppointmentModel(
                     id: "",
-                    doctor: doctor ?? {},
-                    user: user ?? UsersModel.empty(),
+                    doctor: widget.doctor ?? {},
+                    user: userModel,
                     currentDateTime: currentTime,
                     name: name,
                     email: email,
                     transactionId: transactionId,
+                    status: "Pending",
                   );
                   PaymentModel payment = PaymentModel(
                     id: "",
-                    user: user ?? UsersModel.empty(),
-                    paymentCategory: category,
-                    paymentAmount: payable,
+                    user: userModel,
+                    paymentCategory: widget.category,
+                    paymentAmount: widget.payable,
                     paymentStatus: "Pending",
                     currentDateTime: currentTime,
                   );
                   await DatabaseService.instance.addNewAppointment(appointment);
                   await DatabaseService.instance.addNewPayment(payment);
                   Navigator.pop(context, {
-                    'category': category,
-                    'type': type,
-                    'payable': payable,
+                    'category': widget.category,
+                    'type': widget.type,
+                    'payable': widget.payable,
+                  });
+                  Navigator.pop(context, {
+                    'category': widget.category,
+                    'type': widget.type,
+                    'payable': widget.payable,
                   });
                 },
                 child: const Text(
@@ -150,15 +177,15 @@ class PaymentsScreen extends StatelessWidget {
                       crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
                         Text(
-                          'Category:  $category',
+                          'Category:  ${widget.category}',
                           style: const TextStyle(fontSize: 18, color: AppColors.primaryColor),
                         ),
                         Text(
-                          'Type:   $type',
+                          'Type:   ${widget.type}',
                           style: const TextStyle(fontSize: 18, color: Colors.black),
                         ),
                         Text(
-                          'Payable:   $payable',
+                          'Payable:   ${widget.payable}',
                           style: const TextStyle(fontSize: 18, color: Colors.grey),
                         ),
                       ],
@@ -166,7 +193,7 @@ class PaymentsScreen extends StatelessWidget {
                   ),
                   const SizedBox(height: 20),
                   Text(
-                    " Pay BDT $payable by Bkash and fatch the Transaction ID! ",
+                    " Pay BDT ${widget.payable} by Bkash and fatch the Transaction ID! ",
                     style: const TextStyle(color: Colors.blueGrey, fontWeight: FontWeight.w700, fontSize: 16),
                   ),
                   const SizedBox(height: 20),
