@@ -1,5 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:frastraited/Precentation/ui/utility/app_colors.dart';
+import 'package:frastraited/screen/service/database_service.dart';
+import 'package:frastraited/screen/service/models/book_apointment_model.dart';
+import 'package:frastraited/screen/service/models/payment_model.dart';
+import 'package:frastraited/screen/service/models/users.dart';
 import 'package:frastraited/screen/widgets/bodyBackground.dart';
 //import 'package:intl/intl.dart'; // Import DateFormat for date formatting
 
@@ -7,46 +11,85 @@ class PaymentsScreen extends StatelessWidget {
   final String category;
   final String type;
   final String payable;
+  final Map<String, dynamic>? doctor;
+  final UsersModel? user;
 
-  PaymentsScreen({
+  const PaymentsScreen({
+    super.key,
     required this.category,
     required this.type,
     required this.payable,
+    this.doctor,
+    this.user,
   });
 
   void _showPaymentForm(BuildContext context) {
+    TextEditingController nameEditController = TextEditingController();
+    TextEditingController emailEditController = TextEditingController();
+    TextEditingController transactionEditController = TextEditingController();
     showModalBottomSheet(
       context: context,
       builder: (context) {
         return Container(
           width: double.infinity,
-          padding: EdgeInsets.all(20),
+          padding: const EdgeInsets.all(20),
           child: Column(
             mainAxisSize: MainAxisSize.min,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text(
+              const Text(
                 'Enter Payment Information',
                 style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
               ),
-              SizedBox(height: 20),
+              const SizedBox(height: 20),
               TextFormField(
-                decoration: InputDecoration(labelText: 'Name'),
+                controller: nameEditController,
+                decoration: const InputDecoration(labelText: 'Name'),
               ),
-              SizedBox(height: 10),
+              const SizedBox(height: 10),
               TextFormField(
-                decoration: InputDecoration(labelText: 'Email'),
+                controller: emailEditController,
+                decoration: const InputDecoration(labelText: 'Email'),
               ),
-              SizedBox(height: 10),
+              const SizedBox(height: 10),
               TextFormField(
-                decoration: InputDecoration(labelText: 'Transaction ID'),
+                controller: transactionEditController,
+                decoration: const InputDecoration(labelText: 'Transaction ID'),
               ),
-              SizedBox(height: 20),
+              const SizedBox(height: 20),
               ElevatedButton(
-                onPressed: () {
-                  _makePayment(context);
+                onPressed: () async {
+                  final name = transactionEditController.text;
+                  final email = transactionEditController.text;
+                  final transactionId = transactionEditController.text;
+                  final currentTime = DateTime.now().toString();
+                  BookAppointmentModel appointment = BookAppointmentModel(
+                    id: "",
+                    doctor: doctor ?? {},
+                    user: user ?? UsersModel.empty(),
+                    currentDateTime: currentTime,
+                    name: name,
+                    email: email,
+                    transactionId: transactionId,
+                  );
+                  PaymentModel payment = PaymentModel(
+                    id: "",
+                    user: user ?? UsersModel.empty(),
+                    paymentCategory: category,
+                    paymentAmount: payable,
+                    paymentStatus: "Pending",
+                    currentDateTime: currentTime,
+                  );
+                  await DatabaseService.instance.addNewAppointment(appointment);
+                  await DatabaseService.instance.addNewPayment(payment);
+                  Navigator.pop(context, {
+                    'category': category,
+                    'type': type,
+                    'payable': payable,
+                  });
                 },
-                child: Text('   Confirm Payment   ',
+                child: const Text(
+                  '   Confirm Payment   ',
                   style: TextStyle(color: Colors.white),
                 ),
               ),
@@ -55,12 +98,6 @@ class PaymentsScreen extends StatelessWidget {
         );
       },
     );
-  }
-
-  void _makePayment(BuildContext context) {
-    // Fetch payment information
-    //String currentDate = DateFormat.yMMMd().format(DateTime.now());
-    Navigator.pop(context, {'category': category, 'type': type, 'payable': payable, });
   }
 
   @override
@@ -78,7 +115,7 @@ class PaymentsScreen extends StatelessWidget {
                     mainAxisAlignment: MainAxisAlignment.start,
                     children: [
                       IconButton(
-                        icon: Icon(
+                        icon: const Icon(
                           Icons.arrow_back,
                           color: AppColors.primaryColor,
                         ),
@@ -88,15 +125,15 @@ class PaymentsScreen extends StatelessWidget {
                       ),
                     ],
                   ),
-                  SizedBox(height: 40),
-                  Text(
+                  const SizedBox(height: 40),
+                  const Text(
                     'Payment Details',
                     style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
                   ),
-                  SizedBox(height: 40),
+                  const SizedBox(height: 40),
                   Container(
                     width: double.infinity,
-                    padding: EdgeInsets.all(20),
+                    padding: const EdgeInsets.all(20),
                     decoration: BoxDecoration(
                       color: Colors.white,
                       borderRadius: BorderRadius.circular(10),
@@ -105,7 +142,7 @@ class PaymentsScreen extends StatelessWidget {
                           color: Colors.grey.withOpacity(0.5),
                           spreadRadius: 2,
                           blurRadius: 5,
-                          offset: Offset(0, 3),
+                          offset: const Offset(0, 3),
                         ),
                       ],
                     ),
@@ -114,29 +151,31 @@ class PaymentsScreen extends StatelessWidget {
                       children: [
                         Text(
                           'Category:  $category',
-                          style: TextStyle(fontSize: 18,color: AppColors.primaryColor),
+                          style: const TextStyle(fontSize: 18, color: AppColors.primaryColor),
                         ),
                         Text(
                           'Type:   $type',
-                          style: TextStyle(fontSize: 18,color: Colors.black),
+                          style: const TextStyle(fontSize: 18, color: Colors.black),
                         ),
                         Text(
                           'Payable:   $payable',
-                          style: TextStyle(fontSize: 18,color: Colors.grey),
+                          style: const TextStyle(fontSize: 18, color: Colors.grey),
                         ),
                       ],
                     ),
                   ),
-                  SizedBox(height: 20),
-                  Text(" Pay BDT $payable by Bkash and fatch the Transaction ID! ",
-                    style: TextStyle(color: Colors.blueGrey,fontWeight: FontWeight.w700,fontSize: 16),
+                  const SizedBox(height: 20),
+                  Text(
+                    " Pay BDT $payable by Bkash and fatch the Transaction ID! ",
+                    style: const TextStyle(color: Colors.blueGrey, fontWeight: FontWeight.w700, fontSize: 16),
                   ),
-                  SizedBox(height: 20),
+                  const SizedBox(height: 20),
                   ElevatedButton(
                     onPressed: () {
                       _showPaymentForm(context);
                     },
-                    child: Text('  Next  ',
+                    child: const Text(
+                      '  Next  ',
                       style: TextStyle(color: Colors.white),
                     ),
                   ),

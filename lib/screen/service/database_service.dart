@@ -1,8 +1,10 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:frastraited/screen/service/models/book_apointment_model.dart';
 import 'package:frastraited/screen/service/models/collect_reports_model.dart';
 import 'package:frastraited/screen/service/models/doctors.dart';
 import 'package:frastraited/screen/service/models/donation_model.dart';
 import 'package:frastraited/screen/service/models/operationPackages.dart';
+import 'package:frastraited/screen/service/models/payment_model.dart';
 import 'package:frastraited/screen/service/models/pending_test_model.dart';
 import 'package:frastraited/screen/service/models/users.dart';
 import 'package:frastraited/screen/service/models/vaccines.dart';
@@ -16,6 +18,8 @@ class DatabaseTables {
   static const pendingTestsUser = "pendingTestsUser";
   static const donations = "donations";
   static const collectReports = "collectReports";
+  static const bookAppointments = "bookAppointments";
+  static const payments = "payments";
 }
 
 class DatabaseService {
@@ -242,5 +246,20 @@ class DatabaseService {
     });
 
     return collectReportsList;
+  }
+
+  ///
+  Future<void> addNewAppointment(BookAppointmentModel model) async {
+    CollectionReference result = fireStore.collection(DatabaseTables.bookAppointments);
+    final appointmentId = result.doc().id;
+
+    result.doc(appointmentId).set(model.copyWith(id: appointmentId).toJson());
+  }
+
+  Future<void> addNewPayment(PaymentModel model) async {
+    CollectionReference result = fireStore.collection(DatabaseTables.payments);
+    final paymentId = result.doc().id;
+
+    result.doc(paymentId).set(model.copyWith(id: paymentId).toJson());
   }
 }
