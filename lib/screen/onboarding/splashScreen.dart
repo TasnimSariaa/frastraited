@@ -19,7 +19,7 @@ class _splashScreenState extends State<splashScreen> {
       if (FirebaseAuth.instance.currentUser != null) {
         Navigator.pushReplacementNamed(context, "/userHome");
       } else {
-        Navigator.pushReplacementNamed(context, "/front");
+        Navigator.pushReplacementNamed(context, "/login");
       }
     });
   }
@@ -34,9 +34,8 @@ class _splashScreenState extends State<splashScreen> {
               //Icon(Icons.),
               const Spacer(),
               SvgPicture.asset(
-                'assets/images/research.svg',
-                height: 220,
-                width: 220,
+                'assets/images/medical1.svg',
+                width: 400,
                 //height: double.infinity,
               ),
               const Spacer(),

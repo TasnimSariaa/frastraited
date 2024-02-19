@@ -91,8 +91,8 @@ class _EditActiveDoctorsState extends State<EditActiveDoctors> {
                                   leading: Stack(
                                     children: [
                                       CustomImageView(
-                                        height: 60,
-                                        width: 60,
+                                        height: 120,
+                                        width: 120,
                                         path: doctor.profileImageUrl,
                                         borderRadius: BorderRadius.circular(15),
                                       ),

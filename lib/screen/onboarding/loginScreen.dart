@@ -130,7 +130,7 @@ class _loginScreenState extends State<loginScreen> {
                         ? const SizedBox(
                             height: 24,
                             width: 24,
-                            child: CircularProgressIndicator(),
+                            child: CircularProgressIndicator(color:Colors.white),
                           )
                         : const Text(
                             'Next',
