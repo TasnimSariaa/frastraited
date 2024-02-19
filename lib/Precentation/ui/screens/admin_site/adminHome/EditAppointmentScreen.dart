@@ -11,8 +11,8 @@ class EditAppointment extends StatefulWidget {
     required this.category,
     required this.type,
     required this.payable,
-    Key? key,
-  }) : super(key: key);
+    super.key,
+  });
 
   @override
   State<EditAppointment> createState() => _EditAppointmentState();
@@ -86,6 +86,10 @@ class _EditAppointmentState extends State<EditAppointment> {
                               'Paid:   ${widget.payable}',
                               style: const TextStyle(fontSize: 18, color: Colors.grey),
                             ),
+                            Text(
+                              'Status: Pending',
+                              style: const TextStyle(fontSize: 18, color: Colors.grey),
+                            ),
                           ],
                         ),
                         Row(
@@ -97,7 +101,7 @@ class _EditAppointmentState extends State<EditAppointment> {
                               ),
                               onPressed: () {
                                 // Show dialog box for providing schedule
-                                _showScheduleDialog(context, "Reject");
+                                _showScheduleDialog(context, false, "Reject");
                               },
                               child: const Text(
                                 'Reject',
@@ -108,7 +112,7 @@ class _EditAppointmentState extends State<EditAppointment> {
                             ElevatedButton(
                               onPressed: () {
                                 // Show dialog box for providing schedule
-                                _showScheduleDialog(context, "Accept");
+                                _showScheduleDialog(context, true, "Accept");
                               },
                               child: const Text(
                                 'Accept',
@@ -129,52 +133,55 @@ class _EditAppointmentState extends State<EditAppointment> {
     );
   }
 
-  void _showScheduleDialog(BuildContext context, String value) {
-    showDialog(
-      context: context,
-      builder: (context) {
-        return AlertDialog(
-          title: const Text('Provide Schedule'),
-          content: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              TextField(
-                onChanged: (value) {
-                  setState(() {
-                    _selectedDate = value;
-                  });
+  void _showScheduleDialog(BuildContext context, bool isShow, String value) {
+    if (!isShow) {
+    } else {
+      showDialog(
+        context: context,
+        builder: (context) {
+          return AlertDialog(
+            title: const Text('Provide Schedule'),
+            content: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                TextField(
+                  onChanged: (value) {
+                    setState(() {
+                      _selectedDate = value;
+                    });
+                  },
+                  decoration: const InputDecoration(labelText: 'Date'),
+                ),
+                const SizedBox(height: 10),
+                TextField(
+                  onChanged: (value) {
+                    setState(() {
+                      _selectedTime = value;
+                    });
+                  },
+                  decoration: const InputDecoration(labelText: 'Time'),
+                ),
+              ],
+            ),
+            actions: [
+              TextButton(
+                onPressed: () {
+                  // Perform your action here with the selected date and time
+                  Navigator.pop(context);
+                  // You can use _selectedDate and _selectedTime for further actions
                 },
-                decoration: const InputDecoration(labelText: 'Date'),
+                child: const Text('Confirm'),
               ),
-              const SizedBox(height: 10),
-              TextField(
-                onChanged: (value) {
-                  setState(() {
-                    _selectedTime = value;
-                  });
+              TextButton(
+                onPressed: () {
+                  Navigator.pop(context);
                 },
-                decoration: const InputDecoration(labelText: 'Time'),
+                child: const Text('Cancel'),
               ),
             ],
-          ),
-          actions: [
-            TextButton(
-              onPressed: () {
-                // Perform your action here with the selected date and time
-                Navigator.pop(context);
-                // You can use _selectedDate and _selectedTime for further actions
-              },
-              child: const Text('Confirm'),
-            ),
-            TextButton(
-              onPressed: () {
-                Navigator.pop(context);
-              },
-              child: const Text('Cancel'),
-            ),
-          ],
-        );
-      },
-    );
+          );
+        },
+      );
+    }
   }
 }

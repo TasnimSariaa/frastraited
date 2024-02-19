@@ -2,11 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:frastraited/Precentation/ui/screens/Payments_screen.dart';
 import 'package:frastraited/Precentation/ui/utility/app_colors.dart';
-import 'package:frastraited/screen/task/appointmentBooking.dart';
+import 'package:frastraited/screen/service/models/users.dart';
 import 'package:frastraited/screen/widgets/bodyBackground.dart';
 
 class Appointment extends StatefulWidget {
-  const Appointment({Key? key}) : super(key: key);
+  final UsersModel? user;
+
+  const Appointment({super.key, this.user});
 
   @override
   State<Appointment> createState() => _AppointmentState();
@@ -50,7 +52,7 @@ class _AppointmentState extends State<Appointment> {
                   mainAxisAlignment: MainAxisAlignment.start,
                   children: [
                     IconButton(
-                      icon: Icon(
+                      icon: const Icon(
                         Icons.arrow_back,
                         color: AppColors.primaryColor,
                       ),
@@ -91,7 +93,7 @@ class _AppointmentState extends State<Appointment> {
                         height: 150,
                       ),
                     ),
-                    Positioned(
+                    const Positioned(
                       left: 20,
                       top: 47,
                       child: Text(
@@ -99,7 +101,7 @@ class _AppointmentState extends State<Appointment> {
                         style: TextStyle(fontSize: 27, color: Colors.white),
                       ),
                     ),
-                    Positioned(
+                    const Positioned(
                       left: 20,
                       top: 70,
                       child: Text(
@@ -124,21 +126,21 @@ class _AppointmentState extends State<Appointment> {
                             showDialog(
                               context: context,
                               builder: (context) => AlertDialog(
-                                title: Text('Error'),
-                                content: Text('Please choose a doctor from the list.'),
+                                title: const Text('Error'),
+                                content: const Text('Please choose a doctor from the list.'),
                                 actions: [
                                   TextButton(
                                     onPressed: () {
                                       Navigator.pop(context);
                                     },
-                                    child: Text('Close'),
+                                    child: const Text('Close'),
                                   ),
                                 ],
                               ),
                             );
                           }
                         },
-                        child: Text(
+                        child: const Text(
                           "  Book Appointment  ",
                           style: TextStyle(fontSize: 18, color: AppColors.primaryColor),
                         ),
@@ -146,12 +148,12 @@ class _AppointmentState extends State<Appointment> {
                     ),
                   ],
                 ),
-                SizedBox(height: 30),
-                Text(
+                const SizedBox(height: 30),
+                const Text(
                   ' Doctor List ',
                   style: TextStyle(fontSize: 20, fontWeight: FontWeight.w500),
                 ),
-                SizedBox(height: 10),
+                const SizedBox(height: 10),
                 Expanded(
                   child: ListView.builder(
                     itemCount: doctorsForAppointment.length,
@@ -169,9 +171,7 @@ class _AppointmentState extends State<Appointment> {
                           elevation: 3,
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(8),
-                            side: selectedDoctorIndex == index
-                                ? BorderSide(color: AppColors.primaryColor, width: 2)
-                                : BorderSide.none,
+                            side: selectedDoctorIndex == index ? const BorderSide(color: AppColors.primaryColor, width: 2) : BorderSide.none,
                           ),
                           child: Container(
                             height: 120,
@@ -197,17 +197,17 @@ class _AppointmentState extends State<Appointment> {
                                     children: [
                                       Text(
                                         doctor['name'],
-                                        style: TextStyle(fontSize: 18, color: AppColors.primaryColor),
+                                        style: const TextStyle(fontSize: 18, color: AppColors.primaryColor),
                                       ),
                                       const SizedBox(height: 4),
                                       Text(
                                         doctor['specialty'],
-                                        style: TextStyle(color: Colors.grey),
+                                        style: const TextStyle(color: Colors.grey),
                                       ),
                                       const SizedBox(height: 4),
                                       Text(
                                         'Fees: ${doctor['fees']}',
-                                        style: TextStyle(fontWeight: FontWeight.bold, color: Colors.blueGrey),
+                                        style: const TextStyle(fontWeight: FontWeight.bold, color: Colors.blueGrey),
                                       ),
                                     ],
                                   ),
@@ -235,7 +235,7 @@ class _AppointmentState extends State<Appointment> {
     showDialog(
       context: context,
       builder: (context) => AlertDialog(
-        title: Text('Appointment Confirmation'),
+        title: const Text('Appointment Confirmation'),
         content: Text('You have to pay $fees for the appointment.'),
         actions: [
           TextButton(
@@ -252,13 +252,13 @@ class _AppointmentState extends State<Appointment> {
                 ),
               );
             },
-            child: Text('Pay'),
+            child: const Text('Pay'),
           ),
           TextButton(
             onPressed: () {
               Navigator.pop(context);
             },
-            child: Text('Cancel'),
+            child: const Text('Cancel'),
           ),
         ],
       ),

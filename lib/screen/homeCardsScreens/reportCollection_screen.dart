@@ -1,139 +1,166 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:frastraited/Precentation/ui/screens/Payments_screen.dart';
 import 'package:frastraited/Precentation/ui/utility/app_colors.dart';
+import 'package:frastraited/screen/service/database_service.dart';
+import 'package:frastraited/screen/service/models/collect_reports_model.dart';
 import 'package:frastraited/screen/widgets/bodyBackground.dart';
 
 class ReportCollection extends StatefulWidget {
-  const ReportCollection({Key? key}) : super(key: key);
+  const ReportCollection({super.key});
 
   @override
   State<ReportCollection> createState() => _ReportCollectionState();
 }
 
 class _ReportCollectionState extends State<ReportCollection> {
-  List<Map<String, dynamic>> testReports = [
-    {'type': 'Blood Test', 'ready': false, 'approximateTime': '11:00 A.M', 'payable': 'BDT 200'},
-    {'type': 'Urine Test', 'ready': true, 'payable': 'BDT 150'}
-    // Add more test reports as needed
-  ];
+  List<CollectReportsModel> collectReportList = [];
+
+  bool isLoading = true;
+
+  @override
+  void initState() {
+    super.initState();
+    if (FirebaseAuth.instance.currentUser != null) {
+      _getUser(FirebaseAuth.instance.currentUser!.uid);
+    }
+  }
+
+  void _getUser(String uid) async {
+    final user = await DatabaseService.instance.getUserInfo(uid);
+    _getCollectReportList(user.medicalId);
+  }
+
+  void _getCollectReportList(String medicalId) async {
+    collectReportList.clear();
+    final result = await DatabaseService.instance.getUserCollectReportsList(medicalId);
+    collectReportList.addAll(result);
+    isLoading = false;
+    setState(() {});
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: BodyBackground(
-        child: SafeArea(
-          child: SingleChildScrollView(
-            child: Padding(
-              padding: const EdgeInsets.all(24),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    children: [
-                      IconButton(
-                        icon: Icon(
-                          Icons.arrow_back,
-                          color: AppColors.primaryColor,
-                        ),
-                        onPressed: () {
-                          Navigator.pop(context);
-                        },
-                      ),
-                    ],
-                  ),
-                  const SizedBox(height: 30),
-                  Text(
-                    'Report Collection',
-                    style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold, color: AppColors.primaryColor),
-                  ),
-                  const SizedBox(height: 25),
-                  ListView.builder(
-                    shrinkWrap: true,
-                    physics: NeverScrollableScrollPhysics(),
-                    itemCount: testReports.length,
-                    itemBuilder: (context, index) {
-                      return GestureDetector(
-                        onTap: () {
-                          if (!testReports[index]['ready']) {
-                            // Show dialog if report is not ready
-                            showDialog(
-                              context: context,
-                              builder: (context) {
-                                return AlertDialog(
-                                  title: Text('Report Not Available'),
-                                  content: Text(
-                                    'This report is not ready yet! Might be available at: ${testReports[index]['approximateTime']}',
+        child: isLoading
+            ? const Center(child: CircularProgressIndicator())
+            : collectReportList.isEmpty
+                ? const Center(child: Text("List is Empty"))
+                : SafeArea(
+                    child: SingleChildScrollView(
+                      child: Padding(
+                        padding: const EdgeInsets.all(24),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: [
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.start,
+                              children: [
+                                IconButton(
+                                  icon: const Icon(
+                                    Icons.arrow_back,
+                                    color: AppColors.primaryColor,
                                   ),
-                                  actions: <Widget>[
-                                    TextButton(
-                                      onPressed: () {
-                                        Navigator.of(context).pop();
-                                      },
-                                      child: Text('Close'),
+                                  onPressed: () {
+                                    Navigator.pop(context);
+                                  },
+                                ),
+                              ],
+                            ),
+                            const SizedBox(height: 30),
+                            const Text(
+                              'Report Collection',
+                              style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold, color: AppColors.primaryColor),
+                            ),
+                            const SizedBox(height: 25),
+                            ListView.builder(
+                              shrinkWrap: true,
+                              physics: const NeverScrollableScrollPhysics(),
+                              itemCount: collectReportList.length,
+                              itemBuilder: (context, index) {
+                                final item = collectReportList[index];
+                                return GestureDetector(
+                                  onTap: () {
+                                    // if (collectReportList[index].reportList.isEmpty) {
+                                    //   // Show dialog if report is not ready
+                                    //   showDialog(
+                                    //     context: context,
+                                    //     builder: (context) {
+                                    //       return AlertDialog(
+                                    //         title: const Text('Report Not Available'),
+                                    //         content: Text(
+                                    //           'This report is not ready yet! Might be available at: ${testReports[index]['approximateTime']}',
+                                    //         ),
+                                    //         actions: <Widget>[
+                                    //           TextButton(
+                                    //             onPressed: () {
+                                    //               Navigator.of(context).pop();
+                                    //             },
+                                    //             child: const Text('Close'),
+                                    //           ),
+                                    //         ],
+                                    //       );
+                                    //     },
+                                    //   );
+                                    // } else {
+                                    //   _collectReport(testReports[index]['type'], testReports[index]['payable']);
+                                    // }
+                                  },
+                                  child: Container(
+                                    margin: const EdgeInsets.only(bottom: 26),
+                                    padding: const EdgeInsets.all(20),
+                                    decoration: BoxDecoration(
+                                      color: Colors.white,
+                                      borderRadius: BorderRadius.circular(10),
+                                      boxShadow: [
+                                        BoxShadow(
+                                          color: Colors.grey.withOpacity(0.5),
+                                          spreadRadius: 2,
+                                          blurRadius: 5,
+                                          offset: const Offset(0, 3),
+                                        ),
+                                      ],
                                     ),
-                                  ],
+                                    child: Column(
+                                      crossAxisAlignment: CrossAxisAlignment.start,
+                                      children: [
+                                        Text(
+                                          'Report : ${item.reportList.isEmpty ? "" : item.reportList.first.reportName}',
+                                          style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                                        ),
+                                        const SizedBox(height: 20),
+                                        if (item.isReady)
+                                          ElevatedButton(
+                                            onPressed: () {
+                                              // _collectReport(testReports[index]['type'], testReports[index]['payable']);
+                                            },
+                                            child: const Text(
+                                              '  Collect Report  ',
+                                              style: TextStyle(color: Colors.white, fontWeight: FontWeight.w500),
+                                            ),
+                                          )
+                                        else
+                                          const Text(
+                                            'This report is not ready yet! Tap for details.',
+                                            style: TextStyle(color: Colors.red),
+                                          ),
+                                        const SizedBox(height: 10),
+                                        Text(
+                                          'Payable: ${item.payable}',
+                                          style: const TextStyle(color: Colors.blueGrey),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
                                 );
                               },
-                            );
-                          } else {
-                            _collectReport(testReports[index]['type'], testReports[index]['payable']);
-                          }
-                        },
-                        child: Container(
-                          margin: EdgeInsets.only(bottom: 26),
-                          padding: EdgeInsets.all(20),
-                          decoration: BoxDecoration(
-                            color: Colors.white,
-                            borderRadius: BorderRadius.circular(10),
-                            boxShadow: [
-                              BoxShadow(
-                                color: Colors.grey.withOpacity(0.5),
-                                spreadRadius: 2,
-                                blurRadius: 5,
-                                offset: Offset(0, 3),
-                              ),
-                            ],
-                          ),
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text(
-                                'Report : ${testReports[index]['type']}',
-                                style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-                              ),
-                              SizedBox(height: 20),
-                              if (testReports[index]['ready'])
-                                ElevatedButton(
-                                  onPressed: () {
-                                    _collectReport(testReports[index]['type'], testReports[index]['payable']);
-                                  },
-                                  child: Text(
-                                    '  Collect Report  ',
-                                    style: TextStyle(color: Colors.white, fontWeight: FontWeight.w500),
-                                  ),
-                                )
-                              else
-                                Text(
-                                  'This report is not ready yet! Tap for details.',
-                                  style: TextStyle(color: Colors.red),
-                                ),
-                              SizedBox(height: 10),
-                              Text(
-                                'Payable: ${testReports[index]['payable']}',
-                                style: TextStyle(color: Colors.blueGrey),
-                              ),
-                            ],
-                          ),
+                            ),
+                          ],
                         ),
-                      );
-                    },
+                      ),
+                    ),
                   ),
-                ],
-              ),
-            ),
-          ),
-        ),
       ),
     );
   }
