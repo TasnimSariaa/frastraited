@@ -66,20 +66,24 @@ class _HomeScreenState extends State<HomeScreen> {
         EditActiveDoctors(),
         EditOperation(),
         EditVaccine(),
-        EditAppointment(category: '', type: '', payable: '',),
+        EditAppointment(
+          category: '',
+          type: '',
+          payable: '',
+        ),
         EditReportCollection(),
         EditDonation(),
         EditPendingTest(),
       ];
     } else {
-      return const [
-        ActiveDoctor(),
-        OperationScreen(),
-        VaccineScreen(),
+      return [
+        const ActiveDoctor(),
+        const OperationScreen(),
+        const VaccineScreen(),
         Appointment(),
-        ReportCollection(),
-        Donation(),
-        PendingTests(),
+        const ReportCollection(),
+        const Donation(),
+        const PendingTests(),
       ];
     }
   }
@@ -220,10 +224,9 @@ class _HomeScreenState extends State<HomeScreen> {
             Navigator.push(
               context,
               MaterialPageRoute(
-                builder: (context) => NotificationScreen(category: '', type: '', payable: ''),
+                builder: (context) => const NotificationScreen(category: '', type: '', payable: ''),
               ),
             );
-
           },
           iconData: Icons.notifications_active_outlined,
         ),

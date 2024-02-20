@@ -1,5 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:frastraited/Precentation/ui/utility/app_colors.dart';
 import 'package:frastraited/screen/widgets/bodyBackground.dart';
 
@@ -14,7 +15,7 @@ class _splashScreenState extends State<splashScreen> {
   @override
   void initState() {
     super.initState();
-    Future.delayed(const Duration(seconds: 1)).then((value) {
+    Future.delayed(const Duration(seconds: 4)).then((value) {
       if (FirebaseAuth.instance.currentUser != null) {
         Navigator.pushReplacementNamed(context, "/userHome");
       } else {
@@ -32,10 +33,10 @@ class _splashScreenState extends State<splashScreen> {
             children: [
               //Icon(Icons.),
               const Spacer(),
-              Image.asset(
-                'assets/images/logo.png',
-                width: 120,
-                height: 120,
+              SvgPicture.asset(
+                'assets/images/medical1.svg',
+                width: 400,
+                //height: double.infinity,
               ),
               const Spacer(),
               const CircularProgressIndicator(color: AppColors.primaryColor),

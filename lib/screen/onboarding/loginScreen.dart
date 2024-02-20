@@ -1,5 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:frastraited/Precentation/ui/screens/main_bottom_nav_screen.dart';
 import 'package:frastraited/Precentation/ui/utility/app_colors.dart';
 import 'package:frastraited/Precentation/ui/widgets/app_logo.dart';
@@ -45,8 +46,11 @@ class _loginScreenState extends State<loginScreen> {
                   ],
                 ),
                 const SizedBox(height: 20),
-                const AppLogo(
-                  height: 80,
+                SvgPicture.asset(
+                  'assets/images/medical_care_logo.svg',
+                  height: 220,
+                  width: 220,
+                  //height: double.infinity,
                 ),
                 const SizedBox(height: 24),
                 Text(
@@ -126,7 +130,7 @@ class _loginScreenState extends State<loginScreen> {
                         ? const SizedBox(
                             height: 24,
                             width: 24,
-                            child: CircularProgressIndicator(),
+                            child: CircularProgressIndicator(color:Colors.white),
                           )
                         : const Text(
                             'Next',

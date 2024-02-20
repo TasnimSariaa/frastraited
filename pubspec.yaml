@@ -42,6 +42,7 @@ dependencies:
   firebase_auth: ^4.17.4
   pin_code_fields: ^8.0.1
   get: ^4.6.6
+  intl:
 
   #Firebase service package
   firebase: 9.0.3
@@ -78,7 +79,6 @@ flutter:
      - assets/images/logo.png
      - assets/images/logo_nav.png
      - assets/images/plus.png
-     - assets/images/1.png
 
   # To add assets to your application, add an assets section, like this:
   # assets:

@@ -1,20 +1,33 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:frastraited/Precentation/ui/screens/settings_screen.dart';
 import 'package:frastraited/Precentation/ui/utility/app_colors.dart';
+import 'package:frastraited/screen/service/database_service.dart';
+import 'package:frastraited/screen/service/models/users.dart';
 import 'package:frastraited/screen/widgets/bodyBackground.dart';
 
 class ProfileScreen extends StatefulWidget {
-  const ProfileScreen({Key? key});
+  const ProfileScreen({super.key});
 
   @override
   State<ProfileScreen> createState() => _ProfileScreenState();
 }
 
 class _ProfileScreenState extends State<ProfileScreen> {
-  String _firstName = 'John';
-  String _lastName = 'Doe';
-  String _email = 'john.doe@example.com';
-  String _phoneNumber = '1234567890';
+  UsersModel user = UsersModel.empty();
+
+  @override
+  void initState() {
+    super.initState();
+    if (FirebaseAuth.instance.currentUser != null) {
+      _getUser(FirebaseAuth.instance.currentUser!.uid);
+    }
+  }
+
+  void _getUser(String uid) async {
+    user = await DatabaseService.instance.getUserInfo(uid);
+    setState(() {});
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -49,7 +62,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
               Navigator.push(
                 context,
                 MaterialPageRoute(
-                  builder: (context) => SettingScreen(),
+                  builder: (context) => const SettingScreen(),
                 ),
               );
             },
@@ -75,8 +88,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                           CircleAvatar(
                             radius: 60,
                             backgroundColor: Colors.grey[300],
-                            backgroundImage: const NetworkImage(
-                                'https://example.com/profile.jpg'), // Set the profile picture URL
+                            backgroundImage: const NetworkImage('https://example.com/profile.jpg'), // Set the profile picture URL
                           ),
                           Positioned(
                             bottom: 0,
@@ -95,8 +107,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       ),
                       const SizedBox(height: 13),
                       Text(
-                        '$_firstName $_lastName',
-                        style: TextStyle(
+                        '${user.firstName} ${user.lastName}',
+                        style: const TextStyle(
                           fontWeight: FontWeight.bold,
                           color: Colors.black,
                           fontSize: 16,
@@ -104,8 +116,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       ),
                       const SizedBox(height: 5),
                       Text(
-                        'Medical ID: ABC123XYZ',
-                        style: TextStyle(
+                        'Medical ID: ${user.medicalId}',
+                        style: const TextStyle(
                           color: Colors.grey,
                           fontSize: 12,
                         ),
@@ -126,18 +138,17 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       child: SingleChildScrollView(
                         child: Column(
                           children: [
-                            _buildInfoField('First Name', _firstName),
+                            _buildInfoField('First Name', user.firstName),
                             const Divider(color: Colors.grey),
-                            _buildInfoField('Last Name', _lastName),
+                            _buildInfoField('Last Name', user.lastName),
                             const Divider(color: Colors.grey),
-                            _buildInfoField('Email', _email),
+                            _buildInfoField('Email', user.email),
                             const Divider(color: Colors.grey),
-                            _buildInfoField('Phone Number', _phoneNumber),
+                            _buildInfoField('Phone Number', user.phone),
                             const SizedBox(height: 20),
                             const Divider(color: Colors.grey),
-                            _buildInfoField('Your Medical ID', 'ABC123XYZ', editable: false),
+                            _buildInfoField('Your Medical ID', user.medicalId, editable: false),
                             const SizedBox(height: 20),
-
                           ],
                         ),
                       ),
@@ -176,7 +187,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 Expanded(
                   child: Text(
                     value,
-                    style: editable ? TextStyle(color: Colors.grey) : TextStyle(color: Colors.black),
+                    style: editable ? const TextStyle(color: Colors.grey) : const TextStyle(color: Colors.black),
                   ),
                 ),
                 if (editable)
@@ -204,30 +215,30 @@ class _ProfileScreenState extends State<ProfileScreen> {
                               onPressed: () {
                                 Navigator.pop(context);
                               },
-                              child: Text('Cancel'),
+                              child: const Text('Cancel'),
                             ),
                             TextButton(
                               onPressed: () {
                                 // Update the corresponding variable with the new value
-                                setState(() {
-                                  switch (label) {
-                                    case 'First Name':
-                                      _firstName = value;
-                                      break;
-                                    case 'Last Name':
-                                      _lastName = value;
-                                      break;
-                                    case 'Email':
-                                      _email = value;
-                                      break;
-                                    case 'Phone Number':
-                                      _phoneNumber = value;
-                                      break;
-                                  }
-                                });
+                                // setState(() {
+                                //   switch (label) {
+                                //     case 'First Name':
+                                //       _firstName = value;
+                                //       break;
+                                //     case 'Last Name':
+                                //       _lastName = value;
+                                //       break;
+                                //     case 'Email':
+                                //       _email = value;
+                                //       break;
+                                //     case 'Phone Number':
+                                //       _phoneNumber = value;
+                                //       break;
+                                //   }
+                                // });
                                 Navigator.pop(context);
                               },
-                              child: Text('Save'),
+                              child: const Text('Save'),
                             ),
                           ],
                         ),
