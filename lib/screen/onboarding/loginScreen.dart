@@ -28,7 +28,7 @@ class _loginScreenState extends State<loginScreen> {
     return Scaffold(
       body: BodyBackground(
         child: SafeArea(
-          child: Padding(
+          child: SingleChildScrollView(
             padding: const EdgeInsets.all(24),
             child: Form(
               key: formKey,
