@@ -1,11 +1,13 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:frastraited/Precentation/ui/screens/main_bottom_nav_screen.dart';
 import 'package:frastraited/Precentation/ui/utility/app_colors.dart';
+import 'package:frastraited/admin/screen/home/admin_home_screen.dart';
 import 'package:frastraited/screen/onboarding/forgotPasswordScreen.dart';
 import 'package:frastraited/screen/onboarding/signUpScreen.dart';
+import 'package:frastraited/screen/service/database_service.dart';
 import 'package:frastraited/screen/widgets/bodyBackground.dart';
+import 'package:frastraited/user/user_home_screen.dart';
 import 'package:get/get.dart';
 
 class loginScreen extends StatefulWidget {
@@ -98,13 +100,13 @@ class _loginScreenState extends State<loginScreen> {
                         try {
                           final User? firebaseUser = (await FirebaseAuth.instance.signInWithEmailAndPassword(email: loginEmail, password: loginPass)).user;
                           if (firebaseUser != null) {
-                            // final user = await DatabaseService.instance.getUserInfo(firebaseUser.uid);
+                            final user = await DatabaseService.instance.getUserInfo(firebaseUser.uid);
                             isLoading = false;
                             setState(() {});
                             Navigator.pushReplacement(
                               context,
                               MaterialPageRoute(
-                                builder: (context) => const MainBottomNavScreen(),
+                                builder: (context) => user.userType.toLowerCase() == "admin" ? const AdminHomeScreen() : const UserHomeScreen(),
                               ),
                             );
                           } else {
@@ -166,7 +168,7 @@ class _loginScreenState extends State<loginScreen> {
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       const Text(
-                        "Don't have an acccount?",
+                        "Don't have an account?",
                         style: TextStyle(
                           fontSize: 16,
                           fontWeight: FontWeight.w600,
