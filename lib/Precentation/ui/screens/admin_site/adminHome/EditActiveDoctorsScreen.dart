@@ -15,7 +15,6 @@ class EditActiveDoctors extends StatefulWidget {
 
 class _EditActiveDoctorsState extends State<EditActiveDoctors> {
   List<DoctorModel> activeDoctors = [];
-
   bool isLoading = true;
 
   @override
@@ -37,115 +36,119 @@ class _EditActiveDoctorsState extends State<EditActiveDoctors> {
 
   @override
   Widget build(BuildContext context) {
+    List<DoctorModel> filteredDoctors = activeDoctors.where((doctor) =>
+        doctor.name.toLowerCase().contains(searchController.text.toLowerCase())
+    ).toList();
+
     return Scaffold(
       body: BodyBackground(
         child: isLoading
             ? const Center(child: CircularProgressIndicator())
             : activeDoctors.isEmpty
-                ? const Center(child: Text("List is Empty"))
-                : SafeArea(
-                    child: SingleChildScrollView(
-                      child: Padding(
-                        padding: const EdgeInsets.all(24),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.center,
+            ? const Center(child: Text("List is Empty"))
+            : SafeArea(
+          child: SingleChildScrollView(
+            child: Padding(
+              padding: const EdgeInsets.all(24),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    children: [
+                      IconButton(
+                        icon: const Icon(
+                          Icons.arrow_back,
+                          color: AppColors.primaryColor,
+                        ),
+                        onPressed: () {
+                          Navigator.pop(context);
+                        },
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: 20),
+                  SearchField(
+                    controller: searchController,
+                    onTextChanged: (value) {
+                      setState(() {}); // Trigger rebuild on text change
+                    },
+                  ),
+                  const SizedBox(height: 20),
+                  const Text(
+                    'Active Doctors',
+                    style: TextStyle(
+                      fontSize: 24,
+                      fontWeight: FontWeight.bold,
+                      color: AppColors.primaryColor,
+                    ),
+                  ),
+                  const SizedBox(height: 20),
+                  ListView.builder(
+                    shrinkWrap: true,
+                    physics: const NeverScrollableScrollPhysics(),
+                    itemCount: filteredDoctors.length,
+                    itemBuilder: (BuildContext context, int index) {
+                      final doctor = filteredDoctors[index];
+                      return ListTile(
+                        leading: Stack(
                           children: [
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.start,
-                              children: [
-                                IconButton(
-                                  icon: const Icon(
-                                    Icons.arrow_back,
-                                    color: AppColors.primaryColor,
-                                  ),
-                                  onPressed: () {
-                                    Navigator.pop(context);
-                                  },
-                                ),
-                              ],
+                            CustomImageView(
+                              height: 120,
+                              width: 120,
+                              path: doctor.profileImageUrl,
+                              borderRadius: BorderRadius.circular(15),
                             ),
-                            const SizedBox(height: 20),
-                            SearchField(
-                              controller: searchController,
-                              onTextChanged: (value) {
-                                setState(() {}); // Trigger rebuild on text change
+                            if (doctor.isActive)
+                              Positioned(
+                                right: 0,
+                                top: 0,
+                                child: Container(
+                                  width: 15,
+                                  height: 15,
+                                  decoration: BoxDecoration(
+                                    shape: BoxShape.circle,
+                                    color: Colors.green,
+                                    border: Border.all(color: Colors.white, width: 2),
+                                  ),
+                                ),
+                              ),
+                          ],
+                        ),
+                        title: Text(doctor.name),
+                        subtitle: Text(doctor.speciality),
+                        trailing: Row(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            Switch(
+                              value: doctor.isActive,
+                              onChanged: (newValue) async {
+                                List<DoctorModel> updatedDoctorsList = List.from(activeDoctors);
+                                final index = updatedDoctorsList.indexWhere((element) => element.id == doctor.id);
+
+                                if (index != -1) {
+                                  updatedDoctorsList[index] = doctor.copyWith(isActive: newValue);
+                                  await DatabaseService.instance.updateDoctorInformation(doctor.copyWith(isActive: newValue));
+                                  setState(() => activeDoctors = updatedDoctorsList);
+                                }
                               },
                             ),
-                            const SizedBox(height: 20),
-                            const Text(
-                              'Active Doctors',
-                              style: TextStyle(
-                                fontSize: 24,
-                                fontWeight: FontWeight.bold,
-                                color: AppColors.primaryColor,
-                              ),
-                            ),
-                            const SizedBox(height: 20),
-                            ListView.builder(
-                              shrinkWrap: true,
-                              physics: const NeverScrollableScrollPhysics(),
-                              itemCount: activeDoctors.length,
-                              itemBuilder: (BuildContext context, int index) {
-                                final doctor = activeDoctors[index];
-                                return ListTile(
-                                  leading: Stack(
-                                    children: [
-                                      CustomImageView(
-                                        height: 120,
-                                        width: 120,
-                                        path: doctor.profileImageUrl,
-                                        borderRadius: BorderRadius.circular(15),
-                                      ),
-                                      if (doctor.isActive)
-                                        Positioned(
-                                          right: 0,
-                                          top: 0,
-                                          child: Container(
-                                            width: 15,
-                                            height: 15,
-                                            decoration: BoxDecoration(
-                                              shape: BoxShape.circle,
-                                              color: Colors.green,
-                                              border: Border.all(color: Colors.white, width: 2),
-                                            ),
-                                          ),
-                                        ),
-                                    ],
-                                  ),
-                                  title: Text(doctor.name),
-                                  subtitle: Text(doctor.speciality),
-                                  trailing: Row(
-                                    mainAxisSize: MainAxisSize.min,
-                                    children: [
-                                      Switch(
-                                        value: doctor.isActive,
-                                        onChanged: (newValue) async {
-                                          List<DoctorModel> updatedDoctorsList = List.from(activeDoctors);
-                                          final index = updatedDoctorsList.indexWhere((element) => element.id == doctor.id);
-
-                                          if (index != -1) {
-                                            updatedDoctorsList[index] = doctor.copyWith(isActive: newValue);
-                                            await DatabaseService.instance.updateDoctorInformation(doctor.copyWith(isActive: newValue));
-                                            setState(() => activeDoctors = updatedDoctorsList);
-                                          }
-                                        },
-                                      ),
-                                      IconButton(
-                                        icon: const Icon(Icons.more_vert),
-                                        onPressed: () {
-                                          _showEditDialog(context, doctor);
-                                        },
-                                      ),
-                                    ],
-                                  ),
-                                );
+                            IconButton(
+                              icon: const Icon(Icons.more_vert),
+                              onPressed: () {
+                                _showEditDialog(context, doctor);
                               },
                             ),
                           ],
                         ),
-                      ),
-                    ),
+                      );
+                    },
                   ),
+                ],
+              ),
+            ),
+          ),
+        ),
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {

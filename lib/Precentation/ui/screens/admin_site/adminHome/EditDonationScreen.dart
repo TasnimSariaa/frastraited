@@ -227,7 +227,6 @@ class _EditDonationState extends State<EditDonation> {
     TextEditingController wardNumberController = TextEditingController(text: patient.wardNumber);
     TextEditingController bedNumberController = TextEditingController(text: patient.bedNumber);
     TextEditingController diseaseController = TextEditingController(text: patient.disease);
-    TextEditingController imageUrlController = TextEditingController(text: patient.imageUrl);
 
     showModalBottomSheet(
       context: context,
@@ -270,11 +269,7 @@ class _EditDonationState extends State<EditDonation> {
                     decoration: const InputDecoration(labelText: 'Disease'),
                   ),
                   const SizedBox(height: 16),
-                  TextFormField(
-                    controller: imageUrlController,
-                    decoration: const InputDecoration(labelText: 'Image URL'),
-                  ),
-                  const SizedBox(height: 16),
+
                   ElevatedButton(
                     onPressed: () async {
                       final name = nameController.text;
@@ -282,7 +277,6 @@ class _EditDonationState extends State<EditDonation> {
                       final wardNumber = wardNumberController.text;
                       final bedNumber = bedNumberController.text;
                       final disease = diseaseController.text;
-                      final imageUrl = imageUrlController.text;
                       await DatabaseService.instance.updateDonations(
                         patient.copyWith(
                           name: name,
@@ -290,7 +284,6 @@ class _EditDonationState extends State<EditDonation> {
                           wardNumber: wardNumber,
                           bedNumber: bedNumber,
                           disease: disease,
-                          imageUrl: imageUrl,
                         ),
                       );
                       _getDonationList();
@@ -356,11 +349,6 @@ class _EditDonationState extends State<EditDonation> {
                     decoration: const InputDecoration(labelText: 'Disease'),
                   ),
                   const SizedBox(height: 16),
-                  TextFormField(
-                    controller: imageUrlController,
-                    decoration: const InputDecoration(labelText: 'Image URL'),
-                  ),
-                  const SizedBox(height: 16),
                   ElevatedButton(
                     onPressed: () async {
                       final name = nameController.text;
@@ -368,15 +356,13 @@ class _EditDonationState extends State<EditDonation> {
                       final wardNumber = wardNumberController.text;
                       final bedNumber = bedNumberController.text;
                       final disease = diseaseController.text;
-                      final imageUrl = imageUrlController.text;
                       DonationModel donation = DonationModel(
                         id: "",
                         name: name,
                         age: age,
                         wardNumber: wardNumber,
                         bedNumber: bedNumber,
-                        disease: disease,
-                        imageUrl: imageUrl,
+                        disease: disease, imageUrl: '',
                       );
                       await DatabaseService.instance.addDonations(donation);
                       _getDonationList();
