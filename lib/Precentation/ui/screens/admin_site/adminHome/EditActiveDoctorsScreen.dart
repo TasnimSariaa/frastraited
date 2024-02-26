@@ -106,8 +106,9 @@ class _EditActiveDoctorsState extends State<EditActiveDoctors> {
                             ),
                           ),
                           const SizedBox(height: 20),
-                          ListView.builder(
+                          ListView.separated(
                             shrinkWrap: true,
+                            separatorBuilder: (_, __) => const SizedBox(height: 10),
                             physics: const NeverScrollableScrollPhysics(),
                             itemCount: tempDoctorList.length,
                             itemBuilder: (BuildContext context, int index) {
@@ -117,10 +118,10 @@ class _EditActiveDoctorsState extends State<EditActiveDoctors> {
                                   Stack(
                                     children: [
                                       CustomImageView(
-                                        height: 120,
-                                        width: 120,
+                                        height: 60,
+                                        width: 60,
                                         path: doctor.profileImageUrl,
-                                        borderRadius: BorderRadius.circular(60),
+                                        borderRadius: BorderRadius.circular(30),
                                       ),
                                       if (doctor.isActive)
                                         Positioned(
@@ -138,6 +139,7 @@ class _EditActiveDoctorsState extends State<EditActiveDoctors> {
                                         ),
                                     ],
                                   ),
+                                  const SizedBox(width: 10),
                                   Expanded(
                                     child: Column(
                                       mainAxisSize: MainAxisSize.min,
@@ -149,16 +151,17 @@ class _EditActiveDoctorsState extends State<EditActiveDoctors> {
                                       ],
                                     ),
                                   ),
+                                  const SizedBox(width: 10),
                                   Switch(
                                     value: doctor.isActive,
                                     onChanged: (newValue) async {
-                                      List<DoctorModel> updatedDoctorsList = List.from(activeDoctors);
+                                      List<DoctorModel> updatedDoctorsList = List.from(tempDoctorList);
                                       final index = updatedDoctorsList.indexWhere((element) => element.id == doctor.id);
 
                                       if (index != -1) {
                                         updatedDoctorsList[index] = doctor.copyWith(isActive: newValue);
                                         await DatabaseService.instance.updateDoctorInformation(doctor.copyWith(isActive: newValue));
-                                        setState(() => activeDoctors = updatedDoctorsList);
+                                        setState(() => tempDoctorList = updatedDoctorsList);
                                       }
                                     },
                                   ),
@@ -243,7 +246,6 @@ class _EditActiveDoctorsState extends State<EditActiveDoctors> {
             child: Form(
               key: formKey,
               child: Column(
-                crossAxisAlignment: CrossAxisAlignment.stretch,
                 mainAxisSize: MainAxisSize.min,
                 children: [
                   const SizedBox(height: 20),
@@ -324,6 +326,7 @@ class _EditActiveDoctorsState extends State<EditActiveDoctors> {
                       style: TextStyle(color: Colors.white),
                     ),
                   ),
+                  const SizedBox(height: 16),
                 ],
               ),
             ),
