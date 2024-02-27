@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:frastraited/Precentation/ui/screens/Payments_screen.dart';
 import 'package:frastraited/Precentation/ui/screens/history_screen.dart';
 import 'package:frastraited/Precentation/ui/screens/home_screen.dart';
 import 'package:frastraited/Precentation/ui/screens/profile_screen.dart';
@@ -22,7 +21,7 @@ class _UserHomeScreenState extends State<UserHomeScreen> {
     _screens = [
       const HomeScreen(),
       const HistoryScreen(paymentInfo: {}),
-      const PaymentsScreen(category: '', type: '', payable: ''),
+      // const PaymentsScreen(category: '', type: '', payable: ''),
       const ProfileScreen(),
     ];
   }
@@ -44,7 +43,7 @@ class _UserHomeScreenState extends State<UserHomeScreen> {
         items: const [
           BottomNavigationBarItem(icon: Icon(Icons.home_filled), label: 'Home'),
           BottomNavigationBarItem(icon: Icon(Icons.history), label: 'History'),
-          BottomNavigationBarItem(icon: Icon(Icons.attach_money), label: 'Payments'),
+          // BottomNavigationBarItem(icon: Icon(Icons.attach_money), label: 'Payments'),
           BottomNavigationBarItem(icon: Icon(Icons.account_circle_rounded), label: 'Profile'),
         ],
       ),
