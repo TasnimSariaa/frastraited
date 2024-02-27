@@ -75,6 +75,7 @@ class _EditAppointmentState extends State<EditAppointment> {
                     return Container(
                       width: double.infinity,
                       padding: const EdgeInsets.all(20),
+                      margin: const EdgeInsetsDirectional.only(bottom: 20),
                       decoration: BoxDecoration(
                         color: Colors.white,
                         borderRadius: BorderRadius.circular(10),
@@ -87,60 +88,61 @@ class _EditAppointmentState extends State<EditAppointment> {
                           ),
                         ],
                       ),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text(
-                                'Booked by: ${appointment.user.firstName} ${appointment.user.lastName}',
-                                style: const TextStyle(fontSize: 18, color: AppColors.primaryColor),
-                              ),
-                              Text(
-                                'With Doctor:  ${appointment.doctor["name"]}',
-                                style: const TextStyle(fontSize: 18, color: Colors.black),
-                              ),
-                              Text(
-                                'Transaction Id:   ${appointment.transactionId}',
-                                style: const TextStyle(fontSize: 18, color: Colors.grey),
-                              ),
-                              Text(
-                                'Status: ${appointment.status}',
-                                style: const TextStyle(fontSize: 18, color: Colors.grey),
-                              ),
-                            ],
+                          Text(
+                            'Booked by: ${appointment.user.firstName} ${appointment.user.lastName}',
+                            style: const TextStyle(fontSize: 18, color: AppColors.primaryColor),
                           ),
-                          if (appointment.status.toLowerCase() == "Pending".toLowerCase())
+                          Text(
+                            'With Doctor:  ${appointment.doctor["name"]}',
+                            style: const TextStyle(fontSize: 18, color: Colors.black),
+                          ),
+                          Text(
+                            'Transaction Id:   ${appointment.transactionId}',
+                            style: const TextStyle(fontSize: 18, color: Colors.grey),
+                          ),
+                          Text(
+                            'Status: ${appointment.status}',
+                            style: const TextStyle(fontSize: 18, color: Colors.grey),
+                          ),
+                          if (appointment.status.toLowerCase() == "Pending".toLowerCase()) ...[
+                            const SizedBox(height: 10),
                             Row(
                               mainAxisSize: MainAxisSize.min,
                               children: [
-                                ElevatedButton(
-                                  style: ElevatedButton.styleFrom(
-                                    backgroundColor: Colors.redAccent,
-                                  ),
-                                  onPressed: () {
-                                    // Show dialog box for providing schedule
-                                    _showScheduleDialog(context, false, "Reject", appointment);
-                                  },
-                                  child: const Text(
-                                    'Reject',
-                                    style: TextStyle(color: Colors.white),
+                                Expanded(
+                                  child: ElevatedButton(
+                                    style: ElevatedButton.styleFrom(
+                                      backgroundColor: Colors.redAccent,
+                                    ),
+                                    onPressed: () {
+                                      // Show dialog box for providing schedule
+                                      _showScheduleDialog(context, false, "Reject", appointment);
+                                    },
+                                    child: const Text(
+                                      'Reject',
+                                      style: TextStyle(color: Colors.white),
+                                    ),
                                   ),
                                 ),
                                 const SizedBox(width: 10),
-                                ElevatedButton(
-                                  onPressed: () {
-                                    // Show dialog box for providing schedule
-                                    _showScheduleDialog(context, true, "Accept", appointment);
-                                  },
-                                  child: const Text(
-                                    'Accept',
-                                    style: TextStyle(color: Colors.white),
+                                Expanded(
+                                  child: ElevatedButton(
+                                    onPressed: () {
+                                      // Show dialog box for providing schedule
+                                      _showScheduleDialog(context, true, "Accept", appointment);
+                                    },
+                                    child: const Text(
+                                      'Accept',
+                                      style: TextStyle(color: Colors.white),
+                                    ),
                                   ),
                                 ),
                               ],
                             ),
+                          ],
                         ],
                       ),
                     );

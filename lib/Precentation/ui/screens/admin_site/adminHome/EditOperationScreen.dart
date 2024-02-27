@@ -334,6 +334,8 @@ class _EditOperationState extends State<EditOperation> {
                 const SizedBox(height: 16),
                 TextFormField(
                   controller: imageUrlController,
+                  readOnly: true,
+                  onTap: () => _getImage(_picker, imageUrlController),
                   decoration: InputDecoration(
                     labelText: 'Image URL',
                     suffixIcon: IconButton(
@@ -447,6 +449,8 @@ class _EditOperationState extends State<EditOperation> {
                 const SizedBox(height: 16),
                 TextFormField(
                   controller: imageUrlController,
+                  readOnly: true,
+                  onTap: () => _getImage(_picker, imageUrlController),
                   decoration: InputDecoration(
                     labelText: 'Image URL',
                     suffixIcon: IconButton(

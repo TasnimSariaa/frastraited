@@ -291,6 +291,7 @@ class _EditActiveDoctorsState extends State<EditActiveDoctors> {
                   TextFormField(
                     controller: profilePicUrlController,
                     readOnly: true,
+                    onTap: () => _getImage(_picker, profilePicUrlController),
                     decoration: InputDecoration(
                       labelText: 'Profile Picture URL',
                       suffixIcon: IconButton(
@@ -403,6 +404,7 @@ class _EditActiveDoctorsState extends State<EditActiveDoctors> {
                   TextFormField(
                     controller: profilePicUrlController,
                     readOnly: true,
+                    onTap: () => _getImage(_picker, profilePicUrlController),
                     decoration: InputDecoration(
                       labelText: 'Profile Picture URL',
                       suffixIcon: IconButton(
