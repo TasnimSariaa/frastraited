@@ -48,7 +48,7 @@ class _HistoryScreenState extends State<HistoryScreen> {
                     mainAxisAlignment: MainAxisAlignment.start,
                     children: [
                       IconButton(
-                        icon: Icon(
+                        icon: const Icon(
                           Icons.arrow_back,
                           color: AppColors.primaryColor,
                         ),
@@ -65,7 +65,8 @@ class _HistoryScreenState extends State<HistoryScreen> {
                     final history = historyList[index];
                     return Container(
                       width: double.infinity,
-                      padding: EdgeInsets.all(20),
+                      padding: const EdgeInsets.all(20),
+                      margin: const EdgeInsetsDirectional.only(bottom: 20),
                       decoration: BoxDecoration(
                         color: Colors.white,
                         borderRadius: BorderRadius.circular(10),
@@ -74,7 +75,7 @@ class _HistoryScreenState extends State<HistoryScreen> {
                             color: Colors.grey.withOpacity(0.5),
                             spreadRadius: 2,
                             blurRadius: 5,
-                            offset: Offset(0, 3),
+                            offset: const Offset(0, 3),
                           ),
                         ],
                       ),
@@ -83,20 +84,20 @@ class _HistoryScreenState extends State<HistoryScreen> {
                         children: [
                           Text(
                             'Category:  ${history.paymentCategory}',
-                            style: TextStyle(fontSize: 18, color: AppColors.primaryColor),
+                            style: const TextStyle(fontSize: 18, color: AppColors.primaryColor),
                           ),
                           Text(
                             'Payment Status:   ${history.paymentStatus}',
-                            style: TextStyle(fontSize: 18, color: Colors.black),
+                            style: const TextStyle(fontSize: 18, color: Colors.black),
                           ),
                           Text(
-                            'Payable:   ${history.paymentAmount}',
-                            style: TextStyle(fontSize: 18, color: Colors.grey),
+                            'Pay:   ${history.paymentAmount}',
+                            style: const TextStyle(fontSize: 18, color: Colors.grey),
                           ),
-                          SizedBox(height: 20),
+                          const SizedBox(height: 20),
                           Text(
-                            'Date: ${DateFormat('yyyy-MM-dd – kk:mm').format(DateTime.parse(history.currentDateTime))}',
-                            style: TextStyle(fontSize: 18, color: Colors.blue),
+                            'Date: ${DateFormat('yyyy-MM-dd – HH:mm a').format(DateTime.parse(history.currentDateTime))}',
+                            style: const TextStyle(fontSize: 18, color: Colors.blue),
                           ),
                         ],
                       ),

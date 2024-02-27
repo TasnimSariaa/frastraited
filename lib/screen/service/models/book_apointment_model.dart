@@ -3,6 +3,7 @@ import 'package:frastraited/screen/service/models/users.dart';
 class BookAppointmentModel {
   final String id;
   final Map<String, dynamic> doctor;
+  final Map<String, dynamic> donationUser;
   final UsersModel user;
   final String currentDateTime;
   final String transactionId;
@@ -13,6 +14,7 @@ class BookAppointmentModel {
   BookAppointmentModel({
     required this.id,
     required this.doctor,
+    required this.donationUser,
     required this.user,
     required this.currentDateTime,
     required this.transactionId,
@@ -25,6 +27,7 @@ class BookAppointmentModel {
     return BookAppointmentModel(
       id: json["id"] ?? "",
       doctor: json["doctor"] ?? {},
+      donationUser: json["donationUser"] ?? {},
       user: json["user"] == null ? UsersModel.empty() : UsersModel.fromJson(json["user"]),
       currentDateTime: json["currentDateTime"] ?? "",
       transactionId: json["transactionId"] ?? "",
@@ -38,6 +41,7 @@ class BookAppointmentModel {
     return BookAppointmentModel(
       id: "",
       doctor: {},
+      donationUser: {},
       user: UsersModel.empty(),
       currentDateTime: "",
       transactionId: "",
@@ -50,6 +54,7 @@ class BookAppointmentModel {
   BookAppointmentModel copyWith({
     String? id,
     Map<String, dynamic>? doctor,
+    Map<String, dynamic>? donationUser,
     UsersModel? user,
     String? currentDateTime,
     String? transactionId,
@@ -60,6 +65,7 @@ class BookAppointmentModel {
     return BookAppointmentModel(
       id: id ?? this.id,
       doctor: doctor ?? this.doctor,
+      donationUser: donationUser ?? this.donationUser,
       user: user ?? this.user,
       currentDateTime: currentDateTime ?? this.currentDateTime,
       transactionId: transactionId ?? this.transactionId,
@@ -73,6 +79,7 @@ class BookAppointmentModel {
     return {
       "id": id,
       "doctor": doctor,
+      "donationUser": donationUser,
       "user": user.toJson(),
       "currentDateTime": currentDateTime,
       "transactionId": transactionId,

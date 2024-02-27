@@ -13,6 +13,7 @@ class PaymentsScreen extends StatefulWidget {
   final String type;
   final String payable;
   final Map<String, dynamic>? doctor;
+  final Map<String, dynamic>? donationUser;
 
   const PaymentsScreen({
     super.key,
@@ -20,6 +21,7 @@ class PaymentsScreen extends StatefulWidget {
     required this.type,
     required this.payable,
     this.doctor,
+    this.donationUser,
   });
 
   @override
@@ -111,6 +113,7 @@ class _PaymentsScreenState extends State<PaymentsScreen> {
                     BookAppointmentModel appointment = BookAppointmentModel(
                       id: "",
                       doctor: widget.doctor ?? {},
+                      donationUser: {},
                       user: userModel,
                       currentDateTime: currentTime,
                       name: name,
