@@ -48,79 +48,100 @@ class _PaymentsScreenState extends State<PaymentsScreen> {
     TextEditingController nameEditController = TextEditingController();
     TextEditingController emailEditController = TextEditingController();
     TextEditingController transactionEditController = TextEditingController();
+
+    final GlobalKey<FormState> formKey = GlobalKey<FormState>();
+
     showModalBottomSheet(
       context: context,
       builder: (context) {
-        return Container(
-          width: double.infinity,
-          padding: const EdgeInsets.all(20),
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              const Text(
-                'Enter Payment Information',
-                style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
-              ),
-              const SizedBox(height: 20),
-              TextFormField(
-                controller: nameEditController,
-                decoration: const InputDecoration(labelText: 'Name'),
-              ),
-              const SizedBox(height: 10),
-              TextFormField(
-                controller: emailEditController,
-                decoration: const InputDecoration(labelText: 'Email'),
-              ),
-              const SizedBox(height: 10),
-              TextFormField(
-                controller: transactionEditController,
-                decoration: const InputDecoration(labelText: 'Transaction ID'),
-              ),
-              const SizedBox(height: 20),
-              ElevatedButton(
-                onPressed: () async {
-                  final name = transactionEditController.text;
-                  final email = transactionEditController.text;
-                  final transactionId = transactionEditController.text;
-                  final currentTime = DateTime.now().toString();
-                  BookAppointmentModel appointment = BookAppointmentModel(
-                    id: "",
-                    doctor: widget.doctor ?? {},
-                    user: userModel,
-                    currentDateTime: currentTime,
-                    name: name,
-                    email: email,
-                    transactionId: transactionId,
-                    status: "Pending",
-                  );
-                  PaymentModel payment = PaymentModel(
-                    id: "",
-                    user: userModel,
-                    paymentCategory: widget.category,
-                    paymentAmount: widget.payable,
-                    paymentStatus: "Pending",
-                    currentDateTime: currentTime,
-                  );
-                  await DatabaseService.instance.addNewAppointment(appointment);
-                  await DatabaseService.instance.addNewPayment(payment);
-                  Navigator.pop(context, {
-                    'category': widget.category,
-                    'type': widget.type,
-                    'payable': widget.payable,
-                  });
-                  Navigator.pop(context, {
-                    'category': widget.category,
-                    'type': widget.type,
-                    'payable': widget.payable,
-                  });
-                },
-                child: const Text(
-                  '   Confirm Payment   ',
-                  style: TextStyle(color: Colors.white),
+        return SingleChildScrollView(
+          padding: EdgeInsets.only(
+            bottom: MediaQuery.of(context).viewInsets.bottom,
+            left: 16,
+            right: 16,
+          ),
+          child: Form(
+            key: formKey,
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                const SizedBox(height: 20),
+                const Text(
+                  'Enter Payment Information',
+                  style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
                 ),
-              ),
-            ],
+                const SizedBox(height: 20),
+                TextFormField(
+                  controller: nameEditController,
+                  decoration: const InputDecoration(labelText: 'Name'),
+                  validator: (val) {
+                    if (val == null || val.isEmpty) {
+                      return "Field is required";
+                    }
+                    return null;
+                  },
+                ),
+                const SizedBox(height: 10),
+                TextFormField(
+                  controller: emailEditController,
+                  decoration: const InputDecoration(labelText: 'Email'),
+                ),
+                const SizedBox(height: 10),
+                TextFormField(
+                  controller: transactionEditController,
+                  decoration: const InputDecoration(labelText: 'Transaction ID'),
+                  validator: (val) {
+                    if (val == null || val.isEmpty) {
+                      return "Field is required";
+                    }
+                    return null;
+                  },
+                ),
+                const SizedBox(height: 20),
+                ElevatedButton(
+                  onPressed: () async {
+                    final isValid = formKey.currentState?.validate() ?? false;
+                    if (!isValid) return;
+
+                    final name = nameEditController.text;
+                    final email = emailEditController.text;
+                    final transactionId = transactionEditController.text;
+                    final currentTime = DateTime.now().toString();
+                    BookAppointmentModel appointment = BookAppointmentModel(
+                      id: "",
+                      doctor: widget.doctor ?? {},
+                      user: userModel,
+                      currentDateTime: currentTime,
+                      name: name,
+                      email: email,
+                      transactionId: transactionId,
+                      status: "Pending",
+                    );
+                    PaymentModel payment = PaymentModel(
+                      id: "",
+                      user: userModel,
+                      paymentCategory: widget.category,
+                      paymentAmount: widget.payable,
+                      paymentStatus: "Pending",
+                      currentDateTime: currentTime,
+                    );
+                    await DatabaseService.instance.addNewAppointment(appointment);
+                    await DatabaseService.instance.addNewPayment(payment);
+                    Navigator.pop(context, {
+                      'category': widget.category,
+                      'type': widget.type,
+                      'payable': widget.payable,
+                    });
+                  },
+                  child: const Text(
+                    '   Confirm Payment   ',
+                    style: TextStyle(color: Colors.white),
+                  ),
+                ),
+                const SizedBox(height: 16),
+              ],
+            ),
           ),
         );
       },

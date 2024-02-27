@@ -1,4 +1,6 @@
-class DoctorModel {
+import 'package:equatable/equatable.dart';
+
+class DoctorModel extends Equatable {
   final String id;
   final String name;
   final String speciality;
@@ -6,7 +8,7 @@ class DoctorModel {
   final String profileImageUrl;
   final bool isActive;
 
-  DoctorModel({
+  const DoctorModel({
     required this.id,
     required this.name,
     required this.speciality,
@@ -65,4 +67,7 @@ class DoctorModel {
       "isActive": isActive,
     };
   }
+
+  @override
+  List<Object?> get props => [id, name, speciality, visitingFee, profileImageUrl, isActive];
 }
