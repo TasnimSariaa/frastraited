@@ -6,6 +6,7 @@ class UsersModel {
   final String userType;
   final String userid;
   final String medicalId;
+  final String profileUrl;
 
   UsersModel({
     required this.email,
@@ -15,6 +16,7 @@ class UsersModel {
     required this.userType,
     required this.userid,
     required this.medicalId,
+    required this.profileUrl,
   });
 
   factory UsersModel.fromJson(Map<String, dynamic> json) {
@@ -26,6 +28,7 @@ class UsersModel {
       userType: json["userType"] ?? "",
       userid: json["userid"] ?? "",
       medicalId: json["medicalId"] ?? "",
+      profileUrl: json["profileUrl"] ?? "",
     );
   }
 
@@ -38,6 +41,7 @@ class UsersModel {
       userType: "",
       userid: "",
       medicalId: "",
+      profileUrl: "",
     );
   }
 
@@ -50,6 +54,29 @@ class UsersModel {
       "userType": userType,
       "userid": userid,
       "medicalId": medicalId,
+      "profileUrl": profileUrl,
     };
+  }
+
+  UsersModel copyWith({
+    String? email,
+    String? firstName,
+    String? lastName,
+    String? phone,
+    String? userType,
+    String? userid,
+    String? medicalId,
+    String? profileUrl,
+  }) {
+    return UsersModel(
+      email: email ?? this.email,
+      firstName: firstName ?? this.firstName,
+      lastName: lastName ?? this.lastName,
+      phone: phone ?? this.phone,
+      userType: userType ?? this.userType,
+      userid: userid ?? this.userid,
+      medicalId: medicalId ?? this.medicalId,
+      profileUrl: profileUrl ?? this.profileUrl,
+    );
   }
 }

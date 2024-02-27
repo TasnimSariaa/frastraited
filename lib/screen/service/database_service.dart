@@ -36,6 +36,14 @@ class DatabaseService {
     result.doc(model.userid).set(model.toJson());
   }
 
+  Future<UsersModel> updateUserInformation(UsersModel model) async {
+    CollectionReference result = fireStore.collection(DatabaseTables.users);
+
+    result.doc(model.userid).set(model.toJson());
+
+    return model;
+  }
+
   Future<UsersModel> getUserInfo(String userUid) async {
     CollectionReference result = fireStore.collection(DatabaseTables.users);
 

@@ -40,6 +40,7 @@ class _signUpScreenState extends State<signUpScreen> {
         email: email,
         userid: userCredential.user?.uid ?? "",
         medicalId: "${userCredential.user?.uid.substring(0, 8).toUpperCase()}",
+        profileUrl: "",
       );
       await DatabaseService.instance.setUserInformation(model);
       isLoading = false;
@@ -236,7 +237,9 @@ class _signUpScreenState extends State<signUpScreen> {
                           );
                         },
                         child: isLoading
-                            ? const CircularProgressIndicator(color: Colors.white,)
+                            ? const CircularProgressIndicator(
+                                color: Colors.white,
+                              )
                             : const Text(
                                 'Next',
                                 style: TextStyle(color: Colors.white),

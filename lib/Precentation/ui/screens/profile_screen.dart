@@ -1,10 +1,14 @@
+import 'dart:io';
+
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:frastraited/Precentation/ui/screens/settings_screen.dart';
 import 'package:frastraited/Precentation/ui/utility/app_colors.dart';
 import 'package:frastraited/screen/service/database_service.dart';
 import 'package:frastraited/screen/service/models/users.dart';
 import 'package:frastraited/screen/widgets/bodyBackground.dart';
+import 'package:image_picker/image_picker.dart';
 
 class ProfileScreen extends StatefulWidget {
   const ProfileScreen({super.key});
@@ -15,6 +19,11 @@ class ProfileScreen extends StatefulWidget {
 
 class _ProfileScreenState extends State<ProfileScreen> {
   UsersModel user = UsersModel.empty();
+
+  String _downloadUrl = '';
+
+  late File _image;
+  final ImagePicker _picker = ImagePicker();
 
   @override
   void initState() {
@@ -88,18 +97,19 @@ class _ProfileScreenState extends State<ProfileScreen> {
                           CircleAvatar(
                             radius: 60,
                             backgroundColor: Colors.grey[300],
-                            backgroundImage: const NetworkImage('https://example.com/profile.jpg'), // Set the profile picture URL
+                            backgroundImage: NetworkImage(user.profileUrl), // Set the profile picture URL
                           ),
                           Positioned(
                             bottom: 0,
                             right: 0,
                             child: IconButton(
                               icon: const Icon(
-                                Icons.add,
+                                Icons.camera_alt_outlined,
                                 color: AppColors.primaryColor,
                               ),
                               onPressed: () {
                                 // Handle updating profile picture
+                                _getImage(_picker);
                               },
                             ),
                           ),
@@ -251,5 +261,28 @@ class _ProfileScreenState extends State<ProfileScreen> {
         ],
       ),
     );
+  }
+
+  Future<void> _getImage(ImagePicker picker) async {
+    final XFile? image = await picker.pickImage(source: ImageSource.gallery);
+
+    setState(() {
+      if (image != null) {
+        _image = File(image.path);
+        _uploadImage(File(image.path));
+      }
+    });
+  }
+
+  void _uploadImage(File file) async {
+    final currentUser = FirebaseAuth.instance.currentUser;
+    final storage = FirebaseStorage.instance;
+    final Reference storageRef = storage.ref().child('images/${currentUser?.uid}/${DateTime.now().toString()}');
+    final UploadTask uploadTask = storageRef.putFile(file);
+    await uploadTask.whenComplete(() async {
+      _downloadUrl = await storageRef.getDownloadURL();
+      user = await DatabaseService.instance.updateUserInformation(user.copyWith(profileUrl: _downloadUrl));
+    });
+    setState(() {});
   }
 }
