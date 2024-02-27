@@ -27,7 +27,7 @@ class _loginScreenState extends State<loginScreen> {
       body: BodyBackground(
         child: SafeArea(
           child: Padding(
-            padding: const EdgeInsets.all(24),
+            padding:EdgeInsets.all(MediaQuery.of(context).size.width * 0.03),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
@@ -45,14 +45,14 @@ class _loginScreenState extends State<loginScreen> {
                     ),
                   ],
                 ),
-                const SizedBox(height: 20),
+                SizedBox(height:  MediaQuery.of(context).size.height * 0.02),
                 SvgPicture.asset(
                   'assets/images/medical_care_logo.svg',
-                  height: 220,
-                  width: 220,
+                  height:  MediaQuery.of(context).size.height * 0.25,
+                  width:  MediaQuery.of(context).size.width * 0.25,
                   //height: double.infinity,
                 ),
-                const SizedBox(height: 24),
+          SizedBox(height:  MediaQuery.of(context).size.height * 0.05,),
                 Text(
                   "Welcome Back",
                   style: Theme.of(context).textTheme.titleLarge,
@@ -62,7 +62,7 @@ class _loginScreenState extends State<loginScreen> {
                   "Please enter your logged in Email Address",
                   style: Theme.of(context).textTheme.bodySmall,
                 ),
-                const SizedBox(height: 24),
+                SizedBox(height:  MediaQuery.of(context).size.height * 0.04,),
                 TextFormField(
                   controller: loginemailController,
                   keyboardType: TextInputType.emailAddress,
@@ -70,7 +70,7 @@ class _loginScreenState extends State<loginScreen> {
                     hintText: 'Email',
                   ),
                 ),
-                const SizedBox(height: 16),
+                SizedBox(height:  MediaQuery.of(context).size.height * 0.015,),
                 TextFormField(
                   controller: loginpasswordController,
                   obscureText: true,
@@ -78,7 +78,7 @@ class _loginScreenState extends State<loginScreen> {
                     hintText: 'Password',
                   ),
                 ),
-                const SizedBox(height: 16),
+                SizedBox(height:  MediaQuery.of(context).size.height * 0.02,),
                 SizedBox(
                   width: double.infinity,
                   child: ElevatedButton(
@@ -127,9 +127,9 @@ class _loginScreenState extends State<loginScreen> {
                       }
                     },
                     child: isLoading
-                        ? const SizedBox(
-                            height: 24,
-                            width: 24,
+                        ? SizedBox(
+                            height:  MediaQuery.of(context).size.height * 0.02,
+                            width:  MediaQuery.of(context).size.height * 0.02,
                             child: CircularProgressIndicator(color:Colors.white),
                           )
                         : const Text(
@@ -138,7 +138,7 @@ class _loginScreenState extends State<loginScreen> {
                           ),
                   ),
                 ),
-                const SizedBox(height: 48),
+                SizedBox(height: MediaQuery.of(context).size.height * 0.025),
                 Center(
                   child: TextButton(
                     onPressed: () {

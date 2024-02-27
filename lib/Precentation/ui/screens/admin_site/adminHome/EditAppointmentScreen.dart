@@ -46,7 +46,7 @@ class _EditAppointmentState extends State<EditAppointment> {
         child: SafeArea(
           child: SingleChildScrollView(
             child: Padding(
-              padding: const EdgeInsets.all(24),
+              padding:EdgeInsets.all(MediaQuery.of(context).size.width * 0.025),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
@@ -64,24 +64,26 @@ class _EditAppointmentState extends State<EditAppointment> {
                       ),
                     ],
                   ),
-                  const SizedBox(height: 10),
-                  const Text(
+                 SizedBox(height: MediaQuery.of(context).size.height * 0.02),
+                 Text(
                     'Appointment List',
-                    style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+                    style: TextStyle(
+                        fontSize:  MediaQuery.of(context).size.width * 0.06,
+                        fontWeight: FontWeight.bold),
                   ),
-                  const SizedBox(height: 40),
+                   SizedBox(height: MediaQuery.of(context).size.height * 0.05),
                   ...List.generate(appointmentList.length, (index) {
                     final appointment = appointmentList[index];
                     return Container(
                       width: double.infinity,
-                      padding: const EdgeInsets.all(20),
+                      padding: EdgeInsets.all(MediaQuery.of(context).size.width * 0.05),
                       decoration: BoxDecoration(
                         color: Colors.white,
                         borderRadius: BorderRadius.circular(10),
                         boxShadow: [
                           BoxShadow(
                             color: Colors.grey.withOpacity(0.5),
-                            spreadRadius: 2,
+                            spreadRadius: 3,
                             blurRadius: 5,
                             offset: const Offset(0, 3),
                           ),
@@ -95,19 +97,27 @@ class _EditAppointmentState extends State<EditAppointment> {
                             children: [
                               Text(
                                 'Booked by: ${appointment.user.firstName} ${appointment.user.lastName}',
-                                style: const TextStyle(fontSize: 18, color: AppColors.primaryColor),
+                                style: TextStyle(
+                                    fontSize: MediaQuery.of(context).size.height * 0.019,
+                                    color: AppColors.primaryColor),
                               ),
                               Text(
                                 'With Doctor:  ${appointment.doctor["name"]}',
-                                style: const TextStyle(fontSize: 18, color: Colors.black),
+                                style: TextStyle(
+                                    fontSize: MediaQuery.of(context).size.height * 0.017,
+                                    color: Colors.black),
                               ),
                               Text(
                                 'Transaction Id:   ${appointment.transactionId}',
-                                style: const TextStyle(fontSize: 18, color: Colors.grey),
+                                style:TextStyle
+                                  (fontSize: MediaQuery.of(context).size.height * 0.017,
+                                    color: Colors.grey),
                               ),
                               Text(
                                 'Status: ${appointment.status}',
-                                style: const TextStyle(fontSize: 18, color: Colors.grey),
+                                style:TextStyle(
+                                    fontSize: MediaQuery.of(context).size.height * 0.017,
+                                    color: Colors.grey),
                               ),
                             ],
                           ),
@@ -128,7 +138,7 @@ class _EditAppointmentState extends State<EditAppointment> {
                                     style: TextStyle(color: Colors.white),
                                   ),
                                 ),
-                                const SizedBox(width: 10),
+                                SizedBox(width: MediaQuery.of(context).size.height * 0.005),
                                 ElevatedButton(
                                   onPressed: () {
                                     // Show dialog box for providing schedule

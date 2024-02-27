@@ -46,7 +46,7 @@ class _EditActiveDoctorsState extends State<EditActiveDoctors> {
                 : SafeArea(
                     child: SingleChildScrollView(
                       child: Padding(
-                        padding: const EdgeInsets.all(24),
+                        padding: EdgeInsets.all(MediaQuery.of(context).size.width * 0.03),
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.center,
                           children: [
@@ -64,23 +64,23 @@ class _EditActiveDoctorsState extends State<EditActiveDoctors> {
                                 ),
                               ],
                             ),
-                            const SizedBox(height: 20),
+                            SizedBox(height: MediaQuery.of(context).size.height * 0.02),
                             SearchField(
                               controller: searchController,
                               onTextChanged: (value) {
                                 setState(() {}); // Trigger rebuild on text change
                               },
                             ),
-                            const SizedBox(height: 20),
-                            const Text(
+                            SizedBox(height:MediaQuery.of(context).size.height * 0.02),
+                             Text(
                               'Active Doctors',
                               style: TextStyle(
-                                fontSize: 24,
+                                fontSize:  MediaQuery.of(context).size.width * 0.06,
                                 fontWeight: FontWeight.bold,
                                 color: AppColors.primaryColor,
                               ),
                             ),
-                            const SizedBox(height: 20),
+                            SizedBox(height: MediaQuery.of(context).size.height * 0.02),
                             ListView.builder(
                               shrinkWrap: true,
                               physics: const NeverScrollableScrollPhysics(),
@@ -91,8 +91,8 @@ class _EditActiveDoctorsState extends State<EditActiveDoctors> {
                                   leading: Stack(
                                     children: [
                                       CustomImageView(
-                                        height: 120,
-                                        width: 120,
+                                        height:MediaQuery.of(context).size.height * 0.2,
+                                        width: MediaQuery.of(context).size.width * 0.2,
                                         path: doctor.profileImageUrl,
                                         borderRadius: BorderRadius.circular(15),
                                       ),
@@ -101,34 +101,44 @@ class _EditActiveDoctorsState extends State<EditActiveDoctors> {
                                           right: 0,
                                           top: 0,
                                           child: Container(
-                                            width: 15,
-                                            height: 15,
+                                            width: MediaQuery.of(context).size.width * 0.04,
+                                            height: MediaQuery.of(context).size.height * 0.04,
                                             decoration: BoxDecoration(
                                               shape: BoxShape.circle,
                                               color: Colors.green,
-                                              border: Border.all(color: Colors.white, width: 2),
+                                              border: Border.all(color: Colors.white, width: 1),
                                             ),
                                           ),
                                         ),
                                     ],
                                   ),
-                                  title: Text(doctor.name),
-                                  subtitle: Text(doctor.speciality),
+                                  title: Text(doctor.name, style: TextStyle(
+                                    fontSize: MediaQuery.of(context).size.width * 0.04
+                                  )),
+                                  subtitle: Text(doctor.speciality,style:TextStyle(
+                                fontSize: MediaQuery.of(context).size.width * 0.035 ,)),
+
                                   trailing: Row(
+                                    mainAxisAlignment: MainAxisAlignment.end,
                                     mainAxisSize: MainAxisSize.min,
                                     children: [
-                                      Switch(
-                                        value: doctor.isActive,
-                                        onChanged: (newValue) async {
-                                          List<DoctorModel> updatedDoctorsList = List.from(activeDoctors);
-                                          final index = updatedDoctorsList.indexWhere((element) => element.id == doctor.id);
+                                      Container(
+                                        width: MediaQuery.of(context).size.width * 0.05,
+                                        height: MediaQuery.of(context).size.height * 0.06,
+                                        child: Switch(
+                                          value: doctor.isActive,
+                                          onChanged: (newValue) async {
+                                            List<DoctorModel> updatedDoctorsList = List.from(activeDoctors);
+                                            final index = updatedDoctorsList.indexWhere((element) => element.id == doctor.id);
 
-                                          if (index != -1) {
-                                            updatedDoctorsList[index] = doctor.copyWith(isActive: newValue);
-                                            await DatabaseService.instance.updateDoctorInformation(doctor.copyWith(isActive: newValue));
-                                            setState(() => activeDoctors = updatedDoctorsList);
-                                          }
-                                        },
+                                            if (index != -1) {
+                                              updatedDoctorsList[index] = doctor.copyWith(isActive: newValue);
+                                              await DatabaseService.instance.updateDoctorInformation(doctor.copyWith(isActive: newValue));
+                                              setState(() => activeDoctors = updatedDoctorsList);
+                                            }
+                                          },
+
+                                        ),
                                       ),
                                       IconButton(
                                         icon: const Icon(Icons.more_vert),

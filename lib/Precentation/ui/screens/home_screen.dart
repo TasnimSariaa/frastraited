@@ -31,7 +31,7 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> {
   final List<Map<String, dynamic>> categories = [
-    {'category': 'Active doctors', 'icon': Icons.person},
+    {'category': 'Active Doctors', 'icon': Icons.person},
     {'category': 'Operation Packages', 'icon': Icons.personal_injury_outlined},
     {'category': 'Vaccine Packages', 'icon': Icons.medical_services},
     {'category': 'Appointment', 'icon': Icons.event},
@@ -80,7 +80,7 @@ class _HomeScreenState extends State<HomeScreen> {
         const ActiveDoctor(),
         const OperationScreen(),
         const VaccineScreen(),
-        Appointment(),
+        const Appointment(),
         const ReportCollection(),
         const Donation(),
         const PendingTests(),
@@ -102,7 +102,7 @@ class _HomeScreenState extends State<HomeScreen> {
       body: BodyBackground(
         child: SafeArea(
           child: Padding(
-            padding: const EdgeInsets.all(24),
+            padding: EdgeInsets.all(MediaQuery.of(context).size.width * 0.05),
             child: SingleChildScrollView(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.center,
@@ -118,8 +118,8 @@ class _HomeScreenState extends State<HomeScreen> {
                   GridView.builder(
                     shrinkWrap: true,
                     physics: const NeverScrollableScrollPhysics(),
-                    gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                      crossAxisCount: 2,
+                    gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                      crossAxisCount: MediaQuery.of(context).size.width > 600 ? 3 : 2,
                       crossAxisSpacing: 1,
                       mainAxisSpacing: 1,
                     ),
@@ -168,9 +168,9 @@ class _HomeScreenState extends State<HomeScreen> {
       child: GestureDetector(
         onTap: onTap,
         child: Container(
-          height: 50,
-          padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 10),
-          margin: const EdgeInsets.symmetric(vertical: 20, horizontal: 20),
+          height: MediaQuery.of(context).size.height * 0.02 ,
+          padding: const EdgeInsets.symmetric(vertical: 5, horizontal: 5),
+          margin: const EdgeInsets.symmetric(vertical: 5, horizontal: 5),
           // Example margin values
           decoration: BoxDecoration(
             color: isHovered ? Colors.grey.shade100 : Colors.white,
@@ -190,7 +190,8 @@ class _HomeScreenState extends State<HomeScreen> {
                   const SizedBox(height: 8),
                   Text(
                     category,
-                    style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w700),
+                    style: TextStyle(fontSize: MediaQuery.of(context).size.width * 0.04,
+                        fontWeight: FontWeight.w700),
                     textAlign: TextAlign.center,
                   ),
                 ],
@@ -213,7 +214,7 @@ class _HomeScreenState extends State<HomeScreen> {
     return AppBar(
       backgroundColor: AppColors.primaryColor,
       actions: [
-        const SizedBox(width: 8),
+        SizedBox(width: MediaQuery.of(context).size.width * 0.02),
         CircleIconButton(
           onTap: () {},
           iconData: Icons.call,

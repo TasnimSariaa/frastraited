@@ -43,12 +43,11 @@ class _VaccineScreenState extends State<VaccineScreen> {
   // Function to handle changes in the search text field
   void _onSearchChanged() {
     String query = searchController.text.toLowerCase();
-    // setState(() {
-    //   filteredVaccines = availableVaccines.where((vaccine) {
-    //     String vaccineName = vaccine['name'].toLowerCase();
-    //     return vaccineName.contains(query);
-    //   }).toList();
-    // });
+     setState(() {
+       vaccineList = query.isEmpty
+           ? [...vaccineList]
+           : vaccineList.where((vaccine) => vaccine.name.toLowerCase().contains(query)).toList();
+     });
   }
 
   @override
@@ -58,11 +57,50 @@ class _VaccineScreenState extends State<VaccineScreen> {
         child: isLoading
             ? const Center(child: CircularProgressIndicator())
             : vaccineList.isEmpty
-                ? const Center(child: Text("List is Empty"))
+                ? Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Center(child :Text("No Vacchines Found",style: TextStyle(fontSize: 20,fontWeight: FontWeight.bold),),),
+              SizedBox(height: 10,),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Container(
+                    height: 50,
+                    width: 100,
+                    child: ElevatedButton(
+                      child: Text("   Back   "),
+                      onPressed: () {
+
+                        setState(() {
+                          searchController.addListener(_onSearchChanged);
+                          searchController.clear();
+                          _getVaccineList();
+                        });
+
+                      },
+                    ),
+                  ),
+                    SizedBox(width: 20,),
+                    Container(
+                      height: 50,
+                      width:100 ,
+                      child: ElevatedButton(
+                        child: Text("   Back to home page  "),
+                        onPressed: () {
+                          Navigator.pop(context);
+                        },
+                                        ),
+                    ),
+                ],
+              )
+          ],
+        )
+
                 : SafeArea(
                     child: SingleChildScrollView(
                       child: Padding(
-                        padding: const EdgeInsets.all(24),
+                        padding:EdgeInsets.all(MediaQuery.of(context).size.height * 0.03),
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.center,
                           children: [
@@ -86,19 +124,20 @@ class _VaccineScreenState extends State<VaccineScreen> {
                             SearchField(
                               controller: searchController,
                               onTextChanged: (value) {
-                                setState(() {}); // Trigger rebuild on text change
+                                setState(() {
+                                }); // Trigger rebuild on text change
                               },
                             ),
-                            const SizedBox(height: 10),
-                            const Text(
+                            const SizedBox(height: 30),
+                            Text(
                               'Available Vaccines',
                               style: TextStyle(
-                                fontSize: 24,
+                                fontSize: MediaQuery.of(context).size.width * 0.08,
                                 fontWeight: FontWeight.bold,
                                 color: AppColors.primaryColor,
                               ),
                             ),
-                            const SizedBox(height: 35),
+                             SizedBox(height: MediaQuery.of(context).size.height * 0.04),
                             ListView.builder(
                               shrinkWrap: true,
                               physics: const NeverScrollableScrollPhysics(),
@@ -108,7 +147,7 @@ class _VaccineScreenState extends State<VaccineScreen> {
                                 return Column(
                                   children: [
                                     Container(
-                                      height: 140,
+                                      height: MediaQuery.of(context).size.height * 0.25,
                                       margin: const EdgeInsets.symmetric(vertical: 10),
                                       decoration: BoxDecoration(
                                         color: Colors.white,
@@ -147,8 +186,8 @@ class _VaccineScreenState extends State<VaccineScreen> {
                                               children: [
                                                 Text(
                                                   vaccine.name,
-                                                  style: const TextStyle(
-                                                    fontSize: 18,
+                                                  style: TextStyle(
+                                                    fontSize: MediaQuery.of(context).size.width * 0.05,
                                                     fontWeight: FontWeight.bold,
                                                     color: AppColors.primaryColor,
                                                   ),
@@ -188,4 +227,9 @@ class _VaccineScreenState extends State<VaccineScreen> {
       ),
     );
   }
+
+  void emptyhome(){
+
+  }
+
 }

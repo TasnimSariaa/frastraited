@@ -56,10 +56,12 @@ class _EditVaccineState extends State<EditVaccine> {
       body: BodyBackground(
         child: isLoading
             ? const Center(child: CircularProgressIndicator())
+        :vaccineList.isEmpty
+          ? const Center(child: Text("List is Empty"))
             : SafeArea(
                 child: SingleChildScrollView(
                   child: Padding(
-                    padding: const EdgeInsets.all(24),
+                    padding: EdgeInsets.all(MediaQuery.of(context).size.width * 0.03),
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
@@ -77,25 +79,25 @@ class _EditVaccineState extends State<EditVaccine> {
                             ),
                           ],
                         ),
-                        const SizedBox(
-                          height: 10,
+                       SizedBox(
+                          height: MediaQuery.of(context).size.height * 0.02,
                         ),
-                        const Text(
+                        Text(
                           'Available Vaccines',
                           style: TextStyle(
-                            fontSize: 24,
+                            fontSize: MediaQuery.of(context).size.width * 0.06,
                             fontWeight: FontWeight.bold,
                             color: AppColors.primaryColor,
                           ),
                         ),
-                        const SizedBox(height: 30),
+                        SizedBox(height: MediaQuery.of(context).size.height * 0.04),
                         SearchField(
                           controller: searchController,
                           onTextChanged: (value) {
                             setState(() {});
                           },
                         ),
-                        const SizedBox(height: 30),
+                       SizedBox(height: MediaQuery.of(context).size.height * 0.04),
                         ListView.builder(
                           shrinkWrap: true,
                           physics: const NeverScrollableScrollPhysics(),
@@ -105,7 +107,7 @@ class _EditVaccineState extends State<EditVaccine> {
                             return Column(
                               children: [
                                 Container(
-                                  height: 120,
+                                  height: MediaQuery.of(context).size.width * 0.4,
                                   margin: const EdgeInsets.symmetric(vertical: 10),
                                   decoration: BoxDecoration(
                                     color: Colors.white,

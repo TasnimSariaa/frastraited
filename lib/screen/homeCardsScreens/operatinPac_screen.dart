@@ -61,7 +61,7 @@ class _OperationScreenState extends State<OperationScreen> {
                 : SafeArea(
                     child: SingleChildScrollView(
                       child: Padding(
-                        padding: const EdgeInsets.all(24),
+                        padding: EdgeInsets.all( MediaQuery.of(context).size.height * 0.03,),
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.center,
                           children: [
@@ -79,8 +79,8 @@ class _OperationScreenState extends State<OperationScreen> {
                                 ),
                               ],
                             ),
-                            const SizedBox(
-                              height: 10,
+                           SizedBox(
+                              height: MediaQuery.of(context).size.height * 0.02,
                             ),
                             SearchField(
                               controller: searchController,
@@ -88,16 +88,16 @@ class _OperationScreenState extends State<OperationScreen> {
                                 setState(() {}); // Trigger rebuild on text change
                               },
                             ),
-                            const SizedBox(height: 10),
-                            const Text(
+                             SizedBox(height: MediaQuery.of(context).size.height * 0.02),
+                             Text(
                               'Available Operations',
                               style: TextStyle(
-                                fontSize: 24,
+                                fontSize: MediaQuery.of(context).size.width * 0.06,
                                 fontWeight: FontWeight.bold,
                                 color: AppColors.primaryColor,
                               ),
                             ),
-                            const SizedBox(height: 40),
+                             SizedBox(height:MediaQuery.of(context).size.height * 0.07),
                             ListView.builder(
                               shrinkWrap: true,
                               physics: const NeverScrollableScrollPhysics(),
@@ -111,7 +111,7 @@ class _OperationScreenState extends State<OperationScreen> {
                                         // Handle onTap event
                                       },
                                       child: Container(
-                                        height: 120,
+                                        height: MediaQuery.of(context).size.height * 0.25,
                                         decoration: BoxDecoration(
                                           color: Colors.white,
                                           borderRadius: BorderRadius.circular(8),
@@ -142,7 +142,7 @@ class _OperationScreenState extends State<OperationScreen> {
                                             const SizedBox(width: 16),
                                             Expanded(
                                               child: Padding(
-                                                padding: const EdgeInsets.symmetric(vertical: 8),
+                                                padding: const EdgeInsets.symmetric(vertical: 5),
                                                 child: Column(
                                                   crossAxisAlignment: CrossAxisAlignment.start,
                                                   mainAxisAlignment: MainAxisAlignment.center,
@@ -159,7 +159,7 @@ class _OperationScreenState extends State<OperationScreen> {
                                                       style: const TextStyle(color: Colors.grey),
                                                     ),
                                                     const SizedBox(
-                                                      height: 12,
+                                                      height: 2,
                                                     ),
                                                     Text(
                                                       'Amount: ${package.amount}',

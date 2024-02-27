@@ -60,7 +60,7 @@ class _EditOperationState extends State<EditOperation> {
                 : SafeArea(
                     child: SingleChildScrollView(
                       child: Padding(
-                        padding: const EdgeInsets.all(24),
+                        padding: EdgeInsets.all(MediaQuery.of(context).size.width * 0.03,),
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.center,
                           children: [
@@ -78,23 +78,23 @@ class _EditOperationState extends State<EditOperation> {
                                 ),
                               ],
                             ),
-                            const SizedBox(height: 10),
-                            const Text(
+                            SizedBox(height: MediaQuery.of(context).size.height * 0.02),
+                             Text(
                               'Available Operation Packages',
                               style: TextStyle(
-                                fontSize: 24,
+                                fontSize: MediaQuery.of(context).size.width * 0.06,
                                 fontWeight: FontWeight.bold,
                                 color: AppColors.primaryColor,
                               ),
                             ),
-                            const SizedBox(height: 20),
+                             SizedBox(height: MediaQuery.of(context).size.height * 0.04),
                             SearchField(
                               controller: searchController,
                               onTextChanged: (value) {
                                 setState(() {});
                               },
                             ),
-                            const SizedBox(height: 20),
+                            SizedBox(height: MediaQuery.of(context).size.height * 0.04),
                             ListView.builder(
                               shrinkWrap: true,
                               physics: const NeverScrollableScrollPhysics(),
@@ -104,7 +104,7 @@ class _EditOperationState extends State<EditOperation> {
                                 return Column(
                                   children: [
                                     Container(
-                                      height: 120, // Adjusted height
+                                      height: MediaQuery.of(context).size.width * 0.4, // Adjusted height
                                       margin: const EdgeInsets.symmetric(vertical: 10), // Adjusted margin
                                       decoration: BoxDecoration(
                                         color: Colors.white,

@@ -46,7 +46,19 @@ class _ReportCollectionState extends State<ReportCollection> {
         child: isLoading
             ? const Center(child: CircularProgressIndicator())
             : collectReportList.isEmpty
-                ? const Center(child: Text("List is Empty"))
+                ?  Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Center(child: Text("No Report Available Right Now")),
+            SizedBox(height: 20,),
+            Container(
+              height: 60,
+              width: 160,
+              child: ElevatedButton(onPressed:(){Navigator.pop(context);} ,
+                  child: Text("Back to Home Page",style: TextStyle(color: Colors.white),)),
+            )
+          ],
+        )
                 : SafeArea(
                     child: SingleChildScrollView(
                       child: Padding(

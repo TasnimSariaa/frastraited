@@ -17,12 +17,6 @@ class signUpScreen extends StatefulWidget {
 class _signUpScreenState extends State<signUpScreen> {
   bool isLoading = false;
 
-  // _signUpScreenState() {
-  //   selectedType = userType[0];
-  // }
-
-  // final userType = ['User', 'Doctor'];
-  // String? selectedType = "User";
 
   final FirebaseAuth _auth = FirebaseAuth.instance;
 
@@ -44,7 +38,7 @@ class _signUpScreenState extends State<signUpScreen> {
       await DatabaseService.instance.setUserInformation(model);
       isLoading = false;
       setState(() {});
-      Navigator.push(
+      Navigator.pushReplacement(
         context,
         MaterialPageRoute(builder: (context) {
           return const loginScreen();
@@ -112,7 +106,7 @@ class _signUpScreenState extends State<signUpScreen> {
                       ],
                     ),
                     const SizedBox(
-                      height: 80,
+                      height: 50,
                     ),
                     Text("Join With Us", style: Theme.of(context).textTheme.titleLarge),
                     const SizedBox(
