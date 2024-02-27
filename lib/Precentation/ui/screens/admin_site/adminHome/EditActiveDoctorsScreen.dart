@@ -108,7 +108,7 @@ class _EditActiveDoctorsState extends State<EditActiveDoctors> {
                           const SizedBox(height: 20),
                           ListView.separated(
                             shrinkWrap: true,
-                            separatorBuilder: (_, __) => const SizedBox(height: 10),
+                            separatorBuilder: (_, __) => const SizedBox(height: 20),
                             physics: const NeverScrollableScrollPhysics(),
                             itemCount: tempDoctorList.length,
                             itemBuilder: (BuildContext context, int index) {
