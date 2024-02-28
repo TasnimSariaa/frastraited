@@ -30,6 +30,21 @@ class DatabaseService {
 
   FirebaseFirestore fireStore = FirebaseFirestore.instance;
 
+  Future<List<UsersModel>> getUserList() async {
+    List<UsersModel> userList = [];
+
+    await fireStore.collection(DatabaseTables.users).get().then((QuerySnapshot querySnapshot) {
+      userList.clear();
+      for (var doc in querySnapshot.docs) {
+        Map<String, dynamic> data = doc.data() as Map<String, dynamic>;
+        UsersModel user = UsersModel.fromJson(data);
+        userList.add(user);
+      }
+    });
+
+    return userList;
+  }
+
   Future<void> setUserInformation(UsersModel model) async {
     CollectionReference result = fireStore.collection(DatabaseTables.users);
 

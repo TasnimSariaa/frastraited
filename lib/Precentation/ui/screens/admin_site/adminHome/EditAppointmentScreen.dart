@@ -119,7 +119,7 @@ class _EditAppointmentState extends State<EditAppointment> {
                                     ),
                                     onPressed: () {
                                       // Show dialog box for providing schedule
-                                      _showScheduleDialog(context, false, "Reject", appointment);
+                                      _showScheduleDialog(context, false, "Rejected", appointment);
                                     },
                                     child: const Text(
                                       'Reject',
@@ -132,7 +132,7 @@ class _EditAppointmentState extends State<EditAppointment> {
                                   child: ElevatedButton(
                                     onPressed: () {
                                       // Show dialog box for providing schedule
-                                      _showScheduleDialog(context, true, "Accept", appointment);
+                                      _showScheduleDialog(context, true, "Accepted", appointment);
                                     },
                                     child: const Text(
                                       'Accept',

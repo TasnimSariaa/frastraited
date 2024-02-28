@@ -1,4 +1,6 @@
-class UsersModel {
+import 'package:equatable/equatable.dart';
+
+class UsersModel extends Equatable {
   final String email;
   final String firstName;
   final String lastName;
@@ -8,7 +10,7 @@ class UsersModel {
   final String medicalId;
   final String profileUrl;
 
-  UsersModel({
+  const UsersModel({
     required this.email,
     required this.firstName,
     required this.lastName,
@@ -33,7 +35,7 @@ class UsersModel {
   }
 
   factory UsersModel.empty() {
-    return UsersModel(
+    return const UsersModel(
       email: "",
       firstName: "",
       lastName: "",
@@ -79,4 +81,7 @@ class UsersModel {
       profileUrl: profileUrl ?? this.profileUrl,
     );
   }
+
+  @override
+  List<Object?> get props => [email, firstName, medicalId, userid, userType];
 }
