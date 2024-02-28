@@ -7,6 +7,7 @@ import 'package:frastraited/screen/service/models/donation_model.dart';
 import 'package:frastraited/screen/service/models/operationPackages.dart';
 import 'package:frastraited/screen/service/models/payment_model.dart';
 import 'package:frastraited/screen/service/models/pending_test_model.dart';
+import 'package:frastraited/screen/service/models/user_test_model.dart';
 import 'package:frastraited/screen/service/models/users.dart';
 import 'package:frastraited/screen/service/models/vaccines.dart';
 
@@ -186,8 +187,15 @@ class DatabaseService {
     return pendingTestList;
   }
 
-  Future<void> setPendingTest(PendingTestModel model) async {
+  Future<void> setPendingTest(UserTestModel model) async {
     CollectionReference result = fireStore.collection(DatabaseTables.pendingTestsUser);
+    final pendingTestId = result.doc().id;
+
+    result.doc(pendingTestId).set(model.copyWith(id: pendingTestId).toJson());
+  }
+
+  Future<void> addNewTest(PendingTestModel model) async {
+    CollectionReference result = fireStore.collection(DatabaseTables.pendingTests);
     final pendingTestId = result.doc().id;
 
     result.doc(pendingTestId).set(model.copyWith(id: pendingTestId).toJson());

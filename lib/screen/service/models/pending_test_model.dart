@@ -1,14 +1,14 @@
-class PendingTestModel {
+import 'package:equatable/equatable.dart';
+
+class PendingTestModel extends Equatable {
   final String id;
   final String name;
   final String amount;
-  final String medicalId;
 
-  PendingTestModel({
+  const PendingTestModel({
     required this.id,
     required this.name,
     required this.amount,
-    required this.medicalId,
   });
 
   factory PendingTestModel.fromJson(Map<String, dynamic> json) {
@@ -16,25 +16,22 @@ class PendingTestModel {
       id: json["id"] ?? "",
       name: json["name"] ?? "",
       amount: json["amount"] ?? "",
-      medicalId: json["medicalId"] ?? "",
     );
   }
 
   factory PendingTestModel.empty() {
-    return PendingTestModel(id: "", name: "", amount: "", medicalId: "");
+    return const PendingTestModel(id: "", name: "", amount: "");
   }
 
   PendingTestModel copyWith({
     String? id,
     String? name,
     String? amount,
-    String? medicalId,
   }) {
     return PendingTestModel(
       id: id ?? this.id,
       name: name ?? this.name,
       amount: amount ?? this.amount,
-      medicalId: medicalId ?? this.medicalId,
     );
   }
 
@@ -43,7 +40,9 @@ class PendingTestModel {
       "id": id,
       "name": name,
       "amount": amount,
-      "medicalId": medicalId,
     };
   }
+
+  @override
+  List<Object?> get props => [id, name, amount];
 }
