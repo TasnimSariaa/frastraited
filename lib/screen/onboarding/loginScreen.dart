@@ -1,6 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:frastraited/Precentation/ui/screens/Doctor_site/doctor_home_screen.dart';
 import 'package:frastraited/Precentation/ui/screens/main_bottom_nav_screen.dart';
 import 'package:frastraited/Precentation/ui/utility/app_colors.dart';
 import 'package:frastraited/Precentation/ui/widgets/app_logo.dart';
@@ -138,6 +139,22 @@ class _loginScreenState extends State<loginScreen> {
                           ),
                   ),
                 ),
+                const SizedBox(height: 18),
+                ElevatedButton(
+                  onPressed: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => const DoctorHomeScreen(),
+                      ),
+                    );
+                  },
+                  child: Text(
+                    '  Doctor  ',
+                    style: TextStyle(color: Colors.white, fontWeight: FontWeight.w500),
+                  ),
+                ),
+
                 const SizedBox(height: 48),
                 Center(
                   child: TextButton(
