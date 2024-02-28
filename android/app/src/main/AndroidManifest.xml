@@ -3,7 +3,7 @@
 
 
     <application
-            android:label="frastraited"
+            android:label="MediAuto"
             android:name="${applicationName}"
             android:icon="@mipmap/ic_launcher">
         <activity
