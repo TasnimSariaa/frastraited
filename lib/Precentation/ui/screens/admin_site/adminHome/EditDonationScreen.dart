@@ -229,6 +229,7 @@ class _EditDonationState extends State<EditDonation> {
     TextEditingController bedNumberController = TextEditingController(text: patient.bedNumber);
     TextEditingController diseaseController = TextEditingController(text: patient.disease);
     TextEditingController imageUrlController = TextEditingController(text: patient.imageUrl);
+    TextEditingController bkashNumberController = TextEditingController();
 
     final GlobalKey<FormState> formKey = GlobalKey<FormState>();
 
@@ -290,6 +291,18 @@ class _EditDonationState extends State<EditDonation> {
                 TextFormField(
                   controller: bedNumberController,
                   decoration: const InputDecoration(labelText: 'Bed Number'),
+                  validator: (val) {
+                    if (val == null || val.isEmpty) {
+                      return "Field is required";
+                    }
+                    return null;
+                  },
+                ),
+                const SizedBox(height: 16),
+                TextFormField(
+                  controller: bkashNumberController,
+                  keyboardType: TextInputType.phone,
+                  decoration: const InputDecoration(labelText: 'Bkash Number'),
                   validator: (val) {
                     if (val == null || val.isEmpty) {
                       return "Field is required";
@@ -329,6 +342,8 @@ class _EditDonationState extends State<EditDonation> {
                     final bedNumber = bedNumberController.text;
                     final disease = diseaseController.text;
                     final imageUrl = imageUrlController.text;
+                    final number = bkashNumberController.text;
+
                     await DatabaseService.instance.updateDonations(
                       patient.copyWith(
                         name: name,
@@ -337,6 +352,7 @@ class _EditDonationState extends State<EditDonation> {
                         bedNumber: bedNumber,
                         disease: disease,
                         imageUrl: imageUrl,
+                        bkashNumber: number,
                       ),
                     );
                     _getDonationList();
@@ -365,6 +381,7 @@ class _EditDonationState extends State<EditDonation> {
     TextEditingController bedNumberController = TextEditingController();
     TextEditingController diseaseController = TextEditingController();
     TextEditingController imageUrlController = TextEditingController();
+    TextEditingController bkashNumberController = TextEditingController();
 
     final GlobalKey<FormState> formKey = GlobalKey<FormState>();
 
@@ -440,6 +457,18 @@ class _EditDonationState extends State<EditDonation> {
                 ),
                 const SizedBox(height: 16),
                 TextFormField(
+                  controller: bkashNumberController,
+                  keyboardType: TextInputType.phone,
+                  decoration: const InputDecoration(labelText: 'Bkash Number'),
+                  validator: (val) {
+                    if (val == null || val.isEmpty) {
+                      return "Field is required";
+                    }
+                    return null;
+                  },
+                ),
+                const SizedBox(height: 16),
+                TextFormField(
                   controller: imageUrlController,
                   readOnly: true,
                   onTap: () => _getImage(_picker, imageUrlController),
@@ -463,6 +492,7 @@ class _EditDonationState extends State<EditDonation> {
                     final bedNumber = bedNumberController.text;
                     final disease = diseaseController.text;
                     final imageUrl = imageUrlController.text;
+                    final number = bkashNumberController.text;
                     DonationModel donation = DonationModel(
                       id: "",
                       name: name,
@@ -471,6 +501,7 @@ class _EditDonationState extends State<EditDonation> {
                       bedNumber: bedNumber,
                       disease: disease,
                       imageUrl: imageUrl,
+                      bkashNumber: number,
                     );
                     await DatabaseService.instance.addDonations(donation);
                     _getDonationList();

@@ -141,10 +141,12 @@ class _DonationState extends State<Donation> {
                 ListTile(
                   title: Text(patient.name),
                   subtitle: Column(
+                    mainAxisSize: MainAxisSize.min,
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text('Age: ${patient.age}'),
                       Text('Ward Number: ${patient.wardNumber}'),
+                      Text('Payment Number: ${patient.bkashNumber}'),
                       Text('Bed Number: ${patient.bedNumber}'),
                       Text('Disease: ${patient.disease}'),
                     ],

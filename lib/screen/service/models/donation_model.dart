@@ -6,6 +6,7 @@ class DonationModel {
   final String bedNumber;
   final String disease;
   final String imageUrl;
+  final String bkashNumber;
 
   DonationModel({
     required this.id,
@@ -15,6 +16,7 @@ class DonationModel {
     required this.bedNumber,
     required this.disease,
     required this.imageUrl,
+    required this.bkashNumber,
   });
 
   factory DonationModel.fromJson(Map<String, dynamic> json) {
@@ -26,6 +28,7 @@ class DonationModel {
       bedNumber: json["bedNumber"] ?? "",
       disease: json["disease"] ?? "",
       imageUrl: json["imageUrl"] ?? "",
+      bkashNumber: json["bkashNumber"] ?? "",
     );
   }
 
@@ -38,6 +41,7 @@ class DonationModel {
       bedNumber: "",
       disease: "",
       imageUrl: "",
+      bkashNumber: "",
     );
   }
 
@@ -49,6 +53,7 @@ class DonationModel {
     String? bedNumber,
     String? disease,
     String? imageUrl,
+    String? bkashNumber,
   }) {
     return DonationModel(
       id: id ?? this.id,
@@ -58,6 +63,7 @@ class DonationModel {
       bedNumber: bedNumber ?? this.bedNumber,
       disease: disease ?? this.disease,
       imageUrl: imageUrl ?? this.imageUrl,
+      bkashNumber: bkashNumber ?? this.bkashNumber,
     );
   }
 
@@ -70,6 +76,7 @@ class DonationModel {
       "bedNumber": bedNumber,
       "disease": disease,
       "imageUrl": imageUrl,
+      "bkashNumber": bkashNumber,
     };
   }
 }

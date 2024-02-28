@@ -217,7 +217,7 @@ class _PaymentsScreenState extends State<PaymentsScreen> {
                   ),
                   const SizedBox(height: 20),
                   Text(
-                    " Pay BDT ${widget.payable} by Bkash and fatch the Transaction ID! ",
+                    " Pay BDT ${widget.payable} by Bkash and fatch the Transaction ID! ${widget.donationUser == null ? "" : ", Donation Number ${widget.donationUser!["bkashNumber"]}"}",
                     style: const TextStyle(color: Colors.blueGrey, fontWeight: FontWeight.w700, fontSize: 16),
                   ),
                   const SizedBox(height: 20),
