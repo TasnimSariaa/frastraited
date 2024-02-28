@@ -187,6 +187,24 @@ class DatabaseService {
     return pendingTestList;
   }
 
+  Future<List<UserTestModel>> getUserPendingTest() async {
+    List<UserTestModel> userPendingTestList = [];
+    final uid = FirebaseAuth.instance.currentUser?.uid ?? "";
+
+    await fireStore.collection(DatabaseTables.pendingTestsUser).get().then((QuerySnapshot querySnapshot) {
+      userPendingTestList.clear();
+      for (var doc in querySnapshot.docs) {
+        Map<String, dynamic> data = doc.data() as Map<String, dynamic>;
+        UserTestModel pendingTest = UserTestModel.fromJson(data);
+        if (pendingTest.usersModel.userid == uid) {
+          userPendingTestList.add(pendingTest);
+        }
+      }
+    });
+
+    return userPendingTestList;
+  }
+
   Future<void> setPendingTest(UserTestModel model) async {
     CollectionReference result = fireStore.collection(DatabaseTables.pendingTestsUser);
     final pendingTestId = result.doc().id;

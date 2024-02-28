@@ -1,6 +1,5 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:frastraited/Precentation/ui/screens/Payments_screen.dart';
 import 'package:frastraited/Precentation/ui/screens/history_screen.dart';
 import 'package:frastraited/Precentation/ui/screens/home_screen.dart';
 import 'package:frastraited/Precentation/ui/screens/profile_screen.dart';
@@ -33,7 +32,7 @@ class _MainBottomNavScreenState extends State<MainBottomNavScreen> {
     _usersScreens = [
       const HomeScreen(),
       const HistoryScreen(paymentInfo: {}),
-      const PaymentsScreen(category: '', type: '', payable: ''),
+      // const PaymentsScreen(category: '', type: '', payable: ''),
       const ProfileScreen(),
     ];
   }
@@ -62,7 +61,7 @@ class _MainBottomNavScreenState extends State<MainBottomNavScreen> {
         items: [
           const BottomNavigationBarItem(icon: Icon(Icons.home_filled), label: 'Home'),
           if (!isAdmin) const BottomNavigationBarItem(icon: Icon(Icons.history), label: 'History'),
-          if (!isAdmin) const BottomNavigationBarItem(icon: Icon(Icons.attach_money), label: 'Payments'),
+          // if (!isAdmin) const BottomNavigationBarItem(icon: Icon(Icons.attach_money), label: 'Payments'),
           const BottomNavigationBarItem(icon: Icon(Icons.account_circle_rounded), label: 'Profile'),
         ],
       ),

@@ -19,8 +19,8 @@ class UserTestModel extends Equatable {
     return UserTestModel(
       id: json["id"] ?? "",
       medicalId: json["medicalId"] ?? "",
-      usersModel: json["usersModel"] ?? UsersModel.empty(),
-      pendingTestModel: json["pendingTestModel"] ?? PendingTestModel.empty(),
+      usersModel: json["usersModel"] == null ? UsersModel.empty() : UsersModel.fromJson(json["usersModel"]),
+      pendingTestModel: json["pendingTestModel"] == null ? PendingTestModel.empty() : PendingTestModel.fromJson(json["pendingTestModel"]),
     );
   }
 

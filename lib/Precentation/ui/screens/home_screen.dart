@@ -20,6 +20,7 @@ import 'package:frastraited/screen/homeCardsScreens/reportCollection_screen.dart
 import 'package:frastraited/screen/homeCardsScreens/vaccinePac_screen.dart';
 import 'package:frastraited/screen/service/database_service.dart';
 import 'package:frastraited/screen/widgets/bodyBackground.dart';
+import 'package:url_launcher/url_launcher.dart';
 // Import the SearchField widget
 
 class HomeScreen extends StatefulWidget {
@@ -199,6 +200,16 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
+  Future<void> _launchUrl() async {
+    final _url = Uri(
+      scheme: 'tel',
+      path: '01615644044',
+    );
+    if (!await launchUrl(_url)) {
+      throw Exception('Could not launch $_url');
+    }
+  }
+
   AppBar get appBar {
     return AppBar(
       backgroundColor: AppColors.primaryColor,
@@ -206,7 +217,7 @@ class _HomeScreenState extends State<HomeScreen> {
       actions: [
         const SizedBox(width: 8),
         CircleIconButton(
-          onTap: () {},
+          onTap: () => _launchUrl(),
           iconData: Icons.call,
         ),
         const SizedBox(width: 8),
