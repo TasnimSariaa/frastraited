@@ -29,11 +29,12 @@ class _ProfileScreenState extends State<ProfileScreen> {
   void initState() {
     super.initState();
     if (FirebaseAuth.instance.currentUser != null) {
-      _getUser(FirebaseAuth.instance.currentUser!.uid);
+      _getUser();
     }
   }
 
-  void _getUser(String uid) async {
+  void _getUser() async {
+    final uid = FirebaseAuth.instance.currentUser!.uid;
     user = await DatabaseService.instance.getUserInfo(uid);
     setState(() {});
   }
@@ -147,14 +148,15 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       ),
                       child: SingleChildScrollView(
                         child: Column(
+                          mainAxisSize: MainAxisSize.min,
                           children: [
-                            _buildInfoField('First Name', user.firstName),
+                            _buildInfoField('First Name', user.firstName, isFirstName: true),
                             const Divider(color: Colors.grey),
-                            _buildInfoField('Last Name', user.lastName),
+                            _buildInfoField('Last Name', user.lastName, isLastName: true),
                             const Divider(color: Colors.grey),
-                            _buildInfoField('Email', user.email),
+                            _buildInfoField('Email', user.email, isEmail: true),
                             const Divider(color: Colors.grey),
-                            _buildInfoField('Phone Number', user.phone),
+                            _buildInfoField('Phone Number', user.phone, isPhoneNumber: true),
                             const SizedBox(height: 20),
                             const Divider(color: Colors.grey),
                             _buildInfoField('Your Medical ID', user.medicalId, editable: false),
@@ -174,7 +176,15 @@ class _ProfileScreenState extends State<ProfileScreen> {
   }
 
   // Widget for building information fields
-  Widget _buildInfoField(String label, String value, {bool editable = true}) {
+  Widget _buildInfoField(
+    String label,
+    String value, {
+    bool editable = true,
+    bool isFirstName = false,
+    bool isLastName = false,
+    bool isEmail = false,
+    bool isPhoneNumber = false,
+  }) {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 8.0),
       child: Row(
@@ -207,51 +217,41 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       // Handle edit button tap
                       showDialog(
                         context: context,
-                        builder: (context) => AlertDialog(
-                          title: Text('Edit $label'),
-                          content: TextFormField(
-                            initialValue: value,
-                            onChanged: (newValue) {
-                              setState(() {
-                                value = newValue;
-                              });
-                            },
-                            decoration: InputDecoration(
-                              hintText: 'Enter new $label',
+                        builder: (context) {
+                          TextEditingController controller = TextEditingController(text: value);
+                          return AlertDialog(
+                            title: Text('Edit $label'),
+                            content: TextFormField(
+                              controller: controller,
+                              decoration: InputDecoration(
+                                hintText: 'Enter new $label',
+                              ),
                             ),
-                          ),
-                          actions: [
-                            TextButton(
-                              onPressed: () {
-                                Navigator.pop(context);
-                              },
-                              child: const Text('Cancel'),
-                            ),
-                            TextButton(
-                              onPressed: () {
-                                // Update the corresponding variable with the new value
-                                // setState(() {
-                                //   switch (label) {
-                                //     case 'First Name':
-                                //       _firstName = value;
-                                //       break;
-                                //     case 'Last Name':
-                                //       _lastName = value;
-                                //       break;
-                                //     case 'Email':
-                                //       _email = value;
-                                //       break;
-                                //     case 'Phone Number':
-                                //       _phoneNumber = value;
-                                //       break;
-                                //   }
-                                // });
-                                Navigator.pop(context);
-                              },
-                              child: const Text('Save'),
-                            ),
-                          ],
-                        ),
+                            actions: [
+                              TextButton(
+                                onPressed: () {
+                                  Navigator.pop(context);
+                                },
+                                child: const Text('Cancel'),
+                              ),
+                              TextButton(
+                                onPressed: () async {
+                                  final newValue = controller.text;
+                                  UsersModel newUser = user.copyWith(
+                                    firstName: isFirstName ? newValue : null,
+                                    lastName: isLastName ? newValue : null,
+                                    email: isEmail ? newValue : null,
+                                    phone: isPhoneNumber ? newValue : null,
+                                  );
+                                  await DatabaseService.instance.updateUserInformation(newUser);
+                                  _getUser();
+                                  Navigator.pop(context);
+                                },
+                                child: const Text('Save'),
+                              ),
+                            ],
+                          );
+                        },
                       );
                     },
                   ),
