@@ -164,25 +164,52 @@ class _EditAppointmentState extends State<EditAppointment> {
       showDialog(
         context: context,
         builder: (context) {
+          TextEditingController dateController = TextEditingController();
+          TextEditingController timeController = TextEditingController();
+          DateTime selected = DateTime.now();
+          DateTime initial = DateTime(2000);
+          DateTime last = DateTime(2025);
           return AlertDialog(
             title: const Text('Provide Schedule'),
             content: Column(
               mainAxisSize: MainAxisSize.min,
               children: [
                 TextField(
-                  onChanged: (value) {
-                    setState(() {
-                      // _selectedDate = value;
-                    });
+                  readOnly: true,
+                  controller: dateController,
+                  onTap: () async {
+                    final selectedDate = await showDatePicker(
+                      context: context,
+                      initialDate: selected,
+                      firstDate: initial,
+                      lastDate: last,
+                    );
+                    if (selectedDate != null) {
+                      dateController.text = selectedDate.toLocal().toString().split(" ")[0];
+                      setState(() {});
+                    }
                   },
                   decoration: const InputDecoration(labelText: 'Date'),
                 ),
                 const SizedBox(height: 10),
                 TextField(
-                  onChanged: (value) {
-                    setState(() {
-                      // _selectedTime = value;
-                    });
+                  readOnly: true,
+                  controller: timeController,
+                  onTap: () async {
+                    TimeOfDay? selectedTime24Hour = await showTimePicker(
+                      context: context,
+                      initialTime: const TimeOfDay(hour: 10, minute: 47),
+                      builder: (BuildContext context, Widget? child) {
+                        return MediaQuery(
+                          data: MediaQuery.of(context).copyWith(alwaysUse24HourFormat: false),
+                          child: child!,
+                        );
+                      },
+                    );
+                    if (selectedTime24Hour != null) {
+                      timeController.text = selectedTime24Hour.format(context);
+                      setState(() {});
+                    }
                   },
                   decoration: const InputDecoration(labelText: 'Time'),
                 ),
