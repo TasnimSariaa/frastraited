@@ -2,6 +2,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:frastraited/Precentation/ui/screens/main_bottom_nav_screen.dart';
 import 'package:frastraited/Precentation/ui/utility/app_theme_data.dart';
+import 'package:frastraited/admin/screen/home/admin_home_screen.dart';
 import 'package:frastraited/firebase_options.dart';
 import 'package:frastraited/screen/onboarding/forgotPasswordScreen.dart';
 import 'package:frastraited/screen/onboarding/frontPage.dart';
@@ -38,6 +39,7 @@ class _MyAppState extends State<MyApp> {
         '/signUp': (context) => const signUpScreen(),
         '/forgotPassword': (context) => const forgotPasswordScreen(),
         '/userHome': (context) => const MainBottomNavScreen(),
+        '/adminHome': (context) => const AdminHomeScreen(),
       },
     );
   }

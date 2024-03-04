@@ -104,6 +104,23 @@ class DatabaseService {
     return doctorsList;
   }
 
+  Future<List<BookAppointmentModel>> getUserHistory(UsersModel user) async {
+    List<BookAppointmentModel> list = [];
+
+    await fireStore.collection(DatabaseTables.bookAppointments).get().then((QuerySnapshot querySnapshot) {
+      list.clear();
+      for (var doc in querySnapshot.docs) {
+        Map<String, dynamic> data = doc.data() as Map<String, dynamic>;
+        BookAppointmentModel model = BookAppointmentModel.fromJson(data);
+        if (model.user.medicalId == user.medicalId) {
+          list.add(model);
+        }
+      }
+    });
+
+    return list;
+  }
+
   //For Vaccine
 
   Future<void> setVaccineInformation(VaccineModel model) async {
