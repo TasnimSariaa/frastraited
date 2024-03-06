@@ -1,14 +1,18 @@
-class DoctorModel {
+import 'package:equatable/equatable.dart';
+
+class DoctorModel extends Equatable {
   final String id;
   final String name;
   final String speciality;
+  final String visitingFee;
   final String profileImageUrl;
   final bool isActive;
 
-  DoctorModel({
+  const DoctorModel({
     required this.id,
     required this.name,
     required this.speciality,
+    required this.visitingFee,
     required this.profileImageUrl,
     required this.isActive,
   });
@@ -18,6 +22,7 @@ class DoctorModel {
       id: json["id"] ?? "",
       name: json["name"] ?? "",
       speciality: json["speciality"] ?? "",
+      visitingFee: json["visitingFee"] ?? "",
       profileImageUrl: json["profileImageUrl"] ?? "",
       isActive: json["isActive"] ?? "",
     );
@@ -28,6 +33,7 @@ class DoctorModel {
       id: "",
       name: "",
       speciality: "",
+      visitingFee: "",
       profileImageUrl: "",
       isActive: false,
     );
@@ -37,6 +43,7 @@ class DoctorModel {
     String? id,
     String? name,
     String? speciality,
+    String? visitingFee,
     String? profileImageUrl,
     bool? isActive,
   }) {
@@ -44,6 +51,7 @@ class DoctorModel {
       id: id ?? this.id,
       name: name ?? this.name,
       speciality: speciality ?? this.speciality,
+      visitingFee: visitingFee ?? this.visitingFee,
       profileImageUrl: profileImageUrl ?? this.profileImageUrl,
       isActive: isActive ?? this.isActive,
     );
@@ -54,8 +62,12 @@ class DoctorModel {
       "id": id,
       "name": name,
       "speciality": speciality,
+      "visitingFee": visitingFee,
       "profileImageUrl": profileImageUrl,
       "isActive": isActive,
     };
   }
+
+  @override
+  List<Object?> get props => [id, name, speciality, visitingFee, profileImageUrl, isActive];
 }

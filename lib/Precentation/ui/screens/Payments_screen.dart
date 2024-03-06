@@ -1,3 +1,4 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:frastraited/Precentation/ui/utility/app_colors.dart';
 import 'package:frastraited/screen/service/database_service.dart';
@@ -7,12 +8,12 @@ import 'package:frastraited/screen/service/models/users.dart';
 import 'package:frastraited/screen/widgets/bodyBackground.dart';
 //import 'package:intl/intl.dart'; // Import DateFormat for date formatting
 
-class PaymentsScreen extends StatelessWidget {
+class PaymentsScreen extends StatefulWidget {
   final String category;
   final String type;
   final String payable;
   final Map<String, dynamic>? doctor;
-  final UsersModel? user;
+  final Map<String, dynamic>? donationUser;
 
   const PaymentsScreen({
     super.key,
@@ -20,80 +21,130 @@ class PaymentsScreen extends StatelessWidget {
     required this.type,
     required this.payable,
     this.doctor,
-    this.user,
+    this.donationUser,
   });
+
+  @override
+  State<PaymentsScreen> createState() => _PaymentsScreenState();
+}
+
+class _PaymentsScreenState extends State<PaymentsScreen> {
+  late UsersModel userModel;
+
+  @override
+  void initState() {
+    super.initState();
+    if (FirebaseAuth.instance.currentUser != null) {
+      _getUser(FirebaseAuth.instance.currentUser!.uid);
+    }
+  }
+
+  void _getUser(String uid) async {
+    final user = await DatabaseService.instance.getUserInfo(uid);
+    setState(() {
+      userModel = user;
+    });
+  }
 
   void _showPaymentForm(BuildContext context) {
     TextEditingController nameEditController = TextEditingController();
     TextEditingController emailEditController = TextEditingController();
     TextEditingController transactionEditController = TextEditingController();
+
+    final GlobalKey<FormState> formKey = GlobalKey<FormState>();
+
     showModalBottomSheet(
       context: context,
       builder: (context) {
-        return Container(
-          width: double.infinity,
-          padding: const EdgeInsets.all(20),
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              const Text(
-                'Enter Payment Information',
-                style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
-              ),
-              const SizedBox(height: 20),
-              TextFormField(
-                controller: nameEditController,
-                decoration: const InputDecoration(labelText: 'Name'),
-              ),
-              const SizedBox(height: 10),
-              TextFormField(
-                controller: emailEditController,
-                decoration: const InputDecoration(labelText: 'Email'),
-              ),
-              const SizedBox(height: 10),
-              TextFormField(
-                controller: transactionEditController,
-                decoration: const InputDecoration(labelText: 'Transaction ID'),
-              ),
-              const SizedBox(height: 20),
-              ElevatedButton(
-                onPressed: () async {
-                  final name = transactionEditController.text;
-                  final email = transactionEditController.text;
-                  final transactionId = transactionEditController.text;
-                  final currentTime = DateTime.now().toString();
-                  BookAppointmentModel appointment = BookAppointmentModel(
-                    id: "",
-                    doctor: doctor ?? {},
-                    user: user ?? UsersModel.empty(),
-                    currentDateTime: currentTime,
-                    name: name,
-                    email: email,
-                    transactionId: transactionId,
-                  );
-                  PaymentModel payment = PaymentModel(
-                    id: "",
-                    user: user ?? UsersModel.empty(),
-                    paymentCategory: category,
-                    paymentAmount: payable,
-                    paymentStatus: "Pending",
-                    currentDateTime: currentTime,
-                  );
-                  await DatabaseService.instance.addNewAppointment(appointment);
-                  await DatabaseService.instance.addNewPayment(payment);
-                  Navigator.pop(context, {
-                    'category': category,
-                    'type': type,
-                    'payable': payable,
-                  });
-                },
-                child: const Text(
-                  '   Confirm Payment   ',
-                  style: TextStyle(color: Colors.white),
+        return SingleChildScrollView(
+          padding: EdgeInsets.only(
+            bottom: MediaQuery.of(context).viewInsets.bottom,
+            left: 16,
+            right: 16,
+          ),
+          child: Form(
+            key: formKey,
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                const SizedBox(height: 20),
+                const Text(
+                  'Enter Payment Information',
+                  style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
                 ),
-              ),
-            ],
+                const SizedBox(height: 20),
+                TextFormField(
+                  controller: nameEditController,
+                  decoration: const InputDecoration(labelText: 'Name'),
+                  validator: (val) {
+                    if (val == null || val.isEmpty) {
+                      return "Field is required";
+                    }
+                    return null;
+                  },
+                ),
+                const SizedBox(height: 10),
+                TextFormField(
+                  controller: emailEditController,
+                  decoration: const InputDecoration(labelText: 'Email'),
+                ),
+                const SizedBox(height: 10),
+                TextFormField(
+                  controller: transactionEditController,
+                  decoration: const InputDecoration(labelText: 'Transaction ID'),
+                  validator: (val) {
+                    if (val == null || val.isEmpty) {
+                      return "Field is required";
+                    }
+                    return null;
+                  },
+                ),
+                const SizedBox(height: 20),
+                ElevatedButton(
+                  onPressed: () async {
+                    final isValid = formKey.currentState?.validate() ?? false;
+                    if (!isValid) return;
+
+                    final name = nameEditController.text;
+                    final email = emailEditController.text;
+                    final transactionId = transactionEditController.text;
+                    final currentTime = DateTime.now().toString();
+                    BookAppointmentModel appointment = BookAppointmentModel(
+                      id: "",
+                      doctor: widget.doctor ?? {},
+                      donationUser: {},
+                      user: userModel,
+                      currentDateTime: currentTime,
+                      name: name,
+                      email: email,
+                      transactionId: transactionId,
+                      status: "Pending",
+                    );
+                    PaymentModel payment = PaymentModel(
+                      id: "",
+                      user: userModel,
+                      paymentCategory: widget.category,
+                      paymentAmount: widget.payable,
+                      paymentStatus: "Pending",
+                      currentDateTime: currentTime,
+                    );
+                    await DatabaseService.instance.addNewAppointment(appointment);
+                    await DatabaseService.instance.addNewPayment(payment);
+                    Navigator.pop(context, {
+                      'category': widget.category,
+                      'type': widget.type,
+                      'payable': widget.payable,
+                    });
+                  },
+                  child: const Text(
+                    '   Confirm Payment   ',
+                    style: TextStyle(color: Colors.white),
+                  ),
+                ),
+                const SizedBox(height: 16),
+              ],
+            ),
           ),
         );
       },
@@ -150,15 +201,15 @@ class PaymentsScreen extends StatelessWidget {
                       crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
                         Text(
-                          'Category:  $category',
+                          'Category:  ${widget.category}',
                           style: const TextStyle(fontSize: 18, color: AppColors.primaryColor),
                         ),
                         Text(
-                          'Type:   $type',
+                          'Type:   ${widget.type}',
                           style: const TextStyle(fontSize: 18, color: Colors.black),
                         ),
                         Text(
-                          'Payable:   $payable',
+                          'Payable:   ${widget.payable}',
                           style: const TextStyle(fontSize: 18, color: Colors.grey),
                         ),
                       ],
@@ -166,7 +217,7 @@ class PaymentsScreen extends StatelessWidget {
                   ),
                   const SizedBox(height: 20),
                   Text(
-                    " Pay BDT $payable by Bkash and fatch the Transaction ID! ",
+                    " Pay BDT ${widget.payable} by Bkash and fatch the Transaction ID! ",
                     style: const TextStyle(color: Colors.blueGrey, fontWeight: FontWeight.w700, fontSize: 16),
                   ),
                   const SizedBox(height: 20),

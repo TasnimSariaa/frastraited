@@ -2,41 +2,42 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:frastraited/Precentation/ui/screens/Payments_screen.dart';
 import 'package:frastraited/Precentation/ui/utility/app_colors.dart';
-import 'package:frastraited/screen/service/models/users.dart';
+import 'package:frastraited/Precentation/ui/widgets/empty_container_view.dart';
+import 'package:frastraited/screen/service/database_service.dart';
+import 'package:frastraited/screen/service/models/doctors.dart';
 import 'package:frastraited/screen/widgets/bodyBackground.dart';
 
 class Appointment extends StatefulWidget {
-  final UsersModel? user;
-
-  const Appointment({super.key, this.user});
+  const Appointment({super.key});
 
   @override
   State<Appointment> createState() => _AppointmentState();
 }
 
 class _AppointmentState extends State<Appointment> {
-  int? selectedDoctorIndex;
-  final List<Map<String, dynamic>> doctorsForAppointment = [
-    {
-      'name': 'Dr. Alice Johnson',
-      'specialty': 'Dermatologist',
-      'profilePicUrl': 'https://example.com/doctor1.jpg',
-      'fees': 'BDT 2000', // New field added
-    },
-    {
-      'name': 'Dr. Michael Smith',
-      'specialty': 'Orthopedic Surgeon',
-      'profilePicUrl': 'https://example.com/doctor2.jpg',
-      'fees': 'BDT 2500', // New field added
-    },
-    {
-      'name': 'Dr. Emily Brown',
-      'specialty': 'Pediatrician',
-      'profilePicUrl': 'https://example.com/doctor3.jpg',
-      'fees': 'BDT 1800', // New field added
-    },
-    // Add more doctors here
-  ];
+  DoctorModel selectedDoctor = DoctorModel.empty();
+  List<DoctorModel> activeDoctors = [];
+  bool isLoading = true;
+
+  bool get isDoctorNotSelected => selectedDoctor == DoctorModel.empty();
+
+  void onDoctorSelectListener(DoctorModel doctor) {
+    setState(() => selectedDoctor = doctor);
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    _getDoctorList();
+  }
+
+  void _getDoctorList() async {
+    final result = await DatabaseService.instance.getDoctorInformation();
+    activeDoctors.clear();
+    activeDoctors.addAll(result);
+    isLoading = false;
+    setState(() {});
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -120,8 +121,8 @@ class _AppointmentState extends State<Appointment> {
                           ),
                         ),
                         onPressed: () {
-                          if (selectedDoctorIndex != null) {
-                            _showAppointmentConfirmationDialog(context, selectedDoctorIndex!);
+                          if (!isDoctorNotSelected) {
+                            _showAppointmentConfirmationDialog(context);
                           } else {
                             showDialog(
                               context: context,
@@ -154,72 +155,7 @@ class _AppointmentState extends State<Appointment> {
                   style: TextStyle(fontSize: 20, fontWeight: FontWeight.w500),
                 ),
                 const SizedBox(height: 10),
-                Expanded(
-                  child: ListView.builder(
-                    itemCount: doctorsForAppointment.length,
-                    itemBuilder: (context, index) {
-                      final doctor = doctorsForAppointment[index];
-                      return GestureDetector(
-                        onTap: () {
-                          setState(() {
-                            selectedDoctorIndex = index;
-                          });
-                        },
-                        child: Card(
-                          borderOnForeground: true,
-                          color: Colors.white,
-                          elevation: 3,
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(8),
-                            side: selectedDoctorIndex == index ? const BorderSide(color: AppColors.primaryColor, width: 2) : BorderSide.none,
-                          ),
-                          child: Container(
-                            height: 120,
-                            padding: const EdgeInsets.all(8),
-                            child: Row(
-                              children: [
-                                Container(
-                                  width: 120,
-                                  height: double.infinity,
-                                  decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.circular(8),
-                                    image: DecorationImage(
-                                      image: NetworkImage(doctor['profilePicUrl']),
-                                      fit: BoxFit.cover,
-                                    ),
-                                  ),
-                                ),
-                                const SizedBox(width: 16),
-                                Expanded(
-                                  child: Column(
-                                    crossAxisAlignment: CrossAxisAlignment.start,
-                                    mainAxisAlignment: MainAxisAlignment.center,
-                                    children: [
-                                      Text(
-                                        doctor['name'],
-                                        style: const TextStyle(fontSize: 18, color: AppColors.primaryColor),
-                                      ),
-                                      const SizedBox(height: 4),
-                                      Text(
-                                        doctor['specialty'],
-                                        style: const TextStyle(color: Colors.grey),
-                                      ),
-                                      const SizedBox(height: 4),
-                                      Text(
-                                        'Fees: ${doctor['fees']}',
-                                        style: const TextStyle(fontWeight: FontWeight.bold, color: Colors.blueGrey),
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-                        ),
-                      );
-                    },
-                  ),
-                ),
+                _view,
               ],
             ),
           ),
@@ -228,26 +164,96 @@ class _AppointmentState extends State<Appointment> {
     );
   }
 
-  void _showAppointmentConfirmationDialog(BuildContext context, int selectedDoctorIndex) {
-    final Map<String, dynamic> selectedDoctor = doctorsForAppointment[selectedDoctorIndex];
-    final String fees = selectedDoctor['fees'];
+  Widget get _view {
+    if (isLoading) {
+      return const Center(child: CircularProgressIndicator());
+    } else if (activeDoctors.isEmpty) {
+      return const Center(child: EmptyContainerView());
+    } else {
+      return Expanded(
+        child: ListView.builder(
+          itemCount: activeDoctors.length,
+          itemBuilder: (context, index) {
+            final doctor = activeDoctors[index];
+            return GestureDetector(
+              onTap: () => onDoctorSelectListener(doctor),
+              child: Card(
+                borderOnForeground: true,
+                color: Colors.white,
+                elevation: 3,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(8),
+                  side: selectedDoctor == doctor ? const BorderSide(color: AppColors.primaryColor, width: 2) : BorderSide.none,
+                ),
+                child: Container(
+                  height: 120,
+                  padding: const EdgeInsets.all(8),
+                  child: Row(
+                    children: [
+                      Container(
+                        width: 120,
+                        height: double.infinity,
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(8),
+                          image: DecorationImage(
+                            image: NetworkImage(doctor.profileImageUrl),
+                            fit: BoxFit.cover,
+                          ),
+                        ),
+                      ),
+                      const SizedBox(width: 16),
+                      Expanded(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Text(
+                              doctor.name,
+                              style: const TextStyle(fontSize: 18, color: AppColors.primaryColor),
+                            ),
+                            const SizedBox(height: 4),
+                            Text(
+                              doctor.speciality,
+                              style: const TextStyle(color: Colors.grey),
+                            ),
+                            const SizedBox(height: 4),
+                            Text(
+                              'Fees: ${doctor.visitingFee}',
+                              style: const TextStyle(fontWeight: FontWeight.bold, color: Colors.blueGrey),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            );
+          },
+        ),
+      );
+    }
+  }
 
+  void _showAppointmentConfirmationDialog(BuildContext context) {
     showDialog(
       context: context,
       builder: (context) => AlertDialog(
         title: const Text('Appointment Confirmation'),
-        content: Text('You have to pay $fees for the appointment.'),
+        content: Text('You have to pay ${selectedDoctor.visitingFee} for the appointment.'),
         actions: [
           TextButton(
             onPressed: () {
               // Navigate to Payment Screen with required information
+              Navigator.pop(context);
               Navigator.push(
                 context,
                 MaterialPageRoute(
                   builder: (context) => PaymentsScreen(
                     category: 'Appointment',
-                    type: selectedDoctor['name'],
-                    payable: fees,
+                    type: selectedDoctor.name,
+                    payable: selectedDoctor.visitingFee,
+                    doctor: selectedDoctor.toJson(),
                   ),
                 ),
               );

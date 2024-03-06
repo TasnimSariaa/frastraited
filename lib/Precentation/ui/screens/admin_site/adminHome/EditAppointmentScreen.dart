@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:frastraited/Precentation/ui/utility/app_colors.dart';
+import 'package:frastraited/screen/service/database_service.dart';
+import 'package:frastraited/screen/service/models/book_apointment_model.dart';
 import 'package:frastraited/screen/widgets/bodyBackground.dart';
 
 class EditAppointment extends StatefulWidget {
@@ -19,8 +21,23 @@ class EditAppointment extends StatefulWidget {
 }
 
 class _EditAppointmentState extends State<EditAppointment> {
-  String? _selectedDate;
-  String? _selectedTime;
+  List<BookAppointmentModel> appointmentList = [];
+
+  bool isLoading = true;
+
+  @override
+  void initState() {
+    super.initState();
+    _getDoctorList();
+  }
+
+  void _getDoctorList() async {
+    appointmentList.clear();
+    final result = await DatabaseService.instance.getAdminBookAppointment();
+    appointmentList.addAll(result);
+    isLoading = false;
+    setState(() {});
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -53,77 +70,83 @@ class _EditAppointmentState extends State<EditAppointment> {
                     style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
                   ),
                   const SizedBox(height: 40),
-                  Container(
-                    width: double.infinity,
-                    padding: const EdgeInsets.all(20),
-                    decoration: BoxDecoration(
-                      color: Colors.white,
-                      borderRadius: BorderRadius.circular(10),
-                      boxShadow: [
-                        BoxShadow(
-                          color: Colors.grey.withOpacity(0.5),
-                          spreadRadius: 2,
-                          blurRadius: 5,
-                          offset: const Offset(0, 3),
-                        ),
-                      ],
-                    ),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                              'Booked ${widget.category}',
-                              style: const TextStyle(fontSize: 18, color: AppColors.primaryColor),
-                            ),
-                            Text(
-                              'With Doctor:  ${widget.type}',
-                              style: const TextStyle(fontSize: 18, color: Colors.black),
-                            ),
-                            Text(
-                              'Paid:   ${widget.payable}',
-                              style: const TextStyle(fontSize: 18, color: Colors.grey),
-                            ),
-                            Text(
-                              'Status: Pending',
-                              style: const TextStyle(fontSize: 18, color: Colors.grey),
+                  ...List.generate(appointmentList.length, (index) {
+                    final appointment = appointmentList[index];
+                    return Container(
+                      width: double.infinity,
+                      padding: const EdgeInsets.all(20),
+                      margin: const EdgeInsetsDirectional.only(bottom: 20),
+                      decoration: BoxDecoration(
+                        color: Colors.white,
+                        borderRadius: BorderRadius.circular(10),
+                        boxShadow: [
+                          BoxShadow(
+                            color: Colors.grey.withOpacity(0.5),
+                            spreadRadius: 2,
+                            blurRadius: 5,
+                            offset: const Offset(0, 3),
+                          ),
+                        ],
+                      ),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            'Booked by: ${appointment.user.firstName} ${appointment.user.lastName}',
+                            style: const TextStyle(fontSize: 18, color: AppColors.primaryColor),
+                          ),
+                          Text(
+                            'With Doctor:  ${appointment.doctor["name"]}',
+                            style: const TextStyle(fontSize: 18, color: Colors.black),
+                          ),
+                          Text(
+                            'Transaction Id:   ${appointment.transactionId}',
+                            style: const TextStyle(fontSize: 18, color: Colors.grey),
+                          ),
+                          Text(
+                            'Status: ${appointment.status}',
+                            style: const TextStyle(fontSize: 18, color: Colors.grey),
+                          ),
+                          if (appointment.status.toLowerCase() == "Pending".toLowerCase()) ...[
+                            const SizedBox(height: 10),
+                            Row(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                Expanded(
+                                  child: ElevatedButton(
+                                    style: ElevatedButton.styleFrom(
+                                      backgroundColor: Colors.redAccent,
+                                    ),
+                                    onPressed: () {
+                                      // Show dialog box for providing schedule
+                                      _showScheduleDialog(context, false, "Reject", appointment);
+                                    },
+                                    child: const Text(
+                                      'Reject',
+                                      style: TextStyle(color: Colors.white),
+                                    ),
+                                  ),
+                                ),
+                                const SizedBox(width: 10),
+                                Expanded(
+                                  child: ElevatedButton(
+                                    onPressed: () {
+                                      // Show dialog box for providing schedule
+                                      _showScheduleDialog(context, true, "Accept", appointment);
+                                    },
+                                    child: const Text(
+                                      'Accept',
+                                      style: TextStyle(color: Colors.white),
+                                    ),
+                                  ),
+                                ),
+                              ],
                             ),
                           ],
-                        ),
-                        Row(
-                          mainAxisSize: MainAxisSize.min,
-                          children: [
-                            ElevatedButton(
-                              style: ElevatedButton.styleFrom(
-                                backgroundColor: Colors.redAccent,
-                              ),
-                              onPressed: () {
-                                // Show dialog box for providing schedule
-                                _showScheduleDialog(context, false, "Reject");
-                              },
-                              child: const Text(
-                                'Reject',
-                                style: TextStyle(color: Colors.white),
-                              ),
-                            ),
-                            const SizedBox(width: 10),
-                            ElevatedButton(
-                              onPressed: () {
-                                // Show dialog box for providing schedule
-                                _showScheduleDialog(context, true, "Accept");
-                              },
-                              child: const Text(
-                                'Accept',
-                                style: TextStyle(color: Colors.white),
-                              ),
-                            ),
-                          ],
-                        ),
-                      ],
-                    ),
-                  ),
+                        ],
+                      ),
+                    );
+                  }),
                 ],
               ),
             ),
@@ -133,8 +156,10 @@ class _EditAppointmentState extends State<EditAppointment> {
     );
   }
 
-  void _showScheduleDialog(BuildContext context, bool isShow, String value) {
+  void _showScheduleDialog(BuildContext context, bool isShow, String value, BookAppointmentModel model) async {
     if (!isShow) {
+      await DatabaseService.instance.updateAppointmentStatus(model.copyWith(status: value));
+      _getDoctorList();
     } else {
       showDialog(
         context: context,
@@ -147,7 +172,7 @@ class _EditAppointmentState extends State<EditAppointment> {
                 TextField(
                   onChanged: (value) {
                     setState(() {
-                      _selectedDate = value;
+                      // _selectedDate = value;
                     });
                   },
                   decoration: const InputDecoration(labelText: 'Date'),
@@ -156,7 +181,7 @@ class _EditAppointmentState extends State<EditAppointment> {
                 TextField(
                   onChanged: (value) {
                     setState(() {
-                      _selectedTime = value;
+                      // _selectedTime = value;
                     });
                   },
                   decoration: const InputDecoration(labelText: 'Time'),
@@ -165,15 +190,18 @@ class _EditAppointmentState extends State<EditAppointment> {
             ),
             actions: [
               TextButton(
-                onPressed: () {
+                onPressed: () async {
                   // Perform your action here with the selected date and time
+
+                  await DatabaseService.instance.updateAppointmentStatus(model.copyWith(status: value));
+                  _getDoctorList();
                   Navigator.pop(context);
                   // You can use _selectedDate and _selectedTime for further actions
                 },
                 child: const Text('Confirm'),
               ),
               TextButton(
-                onPressed: () {
+                onPressed: () async {
                   Navigator.pop(context);
                 },
                 child: const Text('Cancel'),
