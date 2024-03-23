@@ -5,6 +5,7 @@ import 'package:frastraited/Precentation/ui/widgets/empty_container_view.dart';
 import 'package:frastraited/screen/service/database_service.dart';
 import 'package:frastraited/screen/service/models/donation_model.dart';
 import 'package:frastraited/screen/widgets/bodyBackground.dart';
+import 'package:frastraited/screen/widgets/custom_image_view.dart';
 
 class Donation extends StatefulWidget {
   const Donation({Key? key}) : super(key: key);
@@ -136,76 +137,101 @@ class _DonationState extends State<Donation> {
               ],
             ),
             child: Column(
+              mainAxisSize: MainAxisSize.min,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                ListTile(
-                  title: Text(patient.name),
-                  subtitle: Column(
-                    mainAxisSize: MainAxisSize.min,
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text('Age: ${patient.age}'),
-                      Text('Ward Number: ${patient.wardNumber}'),
-                      Text('Payment Number: ${patient.bkashNumber}'),
-                      Text('Bed Number: ${patient.bedNumber}'),
-                      Text('Disease: ${patient.disease}'),
-                    ],
-                  ),
-                  trailing: TextButton(
-                    onPressed: () {
-                      TextEditingController donationAmountController = TextEditingController();
-                      final GlobalKey<FormState> formKey = GlobalKey<FormState>();
-                      showDialog(
-                        context: context,
-                        builder: (context) => AlertDialog(
-                          title: const Text('Donation Amount'),
-                          content: Form(
-                            key: formKey,
-                            child: TextFormField(
-                              controller: donationAmountController,
-                              keyboardType: TextInputType.number,
-                              decoration: const InputDecoration(hintText: 'Enter the amount'),
-                              validator: (val) {
-                                if (val == null || val.isEmpty) {
-                                  return "Field is required";
-                                }
-                                return null;
-                              },
-                            ),
-                          ),
-                          actions: [
-                            TextButton(
-                              onPressed: () {
-                                Navigator.pop(context);
-                              },
-                              child: const Text('Cancel'),
-                            ),
-                            TextButton(
-                              onPressed: () {
-                                final isValid = formKey.currentState?.validate() ?? false;
-                                if (!isValid) return;
-
-                                Navigator.pop(context);
-                                Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                    builder: (context) => PaymentsScreen(
-                                      category: 'Donation',
-                                      type: patient.name,
-                                      payable: donationAmountController.text,
-                                      donationUser: patient.toJson(),
-                                    ),
+                Text(patient.name),
+                Row(
+                  children: [
+                    Expanded(
+                      child: Column(
+                        mainAxisSize: MainAxisSize.min,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text('Age: ${patient.age}'),
+                          Text('Ward Number: ${patient.wardNumber}'),
+                          Text('Payment Number: ${patient.bkashNumber}'),
+                          Text('Bed Number: ${patient.bedNumber}'),
+                          Text('Disease: ${patient.disease}'),
+                        ],
+                      ),
+                    ),
+                    Column(
+                      mainAxisSize: MainAxisSize.min,
+                      crossAxisAlignment: CrossAxisAlignment.end,
+                      children: [
+                        TextButton(
+                          onPressed: () {
+                            TextEditingController donationAmountController = TextEditingController();
+                            final GlobalKey<FormState> formKey = GlobalKey<FormState>();
+                            showDialog(
+                              context: context,
+                              builder: (context) => AlertDialog(
+                                title: const Text('Donation Amount'),
+                                content: Form(
+                                  key: formKey,
+                                  child: TextFormField(
+                                    controller: donationAmountController,
+                                    keyboardType: TextInputType.number,
+                                    decoration: const InputDecoration(hintText: 'Enter the amount'),
+                                    validator: (val) {
+                                      if (val == null || val.isEmpty) {
+                                        return "Field is required";
+                                      }
+                                      return null;
+                                    },
                                   ),
-                                );
-                              },
-                              child: const Text('Process'),
-                            ),
-                          ],
+                                ),
+                                actions: [
+                                  TextButton(
+                                    onPressed: () {
+                                      Navigator.pop(context);
+                                    },
+                                    child: const Text('Cancel'),
+                                  ),
+                                  TextButton(
+                                    onPressed: () {
+                                      final isValid = formKey.currentState?.validate() ?? false;
+                                      if (!isValid) return;
+
+                                      Navigator.pop(context);
+                                      Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                          builder: (context) => PaymentsScreen(
+                                            category: 'Donation',
+                                            type: patient.name,
+                                            payable: donationAmountController.text,
+                                            donationUser: patient.toJson(),
+                                          ),
+                                        ),
+                                      );
+                                    },
+                                    child: const Text('Process'),
+                                  ),
+                                ],
+                              ),
+                            );
+                          },
+                          child: const Text("Donate"),
                         ),
-                      );
-                    },
-                    child: const Text("Donate"),
-                  ),
+                        if (patient.imageUrl.isNotEmpty)
+                          TextButton(
+                            child: const Text("See Photos"),
+                            onPressed: () {
+                              showDialog(
+                                context: context,
+                                builder: (context) {
+                                  return CustomImageView(
+                                    path: patient.imageUrl,
+                                  );
+                                },
+                              );
+                            },
+                          ),
+                      ],
+                    ),
+                  ],
                 ),
               ],
             ),
