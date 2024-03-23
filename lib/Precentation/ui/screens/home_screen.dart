@@ -31,6 +31,7 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
+  List<Map<String, dynamic>> tempCategoriesList = [];
   final List<Map<String, dynamic>> categories = [
     {'category': 'Active doctors', 'icon': Icons.person},
     {'category': 'Operation Packages', 'icon': Icons.personal_injury_outlined},
@@ -46,12 +47,16 @@ class _HomeScreenState extends State<HomeScreen> {
 
   bool isAdmin = false;
 
+  TextEditingController searchController = TextEditingController();
+
   @override
   void initState() {
     super.initState();
     if (FirebaseAuth.instance.currentUser != null) {
       _getUser(FirebaseAuth.instance.currentUser!.uid);
     }
+    searchController.addListener(_onSearchChanged);
+    tempCategoriesList = categories;
   }
 
   void _getUser(String uid) async {
@@ -89,11 +94,17 @@ class _HomeScreenState extends State<HomeScreen> {
     }
   }
 
-  TextEditingController searchController = TextEditingController();
-
-  List<Map<String, dynamic>> get filteredCategories {
+  void _onSearchChanged() {
     String query = searchController.text.toLowerCase();
-    return categories.where((cat) => cat['category'].toLowerCase().contains(query)).toList();
+    if (query.isEmpty) {
+      tempCategoriesList = categories;
+    } else {
+      tempCategoriesList = categories.where((searchValue) {
+        String name = searchValue['category'].toLowerCase();
+        return name.contains(query);
+      }).toList();
+    }
+    setState(() {});
   }
 
   @override
@@ -122,9 +133,9 @@ class _HomeScreenState extends State<HomeScreen> {
                   mainAxisSpacing: 14,
                 ),
                 padding: const EdgeInsetsDirectional.only(start: 20, end: 20, bottom: 40),
-                itemCount: filteredCategories.length,
+                itemCount: tempCategoriesList.length,
                 itemBuilder: (BuildContext context, int index) {
-                  final category = filteredCategories[index];
+                  final category = tempCategoriesList[index];
                   return _buildCategoryCard(
                     category: category['category'],
                     icon: category['icon'],
