@@ -187,12 +187,130 @@ class _EditPendingTestState extends State<EditPendingTest> {
                     ),
                   ),
                 ),
+                IconButton(
+                  onPressed: () {
+                    _showEditDialog(context, test);
+                  },
+                  icon: const Icon(Icons.more_vert),
+                ),
               ],
             ),
           );
         },
       );
     }
+  }
+
+  void _showEditDialog(BuildContext context, PendingTestModel test) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Text('Modify Pending Test'),
+          content: const Text('Do you want to modify the pending test list?'),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.pop(context);
+                _showEditBottomSheet(context, test);
+              },
+              child: const Text('Update'),
+            ),
+            TextButton(
+              onPressed: () async {
+                pendingTestList.remove(test);
+                await DatabaseService.instance.deletePendingTest(test);
+                _getPendingTestList();
+                setState(() {});
+                Navigator.pop(context);
+              },
+              child: const Text('Delete'),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  void _showEditBottomSheet(BuildContext context, PendingTestModel pendingTest) {
+    TextEditingController nameController = TextEditingController(text: pendingTest.name);
+    TextEditingController feeController = TextEditingController(text: pendingTest.amount);
+
+    final GlobalKey<FormState> formKey = GlobalKey<FormState>();
+
+    showModalBottomSheet(
+      context: context,
+      isScrollControlled: true,
+      builder: (context) {
+        return SingleChildScrollView(
+          padding: EdgeInsets.only(
+            bottom: MediaQuery.of(context).viewInsets.bottom,
+            left: 16,
+            right: 16,
+          ),
+          child: Form(
+            key: formKey,
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                const SizedBox(height: 20),
+                const Text(
+                  "Medical Test Information",
+                  style: TextStyle(fontSize: 20, fontWeight: FontWeight.w700),
+                ),
+                const SizedBox(height: 20),
+                TextFormField(
+                  controller: nameController,
+                  decoration: const InputDecoration(labelText: 'Name'),
+                  validator: (val) {
+                    if (val == null || val.isEmpty) {
+                      return "Field is required";
+                    }
+                    return null;
+                  },
+                ),
+                const SizedBox(height: 16),
+                TextFormField(
+                  controller: feeController,
+                  keyboardType: TextInputType.number,
+                  decoration: const InputDecoration(labelText: 'Visiting Fee'),
+                  validator: (val) {
+                    if (val == null || val.isEmpty) {
+                      return "Field is required";
+                    }
+                    return null;
+                  },
+                ),
+                const SizedBox(height: 16),
+                ElevatedButton(
+                  onPressed: () async {
+                    final isValid = formKey.currentState?.validate() ?? false;
+                    if (!isValid) return;
+
+                    final name = nameController.text;
+                    final fee = feeController.text;
+                    final updateModel = pendingTest.copyWith(name: name, amount: fee);
+                    await DatabaseService.instance.updatePendingTestInformation(updateModel);
+                    _getPendingTestList();
+                    Navigator.pop(context);
+                  },
+                  child: const Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Text(
+                        'Update',
+                        style: TextStyle(color: Colors.white),
+                      ),
+                    ],
+                  ),
+                ),
+                const SizedBox(height: 16),
+              ],
+            ),
+          ),
+        );
+      },
+    );
   }
 
   // Function to show the bottom sheet for adding patient

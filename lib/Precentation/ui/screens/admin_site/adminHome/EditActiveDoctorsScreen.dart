@@ -121,6 +121,7 @@ class _EditActiveDoctorsState extends State<EditActiveDoctors> {
                                         height: 60,
                                         width: 60,
                                         path: doctor.profileImageUrl,
+                                        fit: BoxFit.cover,
                                         borderRadius: BorderRadius.circular(30),
                                       ),
                                       if (doctor.isActive)

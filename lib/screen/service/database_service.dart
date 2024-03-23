@@ -84,6 +84,16 @@ class DatabaseService {
     result.doc(model.id).delete();
   }
 
+  Future<void> deletePendingTest(PendingTestModel model) async {
+    CollectionReference result = fireStore.collection(DatabaseTables.pendingTests);
+    result.doc(model.id).delete();
+  }
+
+  Future<void> updatePendingTestInformation(PendingTestModel model) async {
+    CollectionReference result = fireStore.collection(DatabaseTables.pendingTests);
+    result.doc(model.id).update(model.toJson());
+  }
+
   Future<void> updateDoctorInformation(DoctorModel model) async {
     CollectionReference result = fireStore.collection(DatabaseTables.doctors);
     result.doc(model.id).update(model.toJson());
