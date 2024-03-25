@@ -7,6 +7,7 @@ import 'package:frastraited/screen/service/database_service.dart';
 import 'package:frastraited/screen/service/models/collect_reports_model.dart';
 import 'package:frastraited/screen/utils/custom_string_constants.dart';
 import 'package:frastraited/screen/widgets/bodyBackground.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class ReportCollection extends StatefulWidget {
   const ReportCollection({super.key});
@@ -132,10 +133,15 @@ class _ReportCollectionState extends State<ReportCollection> {
                                           style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
                                         ),
                                         const SizedBox(height: 20),
-                                        if (item.isReady)
+                                        if (item.isReady && (item.reportList.isNotEmpty && item.reportList.first.reportUrl.isNotEmpty))
                                           ElevatedButton(
-                                            onPressed: () {
+                                            onPressed: () async {
                                               // _collectReport(testReports[index]['type'], testReports[index]['payable']);
+                                              final _url = item.reportList.first.reportUrl;
+                                              final Uri url = Uri.parse(_url);
+                                              if (!await launchUrl(url)) {
+                                                throw Exception('Could not launch $_url');
+                                              }
                                             },
                                             child: const Text(
                                               '  Collect Report  ',

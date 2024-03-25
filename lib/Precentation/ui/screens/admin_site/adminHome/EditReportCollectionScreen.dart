@@ -113,6 +113,7 @@ class _EditReportCollectionState extends State<EditReportCollection> {
       return Container(
         width: double.infinity,
         padding: const EdgeInsets.all(20),
+        margin: const EdgeInsetsDirectional.only(bottom: 12),
         decoration: BoxDecoration(
           color: Colors.white,
           borderRadius: BorderRadius.circular(10),
@@ -160,6 +161,8 @@ class _EditReportCollectionState extends State<EditReportCollection> {
     TextEditingController testNameController = TextEditingController();
 
     final GlobalKey<FormState> formKey = GlobalKey<FormState>();
+
+    selectedUser = UsersModel.empty();
 
     showModalBottomSheet(
       context: context,
@@ -275,6 +278,7 @@ class _EditReportCollectionState extends State<EditReportCollection> {
 
                     if (result != null) {
                       PlatformFile file = result.files.first;
+
                       _uploadImage(File(file.path!));
                     }
                   },
@@ -334,13 +338,32 @@ class _EditReportCollectionState extends State<EditReportCollection> {
     );
   }
 
+  void _showDialog() {
+    showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (BuildContext context) {
+        return const AlertDialog(
+          content: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Center(child: CircularProgressIndicator()),
+            ],
+          ),
+        );
+      },
+    );
+  }
+
   void _uploadImage(File file) async {
+    _showDialog();
     final user = FirebaseAuth.instance.currentUser;
     final storage = FirebaseStorage.instance;
     final Reference storageRef = storage.ref().child('files/${user?.uid}/${DateTime.now().toString()}');
     final UploadTask uploadTask = storageRef.putFile(file);
     await uploadTask.whenComplete(() async {
       _downloadUrl = await storageRef.getDownloadURL();
+      Navigator.pop(context);
     });
     setState(() {});
   }
