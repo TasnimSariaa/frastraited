@@ -4,6 +4,7 @@ import 'package:frastraited/Precentation/ui/utility/app_colors.dart';
 import 'package:frastraited/Precentation/ui/widgets/empty_container_view.dart';
 import 'package:frastraited/screen/service/database_service.dart';
 import 'package:frastraited/screen/service/models/donation_model.dart';
+import 'package:frastraited/screen/utils/custom_string_constants.dart';
 import 'package:frastraited/screen/widgets/bodyBackground.dart';
 import 'package:frastraited/screen/widgets/custom_image_view.dart';
 
@@ -203,6 +204,7 @@ class _DonationState extends State<Donation> {
                                             type: patient.name,
                                             payable: donationAmountController.text,
                                             donationUser: patient.toJson(),
+                                            screenName: CustomStringConstants.donationScreen,
                                           ),
                                         ),
                                       );

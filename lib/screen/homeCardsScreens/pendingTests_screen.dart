@@ -4,6 +4,7 @@ import 'package:frastraited/Precentation/ui/utility/app_colors.dart';
 import 'package:frastraited/Precentation/ui/widgets/empty_container_view.dart';
 import 'package:frastraited/screen/service/database_service.dart';
 import 'package:frastraited/screen/service/models/user_test_model.dart';
+import 'package:frastraited/screen/utils/custom_string_constants.dart';
 import 'package:frastraited/screen/widgets/bodyBackground.dart';
 
 class PendingTests extends StatefulWidget {
@@ -139,7 +140,12 @@ class _PendingTestsState extends State<PendingTests> {
     Navigator.push(
       context,
       MaterialPageRoute(
-        builder: (context) => PaymentsScreen(category: 'Test Booking', type: testName, payable: amount),
+        builder: (context) => PaymentsScreen(
+          category: 'Test Booking',
+          type: testName,
+          payable: amount,
+          screenName: CustomStringConstants.pendingTestsScreen,
+        ),
       ),
     );
   }

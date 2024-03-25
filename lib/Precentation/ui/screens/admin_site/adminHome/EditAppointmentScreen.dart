@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:frastraited/Precentation/ui/utility/app_colors.dart';
 import 'package:frastraited/screen/service/database_service.dart';
 import 'package:frastraited/screen/service/models/book_apointment_model.dart';
+import 'package:frastraited/screen/utils/custom_string_constants.dart';
 import 'package:frastraited/screen/widgets/bodyBackground.dart';
 
 class EditAppointment extends StatefulWidget {
@@ -33,7 +34,7 @@ class _EditAppointmentState extends State<EditAppointment> {
 
   void _getDoctorList() async {
     appointmentList.clear();
-    final result = await DatabaseService.instance.getAdminBookAppointment();
+    final result = await DatabaseService.instance.getAdminBookAppointment(CustomStringConstants.appointmentScreen);
     appointmentList.addAll(result);
     isLoading = false;
     setState(() {});
@@ -95,14 +96,16 @@ class _EditAppointmentState extends State<EditAppointment> {
                             'Booked by: ${appointment.user.firstName} ${appointment.user.lastName}',
                             style: const TextStyle(fontSize: 18, color: AppColors.primaryColor),
                           ),
-                          Text(
-                            'With Doctor:  ${appointment.doctor["name"]}',
-                            style: const TextStyle(fontSize: 18, color: Colors.black),
-                          ),
-                          Text(
-                            'Transaction Id:   ${appointment.transactionId}',
-                            style: const TextStyle(fontSize: 18, color: Colors.grey),
-                          ),
+                          if (appointment.doctor["name"] != "" || appointment.doctor["name"] != null)
+                            Text(
+                              'With Doctor:  ${appointment.doctor["name"]}',
+                              style: const TextStyle(fontSize: 18, color: Colors.black),
+                            ),
+                          if (appointment.transactionId.isEmpty)
+                            Text(
+                              'Transaction Id:   ${appointment.transactionId}',
+                              style: const TextStyle(fontSize: 18, color: Colors.grey),
+                            ),
                           Text(
                             'Status: ${appointment.status}',
                             style: const TextStyle(fontSize: 18, color: Colors.grey),

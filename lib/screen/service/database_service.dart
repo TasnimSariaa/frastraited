@@ -358,7 +358,7 @@ class DatabaseService {
     return historyList;
   }
 
-  Future<List<BookAppointmentModel>> getAdminBookAppointment() async {
+  Future<List<BookAppointmentModel>> getAdminBookAppointment(String screenName) async {
     List<BookAppointmentModel> appointmentList = [];
 
     await fireStore.collection(DatabaseTables.bookAppointments).get().then((QuerySnapshot querySnapshot) {
@@ -366,7 +366,9 @@ class DatabaseService {
       for (var doc in querySnapshot.docs) {
         Map<String, dynamic> data = doc.data() as Map<String, dynamic>;
         BookAppointmentModel appointment = BookAppointmentModel.fromJson(data);
-        appointmentList.add(appointment);
+        if (screenName.toLowerCase() == appointment.screenName.toLowerCase()) {
+          appointmentList.add(appointment);
+        }
       }
     });
 

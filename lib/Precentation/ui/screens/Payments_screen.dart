@@ -14,12 +14,14 @@ class PaymentsScreen extends StatefulWidget {
   final String payable;
   final Map<String, dynamic>? doctor;
   final Map<String, dynamic>? donationUser;
+  final String screenName;
 
   const PaymentsScreen({
     super.key,
     required this.category,
     required this.type,
     required this.payable,
+    required this.screenName,
     this.doctor,
     this.donationUser,
   });
@@ -120,6 +122,7 @@ class _PaymentsScreenState extends State<PaymentsScreen> {
                       email: email,
                       transactionId: transactionId,
                       status: "Pending",
+                      screenName: widget.screenName,
                     );
                     PaymentModel payment = PaymentModel(
                       id: "",

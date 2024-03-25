@@ -5,6 +5,7 @@ import 'package:frastraited/Precentation/ui/utility/app_colors.dart';
 import 'package:frastraited/Precentation/ui/widgets/empty_container_view.dart';
 import 'package:frastraited/screen/service/database_service.dart';
 import 'package:frastraited/screen/service/models/collect_reports_model.dart';
+import 'package:frastraited/screen/utils/custom_string_constants.dart';
 import 'package:frastraited/screen/widgets/bodyBackground.dart';
 
 class ReportCollection extends StatefulWidget {
@@ -171,7 +172,12 @@ class _ReportCollectionState extends State<ReportCollection> {
     Navigator.push(
       context,
       MaterialPageRoute(
-        builder: (context) => PaymentsScreen(category: 'Test Report', type: type, payable: payable),
+        builder: (context) => PaymentsScreen(
+          category: 'Test Report',
+          type: type,
+          payable: payable,
+          screenName: CustomStringConstants.reportCollectionScreen,
+        ),
       ),
     );
   }

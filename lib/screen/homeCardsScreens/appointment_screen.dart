@@ -5,6 +5,7 @@ import 'package:frastraited/Precentation/ui/utility/app_colors.dart';
 import 'package:frastraited/Precentation/ui/widgets/empty_container_view.dart';
 import 'package:frastraited/screen/service/database_service.dart';
 import 'package:frastraited/screen/service/models/doctors.dart';
+import 'package:frastraited/screen/utils/custom_string_constants.dart';
 import 'package:frastraited/screen/widgets/bodyBackground.dart';
 
 class Appointment extends StatefulWidget {
@@ -254,6 +255,7 @@ class _AppointmentState extends State<Appointment> {
                     type: selectedDoctor.name,
                     payable: selectedDoctor.visitingFee,
                     doctor: selectedDoctor.toJson(),
+                    screenName: CustomStringConstants.appointmentScreen,
                   ),
                 ),
               );

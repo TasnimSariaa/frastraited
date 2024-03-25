@@ -10,6 +10,7 @@ class BookAppointmentModel {
   final String name;
   final String email;
   final String status;
+  final String screenName;
 
   BookAppointmentModel({
     required this.id,
@@ -21,6 +22,7 @@ class BookAppointmentModel {
     required this.name,
     required this.status,
     required this.email,
+    required this.screenName,
   });
 
   factory BookAppointmentModel.fromJson(Map<String, dynamic> json) {
@@ -34,6 +36,7 @@ class BookAppointmentModel {
       name: json["name"] ?? "",
       status: json["status"] ?? "",
       email: json["email"] ?? "",
+      screenName: json["screenName"] ?? "",
     );
   }
 
@@ -48,6 +51,7 @@ class BookAppointmentModel {
       name: "",
       email: "",
       status: "",
+      screenName: "",
     );
   }
 
@@ -61,6 +65,7 @@ class BookAppointmentModel {
     String? name,
     String? email,
     String? status,
+    String? screenName,
   }) {
     return BookAppointmentModel(
       id: id ?? this.id,
@@ -72,6 +77,7 @@ class BookAppointmentModel {
       name: name ?? this.name,
       email: email ?? this.email,
       status: status ?? this.status,
+      screenName: screenName ?? this.screenName,
     );
   }
 
@@ -86,6 +92,7 @@ class BookAppointmentModel {
       "name": name,
       "email": email,
       "status": status,
+      "screenName": screenName,
     };
   }
 }
