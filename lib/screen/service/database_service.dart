@@ -316,7 +316,7 @@ class DatabaseService {
       for (var doc in querySnapshot.docs) {
         Map<String, dynamic> data = doc.data() as Map<String, dynamic>;
         CollectReportsModel reports = CollectReportsModel.fromJson(data);
-        if (reports.medicalId == medicalId) {
+        if (reports.medicalId.toLowerCase() == medicalId.toLowerCase()) {
           collectReportsList.add(reports);
         }
       }

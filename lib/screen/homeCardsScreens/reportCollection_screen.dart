@@ -2,6 +2,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:frastraited/Precentation/ui/screens/Payments_screen.dart';
 import 'package:frastraited/Precentation/ui/utility/app_colors.dart';
+import 'package:frastraited/Precentation/ui/widgets/empty_container_view.dart';
 import 'package:frastraited/screen/service/database_service.dart';
 import 'package:frastraited/screen/service/models/collect_reports_model.dart';
 import 'package:frastraited/screen/widgets/bodyBackground.dart';
@@ -28,7 +29,7 @@ class _ReportCollectionState extends State<ReportCollection> {
 
   void _getUser(String uid) async {
     final user = await DatabaseService.instance.getUserInfo(uid);
-    _getCollectReportList(user.medicalId);
+    _getCollectReportList("${user.firstName} (${user.medicalId})");
   }
 
   void _getCollectReportList(String medicalId) async {
@@ -46,7 +47,7 @@ class _ReportCollectionState extends State<ReportCollection> {
         child: isLoading
             ? const Center(child: CircularProgressIndicator())
             : collectReportList.isEmpty
-                ? const Center(child: Text("List is Empty"))
+                ? const Center(child: EmptyContainerView())
                 : SafeArea(
                     child: SingleChildScrollView(
                       child: Padding(
