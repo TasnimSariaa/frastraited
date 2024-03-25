@@ -11,9 +11,8 @@ class NotificationScreen extends StatefulWidget {
     required this.category,
     required this.type,
     required this.payable,
-
-    Key? key,
-  }) : super(key: key);
+    super.key,
+  });
 
   @override
   State<NotificationScreen> createState() => _NotificationScreenState();
@@ -101,5 +100,4 @@ class _NotificationScreenState extends State<NotificationScreen> {
       ),
     );
   }
-
 }

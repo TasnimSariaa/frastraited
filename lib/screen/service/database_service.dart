@@ -10,6 +10,7 @@ import 'package:frastraited/screen/service/models/pending_test_model.dart';
 import 'package:frastraited/screen/service/models/user_test_model.dart';
 import 'package:frastraited/screen/service/models/users.dart';
 import 'package:frastraited/screen/service/models/vaccines.dart';
+import 'package:frastraited/screen/utils/custom_string_constants.dart';
 
 class DatabaseTables {
   static const users = "users";
@@ -358,7 +359,7 @@ class DatabaseService {
     return historyList;
   }
 
-  Future<List<BookAppointmentModel>> getAdminBookAppointment(String screenName) async {
+  Future<List<BookAppointmentModel>> getAdminBookAppointment() async {
     List<BookAppointmentModel> appointmentList = [];
 
     await fireStore.collection(DatabaseTables.bookAppointments).get().then((QuerySnapshot querySnapshot) {
@@ -366,7 +367,29 @@ class DatabaseService {
       for (var doc in querySnapshot.docs) {
         Map<String, dynamic> data = doc.data() as Map<String, dynamic>;
         BookAppointmentModel appointment = BookAppointmentModel.fromJson(data);
-        if (screenName.toLowerCase() == appointment.screenName.toLowerCase()) {
+        if (CustomStringConstants.appointmentScreen.toLowerCase() == appointment.screenName.toLowerCase()) {
+          appointmentList.add(appointment);
+        }
+      }
+    });
+
+    return appointmentList;
+  }
+
+  Future<List<BookAppointmentModel>> getAdminNotificationList() async {
+    List<String> screens = [
+      CustomStringConstants.donationScreen.toLowerCase(),
+      CustomStringConstants.pendingTestsScreen.toLowerCase(),
+      CustomStringConstants.reportCollectionScreen.toLowerCase(),
+    ];
+    List<BookAppointmentModel> appointmentList = [];
+
+    await fireStore.collection(DatabaseTables.bookAppointments).get().then((QuerySnapshot querySnapshot) {
+      appointmentList.clear();
+      for (var doc in querySnapshot.docs) {
+        Map<String, dynamic> data = doc.data() as Map<String, dynamic>;
+        BookAppointmentModel appointment = BookAppointmentModel.fromJson(data);
+        if (screens.contains(appointment.screenName.toLowerCase())) {
           appointmentList.add(appointment);
         }
       }

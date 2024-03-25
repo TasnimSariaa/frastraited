@@ -5,23 +5,14 @@ import 'package:frastraited/screen/service/database_service.dart';
 import 'package:frastraited/screen/service/models/book_apointment_model.dart';
 import 'package:frastraited/screen/widgets/bodyBackground.dart';
 
-class EditAppointment extends StatefulWidget {
-  final String category;
-  final String type;
-  final String payable;
-
-  const EditAppointment({
-    required this.category,
-    required this.type,
-    required this.payable,
-    super.key,
-  });
+class AdminNotificationScreen extends StatefulWidget {
+  const AdminNotificationScreen({super.key});
 
   @override
-  State<EditAppointment> createState() => _EditAppointmentState();
+  State<AdminNotificationScreen> createState() => _AdminNotificationScreenState();
 }
 
-class _EditAppointmentState extends State<EditAppointment> {
+class _AdminNotificationScreenState extends State<AdminNotificationScreen> {
   List<BookAppointmentModel> appointmentList = [];
 
   bool isLoading = true;
@@ -34,7 +25,7 @@ class _EditAppointmentState extends State<EditAppointment> {
 
   void _getDoctorList() async {
     appointmentList.clear();
-    final result = await DatabaseService.instance.getAdminBookAppointment();
+    final result = await DatabaseService.instance.getAdminNotificationList();
     appointmentList.addAll(result);
     isLoading = false;
     setState(() {});
@@ -67,7 +58,7 @@ class _EditAppointmentState extends State<EditAppointment> {
                   ),
                   const SizedBox(height: 10),
                   const Text(
-                    'Appointment List',
+                    'Notifications',
                     style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
                   ),
                   const SizedBox(height: 40),
@@ -112,9 +103,9 @@ class _EditAppointmentState extends State<EditAppointment> {
                 'Booked by: ${appointment.user.firstName} ${appointment.user.lastName}',
                 style: const TextStyle(fontSize: 18, color: AppColors.primaryColor),
               ),
-              if (appointment.doctor["name"] != "" || appointment.doctor["name"] != null)
+              if (appointment.paymentCategory.isNotEmpty)
                 Text(
-                  'With Doctor:  ${appointment.doctor["name"]}',
+                  'Pay For: ${appointment.paymentCategory}',
                   style: const TextStyle(fontSize: 18, color: Colors.black),
                 ),
               if (appointment.transactionId.isEmpty)

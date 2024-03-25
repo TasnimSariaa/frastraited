@@ -11,6 +11,7 @@ class BookAppointmentModel {
   final String email;
   final String status;
   final String screenName;
+  final String paymentCategory;
 
   BookAppointmentModel({
     required this.id,
@@ -23,6 +24,7 @@ class BookAppointmentModel {
     required this.status,
     required this.email,
     required this.screenName,
+    required this.paymentCategory,
   });
 
   factory BookAppointmentModel.fromJson(Map<String, dynamic> json) {
@@ -37,6 +39,7 @@ class BookAppointmentModel {
       status: json["status"] ?? "",
       email: json["email"] ?? "",
       screenName: json["screenName"] ?? "",
+      paymentCategory: json["paymentCategory"] ?? "",
     );
   }
 
@@ -52,6 +55,7 @@ class BookAppointmentModel {
       email: "",
       status: "",
       screenName: "",
+      paymentCategory: "",
     );
   }
 
@@ -66,6 +70,7 @@ class BookAppointmentModel {
     String? email,
     String? status,
     String? screenName,
+    String? paymentCategory,
   }) {
     return BookAppointmentModel(
       id: id ?? this.id,
@@ -78,6 +83,7 @@ class BookAppointmentModel {
       email: email ?? this.email,
       status: status ?? this.status,
       screenName: screenName ?? this.screenName,
+      paymentCategory: paymentCategory ?? this.paymentCategory,
     );
   }
 
@@ -93,6 +99,7 @@ class BookAppointmentModel {
       "email": email,
       "status": status,
       "screenName": screenName,
+      "paymentCategory": paymentCategory,
     };
   }
 }

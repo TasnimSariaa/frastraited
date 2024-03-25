@@ -123,6 +123,7 @@ class _PaymentsScreenState extends State<PaymentsScreen> {
                       transactionId: transactionId,
                       status: "Pending",
                       screenName: widget.screenName,
+                      paymentCategory: widget.category,
                     );
                     PaymentModel payment = PaymentModel(
                       id: "",

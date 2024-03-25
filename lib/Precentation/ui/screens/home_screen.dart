@@ -11,6 +11,7 @@ import 'package:frastraited/Precentation/ui/screens/notification_screen.dart';
 import 'package:frastraited/Precentation/ui/utility/app_colors.dart';
 import 'package:frastraited/Precentation/ui/utility/search_field.dart';
 import 'package:frastraited/Precentation/ui/widgets/home/circle_Icon_button.dart';
+import 'package:frastraited/admin/screen/notification/admin_notification_screen.dart';
 import 'package:frastraited/screen/homeCardsScreens/activeDoctor_screen.dart';
 import 'package:frastraited/screen/homeCardsScreens/appointment_screen.dart';
 import 'package:frastraited/screen/homeCardsScreens/donation_screen.dart';
@@ -237,7 +238,7 @@ class _HomeScreenState extends State<HomeScreen> {
             Navigator.push(
               context,
               MaterialPageRoute(
-                builder: (context) => const NotificationScreen(category: '', type: '', payable: ''),
+                builder: (context) => isAdmin ? const AdminNotificationScreen() : const NotificationScreen(category: '', type: '', payable: ''),
               ),
             );
           },
