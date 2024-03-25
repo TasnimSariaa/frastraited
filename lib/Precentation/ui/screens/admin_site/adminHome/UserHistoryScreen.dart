@@ -137,10 +137,16 @@ class _UserHistoryScreenState extends State<UserHistoryScreen> {
                     'Booked by: ${appointment.user.firstName} ${appointment.user.lastName}',
                     style: const TextStyle(fontSize: 18, color: AppColors.primaryColor),
                   ),
-                  Text(
-                    'With Doctor:  ${appointment.doctor["name"]}',
-                    style: const TextStyle(fontSize: 18, color: Colors.black),
-                  ),
+                  if (appointment.doctor.isNotEmpty)
+                    Text(
+                      'With Doctor:  ${appointment.doctor["name"]}',
+                      style: const TextStyle(fontSize: 18, color: Colors.black),
+                    ),
+                  if (appointment.paymentCategory.isNotEmpty)
+                    Text(
+                      'Pay For:   ${appointment.paymentCategory}',
+                      style: const TextStyle(fontSize: 18, color: Colors.grey),
+                    ),
                   Text(
                     'Transaction Id:   ${appointment.transactionId}',
                     style: const TextStyle(fontSize: 18, color: Colors.grey),

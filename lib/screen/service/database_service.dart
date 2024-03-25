@@ -327,18 +327,19 @@ class DatabaseService {
   }
 
   ///
-  Future<void> addNewAppointment(BookAppointmentModel model) async {
+  Future<void> addNewAppointment(BookAppointmentModel model, PaymentModel paymentModel) async {
     CollectionReference result = fireStore.collection(DatabaseTables.bookAppointments);
     final appointmentId = result.doc().id;
 
     result.doc(appointmentId).set(model.copyWith(id: appointmentId).toJson());
+    addNewPayment(paymentModel.copyWith(id: appointmentId));
   }
 
   Future<void> addNewPayment(PaymentModel model) async {
     CollectionReference result = fireStore.collection(DatabaseTables.payments);
-    final paymentId = result.doc().id;
+    // final paymentId = result.doc().id;
 
-    result.doc(paymentId).set(model.copyWith(id: paymentId).toJson());
+    result.doc(model.id).set(model.toJson());
   }
 
   Future<List<PaymentModel>> getHistory() async {
@@ -401,5 +402,14 @@ class DatabaseService {
   Future<void> updateAppointmentStatus(BookAppointmentModel model) async {
     CollectionReference result = fireStore.collection(DatabaseTables.bookAppointments);
     result.doc(model.id).update(model.toJson());
+  }
+
+  Future<void> updatePaymentStatus(String id, String paymentStatus) async {
+    CollectionReference result = fireStore.collection(DatabaseTables.payments);
+    final docSnapshot = await result.doc(id).get();
+
+    PaymentModel paymentModel = PaymentModel.fromJson(docSnapshot.data() as Map<String, dynamic>);
+
+    result.doc(id).update(paymentModel.copyWith(paymentStatus: paymentStatus).toJson());
   }
 }

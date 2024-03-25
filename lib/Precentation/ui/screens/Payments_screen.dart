@@ -133,8 +133,8 @@ class _PaymentsScreenState extends State<PaymentsScreen> {
                       paymentStatus: "Pending",
                       currentDateTime: currentTime,
                     );
-                    await DatabaseService.instance.addNewAppointment(appointment);
-                    await DatabaseService.instance.addNewPayment(payment);
+                    await DatabaseService.instance.addNewAppointment(appointment, payment);
+                    // await DatabaseService.instance.addNewPayment(payment);
                     Navigator.pop(context, {
                       'category': widget.category,
                       'type': widget.type,

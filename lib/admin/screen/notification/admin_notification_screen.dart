@@ -225,6 +225,7 @@ class _AdminNotificationScreenState extends State<AdminNotificationScreen> {
                   // Perform your action here with the selected date and time
 
                   await DatabaseService.instance.updateAppointmentStatus(model.copyWith(status: value));
+                  await DatabaseService.instance.updatePaymentStatus(model.id, value);
                   _getDoctorList();
                   Navigator.pop(context);
                   // You can use _selectedDate and _selectedTime for further actions
